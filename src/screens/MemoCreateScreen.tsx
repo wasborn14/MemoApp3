@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Text, View, StyleSheet, KeyboardAvoidingView, TextInput} from 'react-native';
+import {View, StyleSheet, KeyboardAvoidingView, TextInput} from 'react-native';
 import CircleButton from '../components/CircleButton';
 
 const MemoCreateScreen = () => {

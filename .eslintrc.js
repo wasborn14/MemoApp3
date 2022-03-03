@@ -23,10 +23,6 @@ module.exports = {
         "prettier"
     ],
     "rules": {
-        "indent": [
-            "error",
-            2
-        ],
         "linebreak-style": [
             "error",
             "unix"
@@ -38,7 +34,9 @@ module.exports = {
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
     },
     "settings": {
         "react": {

@@ -1,8 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import TestScreen from "./src";
 import {Navigation} from "./src/navigation";
+import { firebaseConfig } from './env';
+import firebase from "firebase";
+
+require('firebase/firestore');
+
+if (firebase.apps.length === 0) {
+    firebase.initializeApp(firebaseConfig);
+}
 
 export default function App() {
   return (
@@ -11,11 +17,6 @@ export default function App() {
           <Navigation />
         </SafeAreaView>
       </SafeAreaProvider>
-    // <View style={styles.container}>
-    //   <Text>Open up App.tsx to start working on your app!</Text>
-    //   <TestScreen />
-    //   <StatusBar style="auto" />
-    // </View>
   );
 }
 

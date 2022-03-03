@@ -1,10 +1,34 @@
 import React, {useCallback, useState} from 'react';
-import {Text, View, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
-import Button from "../components/Button";
+import {Text, View, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-native';
+import Button from '../components/Button';
+import firebase from 'firebase';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigation';
+import {translateErrors} from '../utils';
+
+type RootScreenProp = StackNavigationProp<RootStackParamList>;
 
 const SignUpScreen = () => {
+  const nav = useNavigation<RootScreenProp>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const handlePress = useCallback(() => {
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        nav.reset({
+          index: 0,
+          routes: [{name: 'MemoList'}],
+        });
+      })
+      .catch((error) => {
+        const errorMsg = translateErrors(error.code);
+        Alert.alert(errorMsg.title, errorMsg.description);
+      });
+  }, [nav, email, password]);
 
   return (
     <View style={styles.container}>
@@ -32,13 +56,17 @@ const SignUpScreen = () => {
           secureTextEntry
           textContentType="password"
         />
-        <Button label="Submit" onPress={() => {}} />
+        <Button label="Submit" onPress={handlePress} />
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>Already registered?</Text>
           <TouchableOpacity
-            onPress={() => {
-            }}
+            onPress={() =>
+              nav.reset({
+                index: 0,
+                routes: [{name: 'LogIn'}],
+              })
+            }
           >
             <Text style={styles.footerLink}>Log In</Text>
           </TouchableOpacity>

@@ -1,24 +1,68 @@
-import React, {useState} from 'react';
-import {Text, View, StyleSheet, KeyboardAvoidingView, TextInput, ScrollView} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Text, View, StyleSheet, ScrollView} from 'react-native';
 import CircleButton from '../components/CircleButton';
 import {dateToString} from '../utils';
+import {UserMemo} from './MemoListScreen';
+import {RootStackParamList} from '../navigation';
+import {StackNavigationProp, StackScreenProps} from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
+import firebase from 'firebase';
 
-const MemoEditScreen = () => {
-  const [body, setBody] = useState('');
-  const [memo, setMemo] = useState(null);
+export interface MemoDetailParams {
+  id: string;
+}
+
+type RootScreenProp = StackNavigationProp<RootStackParamList, 'MemoDetail'>;
+
+type MemoDetailProp = StackScreenProps<RootStackParamList, 'MemoDetail'>;
+
+const MemoDetailScreen: React.FC<MemoDetailProp> = ({route}) => {
+  const {id} = route.params;
+  const nav = useNavigation<RootScreenProp>();
+  const [memo, setMemo] = useState<UserMemo | null>(null);
+
+  useEffect(() => {
+    const {currentUser} = firebase.auth();
+    let unsubscribe = () => {
+      // do nothing
+    };
+    if (currentUser) {
+      const db = firebase.firestore();
+      const ref = db.collection(`users/${currentUser.uid}/memos`).doc(id);
+      unsubscribe = ref.onSnapshot((doc) => {
+        const data = doc.data();
+        setMemo({
+          id: doc.id,
+          bodyText: data?.bodyText,
+          updatedAt: data?.updatedAt.toDate(),
+        });
+      });
+    }
+    return unsubscribe;
+  }, [id]);
+
+  useEffect(() => {
+    console.log('id', id);
+  }, [id]);
 
   return (
     <View style={styles.container}>
       <View style={styles.memoHeader}>
         <Text style={styles.memoTitle} numberOfLines={1}>
-          テストテキスト
+          {memo?.bodyText}
         </Text>
-        <Text style={styles.memoDate}>2022年2月28日</Text>
+        <Text style={styles.memoDate}>{dateToString(memo?.updatedAt)}</Text>
       </View>
       <ScrollView style={styles.memoBody}>
-        <Text style={styles.memoText}>テストテキスト</Text>
+        <Text style={styles.memoText}>{memo?.bodyText}</Text>
       </ScrollView>
-      <CircleButton style={{top: 60, bottom: 'auto'}} name="edit-2" />
+      <CircleButton
+        style={{top: 60, bottom: 'auto'}}
+        name="edit-2"
+        onPress={() => {
+          nav.navigate('MemoEdit', {id: memo?.id, bodyText: memo?.bodyText});
+        }}
+      />
     </View>
   );
 };
@@ -56,4 +100,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MemoEditScreen;
+export default MemoDetailScreen;

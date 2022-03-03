@@ -2,19 +2,29 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {CardStyleInterpolators, createStackNavigator} from '@react-navigation/stack';
 import MemoListScreen from '../screens/MemoListScreen';
-import MemoEditScreen from '../screens/MemoEditScreen';
+import MemoEditScreen, {MemoEditParams} from '../screens/MemoEditScreen';
 import MemoCreateScreen from '../screens/MemoCreateScreen';
 import MemoDetailScreen from '../screens/MemoDetailScreen';
-import SignUpScreen from "../screens/SignUpScreen";
-import LogInScreen from "../screens/LogInScreen";
+import {MemoDetailParams} from '../screens/MemoDetailScreen';
+import SignUpScreen from '../screens/SignUpScreen';
+import LogInScreen from '../screens/LogInScreen';
 
-const Stack = createStackNavigator();
+export type RootStackParamList = {
+  SignUp: undefined;
+  LogIn: undefined;
+  MemoList: undefined;
+  MemoEdit: MemoEditParams;
+  MemoCreate: undefined;
+  MemoDetail: MemoDetailParams;
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 export const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="SignIn"
+        initialRouteName="LogIn"
         screenOptions={{
           headerStyle: {backgroundColor: '#467FD3'},
           headerTitleStyle: {color: '#ffffff'},
@@ -26,8 +36,8 @@ export const Navigation = () => {
           gestureDirection: 'horizontal',
         }}
       >
-          <Stack.Screen name="SignUp" component={SignUpScreen} />
-          <Stack.Screen name="LogIn" component={LogInScreen} />
+        <Stack.Screen name="SignUp" component={SignUpScreen} />
+        <Stack.Screen name="LogIn" component={LogInScreen} />
         <Stack.Screen name="MemoList" component={MemoListScreen} />
         <Stack.Screen name="MemoEdit" component={MemoEditScreen} />
         <Stack.Screen name="MemoCreate" component={MemoCreateScreen} />

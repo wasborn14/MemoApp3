@@ -1,9 +1,45 @@
-import React, {useState} from 'react';
-import {Text, View, StyleSheet, KeyboardAvoidingView, TextInput} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {View, StyleSheet, KeyboardAvoidingView, TextInput, Alert} from 'react-native';
 import CircleButton from '../components/CircleButton';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigation';
+import firebase from 'firebase';
+import {translateErrors} from '../utils';
 
-const MemoEditScreen = () => {
+export interface MemoEditParams {
+  id?: string;
+  bodyText?: string;
+}
+
+type RootScreenProp = StackNavigationProp<RootStackParamList>;
+
+const MemoEditScreen: React.FC<MemoEditParams> = ({id, bodyText}) => {
+  const nav = useNavigation<RootScreenProp>();
   const [body, setBody] = useState('');
+
+  const handlePress = useCallback(() => {
+    const {currentUser} = firebase.auth();
+    if (currentUser) {
+      const db = firebase.firestore();
+      const ref = db.collection(`users/${currentUser.uid}/memos`).doc(id);
+      ref
+        .set(
+          {
+            bodyText: body,
+            updatedAt: new Date(),
+          },
+          {merge: true},
+        )
+        .then(() => {
+          nav.goBack();
+        })
+        .catch((error) => {
+          const errorMsg = translateErrors(error.code);
+          Alert.alert(errorMsg.title, errorMsg.description);
+        });
+    }
+  }, [id, body, nav]);
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -17,7 +53,7 @@ const MemoEditScreen = () => {
           }}
         />
       </View>
-      <CircleButton name="check" />
+      <CircleButton name="check" onPress={() => handlePress()} />
     </KeyboardAvoidingView>
   );
 };

@@ -1,19 +1,76 @@
-import React from 'react';
-import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import React, {useCallback} from 'react';
+import {View, StyleSheet, TouchableOpacity, Text, FlatList, Alert} from 'react-native';
 import {Feather} from '@expo/vector-icons';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigation';
+import {useNavigation} from '@react-navigation/native';
+import {UserMemo} from '../screens/MemoListScreen';
+import {dateToString} from '../utils';
+import firebase from 'firebase';
 
-export const MemoList = () => {
+type RootScreenProp = StackNavigationProp<RootStackParamList>;
+
+type Props = {
+  memos: UserMemo[];
+};
+
+export const MemoList: React.FC<Props> = ({memos}) => {
+  const nav = useNavigation<RootScreenProp>();
+
+  const deleteMemo = useCallback((id) => {
+    const {currentUser} = firebase.auth();
+    if (currentUser) {
+      const db = firebase.firestore();
+      const ref = db.collection(`users/${currentUser.uid}/memos`).doc(id);
+      Alert.alert('メモを削除します。', 'よろしいですか？', [
+        {
+          text: 'キャンセル',
+          onPress: () => {
+            // do nothing
+          },
+        },
+        {
+          text: '削除する',
+          style: 'destructive',
+          onPress: () => {
+            ref.delete().catch(() => {
+              Alert.alert('削除に失敗しました。');
+            });
+          },
+        },
+      ]);
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.memoListItem}>
-        <View>
-          <Text style={styles.memoListItemTitle}>title</Text>
-          <Text style={styles.memoListItemDate}>date</Text>
-        </View>
-        <TouchableOpacity style={styles.memoDelete}>
-          <Feather name="x" color="#B0b0b0" size={16} />
-        </TouchableOpacity>
-      </TouchableOpacity>
+      <FlatList
+        data={memos}
+        renderItem={({item}) => (
+          <TouchableOpacity
+            style={styles.memoListItem}
+            onPress={() => {
+              nav.navigate('MemoDetail', {id: item.id});
+            }}
+          >
+            <View>
+              <Text style={styles.memoListItemTitle} numberOfLines={1}>
+                {item.id} , {item.bodyText}
+              </Text>
+              <Text style={styles.memoListItemDate}>{dateToString(item.updatedAt)}</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.memoDelete}
+              onPress={() => {
+                deleteMemo(item.id);
+              }}
+            >
+              <Feather name="x" color="#B0b0b0" size={16} />
+            </TouchableOpacity>
+          </TouchableOpacity>
+        )}
+        keyExtractor={(item) => item.id}
+      />
     </View>
   );
 };
