@@ -11,7 +11,7 @@
     "lint": "eslint './src/**/*.{js,ts,tsx}'",
     "lint:fix": "eslint --fix './src/**/*.{js,ts,tsx}'",
     "format": "prettier --check ./src",
-    "fmt": "prettier --write './src/**/*.{js,ts,tsx}'"
+    "fmt": "prettier --write --check './src/**/*.{js,ts,tsx}'"
   },
   "dependencies": {
     "@react-navigation/native": "^6.0.8",

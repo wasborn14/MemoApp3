@@ -1,9 +1,37 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, KeyboardAvoidingView, TextInput} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {View, StyleSheet, KeyboardAvoidingView, TextInput, Alert} from 'react-native';
 import CircleButton from '../components/CircleButton';
+import firebase from 'firebase';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigation';
+import {useNavigation} from '@react-navigation/native';
+import {translateErrors} from '../utils';
+
+type RootScreenProp = StackNavigationProp<RootStackParamList, 'MemoDetail'>;
 
 const MemoCreateScreen = () => {
+  const nav = useNavigation<RootScreenProp>();
   const [bodyText, setBodyText] = useState('');
+
+  const handlePress = useCallback(() => {
+    const {currentUser} = firebase.auth();
+    const db = firebase.firestore();
+    if (currentUser) {
+      const ref = db.collection(`users/${currentUser.uid}/memos`);
+      ref
+        .add({
+          bodyText,
+          updatedAt: new Date(),
+        })
+        .then(() => {
+          nav.goBack();
+        })
+        .catch((error) => {
+          const errorMsg = translateErrors(error.code);
+          Alert.alert(errorMsg.title, errorMsg.description);
+        });
+    }
+  }, [nav, bodyText]);
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -17,7 +45,7 @@ const MemoCreateScreen = () => {
           autoCapitalize="none"
         />
       </View>
-      <CircleButton name="check" />
+      <CircleButton name="check" onPress={handlePress} />
     </KeyboardAvoidingView>
   );
 };

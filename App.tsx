@@ -1,4 +1,4 @@
-import {SafeAreaView, StyleSheet} from 'react-native';
+import {LogBox, SafeAreaView, StyleSheet} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {Navigation} from "./src/navigation";
 import { firebaseConfig } from './env';
@@ -9,6 +9,10 @@ require('firebase/firestore');
 if (firebase.apps.length === 0) {
     firebase.initializeApp(firebaseConfig);
 }
+
+LogBox.ignoreLogs(['Setting a timer']);
+LogBox.ignoreLogs(['AsyncStorage has been extracted from']);
+// LogBox.ignoreAllLogs(true);
 
 export default function App() {
   return (

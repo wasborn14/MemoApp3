@@ -10,7 +10,7 @@ type Props = {
 
 const CircleButton: React.FC<Props> = ({name, style, onPress}) => {
   return (
-    <TouchableOpacity style={[styles.circleButton, style]}>
+    <TouchableOpacity style={[styles.circleButton, style]} onPress={onPress}>
       <Feather name={name} size={32} color="white" />
     </TouchableOpacity>
   );
