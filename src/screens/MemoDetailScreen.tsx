@@ -23,13 +23,10 @@ const MemoDetailScreen: React.FC<MemoDetailProp> = ({route}) => {
 
   useEffect(() => {
     const {currentUser} = firebase.auth();
-    let unsubscribe = () => {
-      // do nothing
-    };
     if (currentUser) {
       const db = firebase.firestore();
       const ref = db.collection(`users/${currentUser.uid}/memos`).doc(id);
-      unsubscribe = ref.onSnapshot((doc) => {
+      ref.onSnapshot((doc) => {
         const data = doc.data();
         setMemo({
           id: doc.id,
@@ -38,11 +35,6 @@ const MemoDetailScreen: React.FC<MemoDetailProp> = ({route}) => {
         });
       });
     }
-    return unsubscribe;
-  }, [id]);
-
-  useEffect(() => {
-    console.log('id', id);
   }, [id]);
 
   return (

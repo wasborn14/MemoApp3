@@ -32,13 +32,10 @@ const MemoListScreen = () => {
   useEffect(() => {
     const db = firebase.firestore();
     const {currentUser} = firebase.auth();
-    let unsubscribe = () => {
-      // do nothing
-    };
     if (currentUser) {
       setLoading(true);
       const ref = db.collection(`users/${currentUser.uid}/memos`).orderBy('updatedAt', 'desc');
-      unsubscribe = ref.onSnapshot(
+      ref.onSnapshot(
         (snapshot) => {
           const userMemos: UserMemo[] = [];
           snapshot.forEach((doc) => {
@@ -58,7 +55,6 @@ const MemoListScreen = () => {
         },
       );
     }
-    return unsubscribe;
   }, []);
 
   const NoMemoListView = useMemo(
