@@ -3,8 +3,8 @@ import {Text, View, StyleSheet, ScrollView} from 'react-native';
 import CircleButton from '../components/CircleButton';
 import {dateToString} from '../utils';
 import {UserMemo} from './MemoListScreen';
-import {RootStackParamList} from '../navigation';
-import {StackNavigationProp, StackScreenProps} from '@react-navigation/stack';
+import {MemoStackPramList, MemoTabNavigation} from '../navigation';
+import {StackScreenProps} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
 import firebase from 'firebase';
 
@@ -12,13 +12,11 @@ export interface MemoDetailParams {
   id: string;
 }
 
-type RootScreenProp = StackNavigationProp<RootStackParamList, 'MemoDetail'>;
-
-type MemoDetailProp = StackScreenProps<RootStackParamList, 'MemoDetail'>;
+type MemoDetailProp = StackScreenProps<MemoStackPramList, 'MemoDetail'>;
 
 const MemoDetailScreen: React.FC<MemoDetailProp> = ({route}) => {
   const {id} = route.params;
-  const nav = useNavigation<RootScreenProp>();
+  const nav = useNavigation<MemoTabNavigation>();
   const [memo, setMemo] = useState<UserMemo | null>(null);
 
   useEffect(() => {

@@ -2,8 +2,8 @@ import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, KeyboardAvoidingView, TextInput, Alert} from 'react-native';
 import CircleButton from '../components/CircleButton';
 import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp, StackScreenProps} from '@react-navigation/stack';
-import {RootStackParamList} from '../navigation';
+import {StackScreenProps} from '@react-navigation/stack';
+import {MemoStackPramList, MemoTabNavigation} from '../navigation';
 import firebase from 'firebase';
 import {translateErrors} from '../utils';
 
@@ -12,13 +12,11 @@ export interface MemoEditParams {
   bodyText?: string;
 }
 
-type RootScreenProp = StackNavigationProp<RootStackParamList>;
-
-type MemoEditProp = StackScreenProps<RootStackParamList, 'MemoEdit'>;
+type MemoEditProp = StackScreenProps<MemoStackPramList, 'MemoEdit'>;
 
 const MemoEditScreen: React.FC<MemoEditProp> = ({route}) => {
   const {id, bodyText} = route.params;
-  const nav = useNavigation<RootScreenProp>();
+  const nav = useNavigation<MemoTabNavigation>();
   const [body, setBody] = useState(bodyText);
 
   const handlePress = useCallback(() => {

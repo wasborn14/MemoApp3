@@ -28,6 +28,7 @@ export type MemoStackPramList = {
 };
 
 export type MainTabNavigation = StackNavigationProp<RootStackParamList>;
+export type MemoTabNavigation = StackNavigationProp<MemoStackPramList>;
 
 const RootStack = createStackNavigator<RootStackParamList>();
 const MemoStack = createStackNavigator<MemoStackPramList>();
@@ -36,16 +37,16 @@ const Tab = createBottomTabNavigator();
 const MemoStackNavigator = () => {
   return (
     <MemoStack.Navigator
-        screenOptions={{
-            headerStyle: {backgroundColor: '#467FD3'},
-            headerTitleStyle: {color: '#ffffff'},
-            headerTitle: 'Memo App',
-            headerTintColor: '#ffffff',
-            headerBackTitle: 'Back',
-            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-            gestureEnabled: true,
-            gestureDirection: 'horizontal',
-        }}
+      screenOptions={{
+        headerStyle: {backgroundColor: '#467FD3'},
+        headerTitleStyle: {color: '#ffffff'},
+        headerTitle: 'Memo App',
+        headerTintColor: '#ffffff',
+        headerBackTitle: 'Back',
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
+      }}
     >
       <MemoStack.Screen name="MemoList" component={MemoListScreen} />
       <MemoStack.Screen name="MemoEdit" component={MemoEditScreen} />
@@ -90,11 +91,13 @@ export const Navigation = () => {
       >
         <RootStack.Screen name="LogIn" component={LogInScreen} />
         <RootStack.Screen name="SignUp" component={SignUpScreen} />
-        <RootStack.Screen name="MainTab" component={MainTabNavigator} options={
-            {
-                headerShown: false,
-            }
-        }/>
+        <RootStack.Screen
+          name="MainTab"
+          component={MainTabNavigator}
+          options={{
+            headerShown: false,
+          }}
+        />
       </RootStack.Navigator>
     </NavigationContainer>
   );

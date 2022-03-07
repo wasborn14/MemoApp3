@@ -4,7 +4,7 @@ import {MemoList} from '../components/MemoList';
 import CircleButton from '../components/CircleButton';
 import Loading from '../components/Loading';
 import Button from '../components/Button';
-import {MainTabNavigation, MemoStackPramList, RootStackParamList} from '../navigation';
+import {MemoTabNavigation} from '../navigation';
 import {useNavigation} from '@react-navigation/native';
 import LogOutButton from '../components/LogOutButton';
 import firebase from 'firebase';
@@ -16,7 +16,7 @@ export type UserMemo = {
 };
 
 const MemoListScreen = () => {
-  const nav = useNavigation<MainTabNavigation>();
+  const nav = useNavigation<MemoTabNavigation>();
   const [memos, setMemos] = useState<UserMemo[]>([]);
   const [isLoading, setLoading] = useState(false);
 
@@ -63,9 +63,7 @@ const MemoListScreen = () => {
           <Button
             label="作成する"
             onPress={() => {
-              nav.navigate('MainTab', {
-                screen: 'MemoCreate',
-              });
+              nav.navigate('MemoCreate');
             }}
             style={emptyStyles.button}
           />
@@ -82,14 +80,7 @@ const MemoListScreen = () => {
       ) : (
         <View style={styles.container}>
           <MemoList memos={memos} />
-          <CircleButton
-            name="plus"
-            onPress={() =>
-              nav.navigate('MainTab', {
-                screen: 'MemoCreate',
-              })
-            }
-          />
+          <CircleButton name="plus" onPress={() => nav.navigate('MemoCreate')} />
         </View>
       )}
     </>
