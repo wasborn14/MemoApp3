@@ -2,26 +2,30 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Text, View, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-native';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '../navigation';
+import {MainTabNavigation} from '../navigation';
 import {useNavigation} from '@react-navigation/native';
 import firebase from 'firebase';
 import {translateErrors} from '../utils';
 
-type RootScreenProp = StackNavigationProp<RootStackParamList>;
-
 const LogInScreen = () => {
-  const nav = useNavigation<RootScreenProp>();
+  const nav = useNavigation<MainTabNavigation>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         nav.reset({
           index: 0,
-          routes: [{name: 'MemoList'}],
+          routes: [
+            {
+              name: 'MainTab',
+              params: {
+                screen: 'MemoList',
+              },
+            },
+          ],
         });
       } else {
         setIsLoading(false);
@@ -37,7 +41,14 @@ const LogInScreen = () => {
       .then(() => {
         nav.reset({
           index: 0,
-          routes: [{name: 'MemoList'}],
+          routes: [
+            {
+              name: 'MainTab',
+              params: {
+                screen: 'MemoList',
+              },
+            },
+          ],
         });
       })
       .catch((error) => {
