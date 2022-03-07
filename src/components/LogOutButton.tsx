@@ -2,13 +2,13 @@ import React, {useCallback} from 'react';
 import {Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '../navigation';
+import {MainTabNavigation, RootStackParamList} from '../navigation';
 import firebase from 'firebase';
-
-type RootScreenProp = StackNavigationProp<RootStackParamList>;
+//
+// type RootScreenProp = StackNavigationProp<RootStackParamList>;
 
 const LogOutButton = () => {
-  const nav = useNavigation<RootScreenProp>();
+  const nav = useNavigation<MainTabNavigation>();
 
   const handlePress = useCallback(() => {
     firebase
