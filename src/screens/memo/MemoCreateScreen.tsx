@@ -1,16 +1,13 @@
 import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, KeyboardAvoidingView, TextInput, Alert} from 'react-native';
-import CircleButton from '../components/CircleButton';
+import CircleButton from '../../components/CircleButton';
 import firebase from 'firebase';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '../navigation';
+import {MemoTabNavigation} from '../../navigation';
 import {useNavigation} from '@react-navigation/native';
-import {translateErrors} from '../utils';
-
-type RootScreenProp = StackNavigationProp<RootStackParamList, 'MemoDetail'>;
+import {translateErrors} from '../../utils';
 
 const MemoCreateScreen = () => {
-  const nav = useNavigation<RootScreenProp>();
+  const nav = useNavigation<MemoTabNavigation>();
   const [bodyText, setBodyText] = useState('');
 
   const handlePress = useCallback(() => {

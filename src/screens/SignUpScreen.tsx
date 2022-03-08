@@ -3,14 +3,11 @@ import {Text, View, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-
 import Button from '../components/Button';
 import firebase from 'firebase';
 import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '../navigation';
+import {MainTabNavigation} from '../navigation';
 import {translateErrors} from '../utils';
 
-type RootScreenProp = StackNavigationProp<RootStackParamList>;
-
 const SignUpScreen = () => {
-  const nav = useNavigation<RootScreenProp>();
+  const nav = useNavigation<MainTabNavigation>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -21,7 +18,14 @@ const SignUpScreen = () => {
       .then(() => {
         nav.reset({
           index: 0,
-          routes: [{name: 'MemoList'}],
+          routes: [
+            {
+              name: 'MainTab',
+              params: {
+                screen: 'MemoList',
+              },
+            },
+          ],
         });
       })
       .catch((error) => {

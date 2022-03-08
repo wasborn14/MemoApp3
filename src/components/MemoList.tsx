@@ -1,21 +1,18 @@
 import React, {useCallback} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, FlatList, Alert} from 'react-native';
 import {Feather} from '@expo/vector-icons';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '../navigation';
+import {MemoTabNavigation} from '../navigation';
 import {useNavigation} from '@react-navigation/native';
-import {UserMemo} from '../screens/MemoListScreen';
+import {UserMemo} from '../screens/memo/MemoListScreen';
 import {dateToString} from '../utils';
 import firebase from 'firebase';
-
-type RootScreenProp = StackNavigationProp<RootStackParamList>;
 
 type Props = {
   memos: UserMemo[];
 };
 
 export const MemoList: React.FC<Props> = ({memos}) => {
-  const nav = useNavigation<RootScreenProp>();
+  const nav = useNavigation<MemoTabNavigation>();
 
   const deleteMemo = useCallback((id) => {
     const {currentUser} = firebase.auth();
@@ -55,7 +52,7 @@ export const MemoList: React.FC<Props> = ({memos}) => {
           >
             <View>
               <Text style={styles.memoListItemTitle} numberOfLines={1}>
-                {item.id} , {item.bodyText}
+                {item.bodyText}
               </Text>
               <Text style={styles.memoListItemDate}>{dateToString(item.updatedAt)}</Text>
             </View>

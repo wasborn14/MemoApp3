@@ -1,12 +1,12 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Text, View, StyleSheet, Alert} from 'react-native';
-import {MemoList} from '../components/MemoList';
-import CircleButton from '../components/CircleButton';
-import Loading from '../components/Loading';
-import Button from '../components/Button';
-import {MainTabNavigation, MemoStackPramList, RootStackParamList} from '../navigation';
+import {MemoList} from '../../components/MemoList';
+import CircleButton from '../../components/CircleButton';
+import Loading from '../../components/Loading';
+import Button from '../../components/Button';
+import {MemoTabNavigation} from '../../navigation';
 import {useNavigation} from '@react-navigation/native';
-import LogOutButton from '../components/LogOutButton';
+import LogOutButton from '../../components/LogOutButton';
 import firebase from 'firebase';
 
 export type UserMemo = {
@@ -16,7 +16,7 @@ export type UserMemo = {
 };
 
 const MemoListScreen = () => {
-  const nav = useNavigation<MainTabNavigation>();
+  const nav = useNavigation<MemoTabNavigation>();
   const [memos, setMemos] = useState<UserMemo[]>([]);
   const [isLoading, setLoading] = useState(false);
 
@@ -29,10 +29,13 @@ const MemoListScreen = () => {
   useEffect(() => {
     const db = firebase.firestore();
     const {currentUser} = firebase.auth();
+    let unsubscribe = () => {
+      // do nothing
+    };
     if (currentUser) {
       setLoading(true);
       const ref = db.collection(`users/${currentUser.uid}/memos`).orderBy('updatedAt', 'desc');
-      ref.onSnapshot(
+      unsubscribe = ref.onSnapshot(
         (snapshot) => {
           const userMemos: UserMemo[] = [];
           snapshot.forEach((doc) => {
@@ -52,7 +55,40 @@ const MemoListScreen = () => {
         },
       );
     }
+    return unsubscribe;
   }, []);
+
+  //useEffect(() => {
+  //     const db = firebase.firestore();
+  //     const {currentUser} = firebase.auth();
+  //     let unsubscribe = () => {
+  //       // do nothing
+  //     };
+  //     if (currentUser) {
+  //       setLoading(true);
+  //       const ref = db.collection(`users/${currentUser.uid}/memos`).orderBy('updatedAt', 'desc');
+  //       unsubscribe = ref.onSnapshot(
+  //         (snapshot) => {
+  //           const userMemos: UserMemo[] = [];
+  //           snapshot.forEach((doc) => {
+  //             const data = doc.data();
+  //             userMemos.push({
+  //               id: doc.id,
+  //               bodyText: data.bodyText,
+  //               updatedAt: data.updatedAt.toDate(),
+  //             });
+  //           });
+  //           setMemos(userMemos);
+  //           setLoading(false);
+  //         },
+  //         () => {
+  //           setLoading(false);
+  //           Alert.alert('データの読み込みに失敗しました。');
+  //         },
+  //       );
+  //     }
+  //     return unsubscribe;
+  //   }, []);
 
   const NoMemoListView = useMemo(
     () => (
@@ -63,9 +99,7 @@ const MemoListScreen = () => {
           <Button
             label="作成する"
             onPress={() => {
-              nav.navigate('MainTab', {
-                screen: 'MemoCreate',
-              });
+              nav.navigate('MemoCreate');
             }}
             style={emptyStyles.button}
           />
@@ -82,14 +116,7 @@ const MemoListScreen = () => {
       ) : (
         <View style={styles.container}>
           <MemoList memos={memos} />
-          <CircleButton
-            name="plus"
-            onPress={() =>
-              nav.navigate('MainTab', {
-                screen: 'MemoCreate',
-              })
-            }
-          />
+          <CircleButton name="plus" onPress={() => nav.navigate('MemoCreate')} />
         </View>
       )}
     </>
