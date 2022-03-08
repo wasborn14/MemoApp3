@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet, ScrollView} from 'react-native';
-import CircleButton from '../components/CircleButton';
-import {dateToString} from '../utils';
+import CircleButton from '../../components/CircleButton';
+import {dateToString} from '../../utils';
 import {UserMemo} from './MemoListScreen';
-import {MemoStackPramList, MemoTabNavigation} from '../navigation';
+import {MemoStackPramList, MemoTabNavigation} from '../../navigation';
 import {StackScreenProps} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
 import firebase from 'firebase';

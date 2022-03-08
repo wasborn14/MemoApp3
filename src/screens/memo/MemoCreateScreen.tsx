@@ -1,10 +1,10 @@
 import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, KeyboardAvoidingView, TextInput, Alert} from 'react-native';
-import CircleButton from '../components/CircleButton';
+import CircleButton from '../../components/CircleButton';
 import firebase from 'firebase';
-import {MemoTabNavigation} from '../navigation';
+import {MemoTabNavigation} from '../../navigation';
 import {useNavigation} from '@react-navigation/native';
-import {translateErrors} from '../utils';
+import {translateErrors} from '../../utils';
 
 const MemoCreateScreen = () => {
   const nav = useNavigation<MemoTabNavigation>();

@@ -1,11 +1,11 @@
 import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, KeyboardAvoidingView, TextInput, Alert} from 'react-native';
-import CircleButton from '../components/CircleButton';
+import CircleButton from '../../components/CircleButton';
 import {useNavigation} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {MemoStackPramList, MemoTabNavigation} from '../navigation';
+import {MemoStackPramList, MemoTabNavigation} from '../../navigation';
 import firebase from 'firebase';
-import {translateErrors} from '../utils';
+import {translateErrors} from '../../utils';
 
 export interface MemoEditParams {
   id?: string;

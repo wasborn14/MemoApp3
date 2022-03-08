@@ -6,13 +6,16 @@ import {
   StackNavigationProp,
 } from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import MemoListScreen from '../screens/MemoListScreen';
-import MemoEditScreen, {MemoEditParams} from '../screens/MemoEditScreen';
-import MemoCreateScreen from '../screens/MemoCreateScreen';
-import MemoDetailScreen from '../screens/MemoDetailScreen';
-import {MemoDetailParams} from '../screens/MemoDetailScreen';
+import MemoListScreen from '../screens/memo/MemoListScreen';
+import MemoEditScreen, {MemoEditParams} from '../screens/memo/MemoEditScreen';
+import MemoCreateScreen from '../screens/memo/MemoCreateScreen';
+import MemoDetailScreen from '../screens/memo/MemoDetailScreen';
+import {MemoDetailParams} from '../screens/memo/MemoDetailScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import LogInScreen from '../screens/LogInScreen';
+import {SettingScreen} from '../screens/SettingScreen';
+import {SimpleLineIcons} from '@expo/vector-icons';
+import {Fontisto} from '@expo/vector-icons';
 
 export type RootStackParamList = {
   SignUp: undefined;
@@ -27,11 +30,16 @@ export type MemoStackPramList = {
   MemoDetail: MemoDetailParams;
 };
 
+export type SettingStackParamList = {
+  Setting: undefined;
+};
+
 export type MainTabNavigation = StackNavigationProp<RootStackParamList>;
 export type MemoTabNavigation = StackNavigationProp<MemoStackPramList>;
 
 const RootStack = createStackNavigator<RootStackParamList>();
 const MemoStack = createStackNavigator<MemoStackPramList>();
+const SetStack = createStackNavigator<SettingStackParamList>();
 const Tab = createBottomTabNavigator();
 
 const MemoStackNavigator = () => {
@@ -56,6 +64,25 @@ const MemoStackNavigator = () => {
   );
 };
 
+const SetStackNavigator = () => {
+  return (
+    <SetStack.Navigator
+      screenOptions={{
+        headerStyle: {backgroundColor: '#467FD3'},
+        headerTitleStyle: {color: '#ffffff'},
+        headerTitle: 'Memo App',
+        headerTintColor: '#ffffff',
+        headerBackTitle: 'Back',
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
+      }}
+    >
+      <SetStack.Screen name="Setting" component={SettingScreen} />
+    </SetStack.Navigator>
+  );
+};
+
 const MainTabNavigator = () => {
   return (
     <Tab.Navigator
@@ -68,7 +95,45 @@ const MainTabNavigator = () => {
         tabBarHideOnKeyboard: true,
       }}
     >
-      <Tab.Screen name="Memo" component={MemoStackNavigator} />
+      <Tab.Screen
+        name="Memo"
+        component={MemoStackNavigator}
+        options={{
+          tabBarLabel: 'Memo',
+          tabBarIcon: ({focused}) =>
+            focused ? (
+              <SimpleLineIcons name="note" size={24} color="black" />
+            ) : (
+              <SimpleLineIcons name="note" size={24} color="black" />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="Mind"
+        component={SetStackNavigator}
+        options={{
+          tabBarLabel: 'Mind',
+          tabBarIcon: ({focused}) =>
+            focused ? (
+              <Fontisto name="heartbeat-alt" size={24} color="black" />
+            ) : (
+              <Fontisto name="heartbeat-alt" size={24} color="black" />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="Setting"
+        component={SetStackNavigator}
+        options={{
+          tabBarLabel: 'Setting',
+          tabBarIcon: ({focused}) =>
+            focused ? (
+              <SimpleLineIcons name="settings" size={24} color="black" />
+            ) : (
+              <SimpleLineIcons name="settings" size={24} color="black" />
+            ),
+        }}
+      />
     </Tab.Navigator>
   );
 };
