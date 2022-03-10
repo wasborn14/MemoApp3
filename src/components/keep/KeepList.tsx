@@ -1,24 +1,23 @@
 import React, {useCallback} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, FlatList, Alert} from 'react-native';
 import {Feather} from '@expo/vector-icons';
-import {MemoTabNavigation} from '../navigation';
+import {KeepTabNavigation} from '../../navigation';
 import {useNavigation} from '@react-navigation/native';
-import {UserMemo} from '../screens/memo/MemoListScreen';
-import {dateToString} from '../utils';
+import {UserKeep} from '../../screens/keep/KeepListScreen';
 import firebase from 'firebase';
 
 type Props = {
-  memos: UserMemo[];
+  keeps: UserKeep[];
 };
 
-export const MemoList: React.FC<Props> = ({memos}) => {
-  const nav = useNavigation<MemoTabNavigation>();
+export const KeepList: React.FC<Props> = ({keeps}) => {
+  const nav = useNavigation<KeepTabNavigation>();
 
-  const deleteMemo = useCallback((id) => {
+  const deleteKeep = useCallback((id) => {
     const {currentUser} = firebase.auth();
     if (currentUser) {
       const db = firebase.firestore();
-      const ref = db.collection(`users/${currentUser.uid}/memos`).doc(id);
+      const ref = db.collection(`users/${currentUser.uid}/keeps`).doc(id);
       Alert.alert('メモを削除します。', 'よろしいですか？', [
         {
           text: 'キャンセル',
@@ -42,24 +41,23 @@ export const MemoList: React.FC<Props> = ({memos}) => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={memos}
+        data={keeps}
         renderItem={({item}) => (
           <TouchableOpacity
-            style={styles.memoListItem}
+            style={styles.keepListItem}
             onPress={() => {
-              nav.navigate('MemoDetail', {id: item.id});
+              nav.navigate('KeepDetail', {id: item.id});
             }}
           >
-            <View style={styles.memoInner}>
-              <Text style={styles.memoListItemTitle} numberOfLines={1}>
+            <View style={styles.keepInner}>
+              <Text style={styles.keepListItemTitle} numberOfLines={1}>
                 {item.bodyText}
               </Text>
-              <Text style={styles.memoListItemDate}>{dateToString(item.updatedAt)}</Text>
             </View>
             <TouchableOpacity
-              style={styles.memoDelete}
+              style={styles.keepDelete}
               onPress={() => {
-                deleteMemo(item.id);
+                deleteKeep(item.id);
               }}
             >
               <Feather name="x" color="#B0b0b0" size={16} />
@@ -75,31 +73,39 @@ export const MemoList: React.FC<Props> = ({memos}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F4F8',
+    backgroundColor: '#8b4513',
+    marginTop: 8,
   },
-  memoListItem: {
+  keepListItem: {
     backgroundColor: '#FFF',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 16,
+    paddingVertical: 8,
     paddingHorizontal: 19,
+    marginVertical: 4,
+    marginHorizontal: 16,
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderColor: 'rgba(0, 0, 0, 0.15)',
+    borderRadius: 20,
+    // 影の設定
+    shadowColor: '#000',
+    shadowOffset: {width: 2, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
+    elevation: 10,
   },
-  memoInner: {
+  keepInner: {
     flex: 1,
   },
-  memoListItemTitle: {
+  keepListItemTitle: {
     fontSize: 16,
     lineHeight: 32,
   },
-  memoListItemDate: {
+  keepListItemDate: {
     fontSize: 12,
     lineHeight: 16,
     color: '#848484',
   },
-  memoDelete: {
+  keepDelete: {
     padding: 8,
   },
 });

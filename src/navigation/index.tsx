@@ -10,17 +10,27 @@ import MemoListScreen from '../screens/memo/MemoListScreen';
 import MemoEditScreen, {MemoEditParams} from '../screens/memo/MemoEditScreen';
 import MemoCreateScreen from '../screens/memo/MemoCreateScreen';
 import MemoDetailScreen from '../screens/memo/MemoDetailScreen';
+import KeepListScreen from '../screens/keep/KeepListScreen';
 import {MemoDetailParams} from '../screens/memo/MemoDetailScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import LogInScreen from '../screens/LogInScreen';
 import {SettingScreen} from '../screens/SettingScreen';
 import {SimpleLineIcons} from '@expo/vector-icons';
-import {Fontisto} from '@expo/vector-icons';
+import {MaterialCommunityIcons} from '@expo/vector-icons';
+import KeepEditScreen from '../screens/keep/KeepEditScreen';
+import KeepCreateScreen from '../screens/keep/KeepCreateScreen';
+import KeepDetailScreen from '../screens/keep/KeepDetailScreen';
 
 export type RootStackParamList = {
   SignUp: undefined;
   LogIn: undefined;
-  MainTab: NavigatorScreenParams<MemoStackPramList>;
+  MainTab: NavigatorScreenParams<MainStackParamList>;
+};
+
+export type MainStackParamList = {
+  Memo: NavigatorScreenParams<MemoStackPramList>;
+  Keep: NavigatorScreenParams<KeepStackPramList>;
+  Set: NavigatorScreenParams<SettingStackParamList>;
 };
 
 export type MemoStackPramList = {
@@ -30,15 +40,24 @@ export type MemoStackPramList = {
   MemoDetail: MemoDetailParams;
 };
 
+export type KeepStackPramList = {
+  KeepList: undefined;
+  KeepEdit: MemoEditParams;
+  KeepCreate: undefined;
+  KeepDetail: MemoDetailParams;
+};
+
 export type SettingStackParamList = {
   Setting: undefined;
 };
 
 export type MainTabNavigation = StackNavigationProp<RootStackParamList>;
 export type MemoTabNavigation = StackNavigationProp<MemoStackPramList>;
+export type KeepTabNavigation = StackNavigationProp<KeepStackPramList>;
 
 const RootStack = createStackNavigator<RootStackParamList>();
 const MemoStack = createStackNavigator<MemoStackPramList>();
+const KeepStack = createStackNavigator<KeepStackPramList>();
 const SetStack = createStackNavigator<SettingStackParamList>();
 const Tab = createBottomTabNavigator();
 
@@ -61,6 +80,28 @@ const MemoStackNavigator = () => {
       <MemoStack.Screen name="MemoCreate" component={MemoCreateScreen} />
       <MemoStack.Screen name="MemoDetail" component={MemoDetailScreen} />
     </MemoStack.Navigator>
+  );
+};
+
+const KeepStackNavigator = () => {
+  return (
+    <KeepStack.Navigator
+      screenOptions={{
+        headerStyle: {backgroundColor: '#FFDDAA'},
+        headerTitleStyle: {color: '#000000'},
+        headerTitle: 'Keep',
+        headerTintColor: '#ffffff',
+        headerBackTitle: 'Back',
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
+      }}
+    >
+      <KeepStack.Screen name="KeepList" component={KeepListScreen} />
+      <KeepStack.Screen name="KeepEdit" component={KeepEditScreen} />
+      <KeepStack.Screen name="KeepCreate" component={KeepCreateScreen} />
+      <KeepStack.Screen name="KeepDetail" component={KeepDetailScreen} />
+    </KeepStack.Navigator>
   );
 };
 
@@ -109,15 +150,15 @@ const MainTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Mind"
-        component={SetStackNavigator}
+        name="Keep"
+        component={KeepStackNavigator}
         options={{
-          tabBarLabel: 'Mind',
+          tabBarLabel: 'Keep',
           tabBarIcon: ({focused}) =>
             focused ? (
-              <Fontisto name="heartbeat-alt" size={24} color="black" />
+              <MaterialCommunityIcons name="human-greeting" size={24} color="black" />
             ) : (
-              <Fontisto name="heartbeat-alt" size={24} color="black" />
+              <MaterialCommunityIcons name="human-greeting" size={24} color="black" />
             ),
         }}
       />
@@ -144,7 +185,7 @@ export const Navigation = () => {
       <RootStack.Navigator
         initialRouteName="LogIn"
         screenOptions={{
-          headerStyle: {backgroundColor: '#467FD3'},
+          headerStyle: {backgroundColor: '#FFDDAA'},
           headerTitleStyle: {color: '#ffffff'},
           headerTitle: 'Memo App',
           headerTintColor: '#ffffff',
