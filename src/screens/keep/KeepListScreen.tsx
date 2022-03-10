@@ -1,23 +1,23 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
-import {MemoList} from '../../components/MemoList';
+import {KeepList} from '../../components/keep/KeepList';
 import CircleButton from '../../components/CircleButton';
 import Loading from '../../components/Loading';
 import Button from '../../components/Button';
-import {MemoTabNavigation} from '../../navigation';
+import {KeepTabNavigation} from '../../navigation';
 import {useNavigation} from '@react-navigation/native';
 import LogOutButton from '../../components/LogOutButton';
 import firebase from 'firebase';
 
-export type UserMemo = {
+export type UserKeep = {
   id: string;
   bodyText?: string;
   updatedAt?: Date;
 };
 
-const MemoListScreen = () => {
-  const nav = useNavigation<MemoTabNavigation>();
-  const [memos, setMemos] = useState<UserMemo[]>([]);
+const KeepListScreen = () => {
+  const nav = useNavigation<KeepTabNavigation>();
+  const [keeps, setKeeps] = useState<UserKeep[]>([]);
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -34,19 +34,19 @@ const MemoListScreen = () => {
     };
     if (currentUser) {
       setLoading(true);
-      const ref = db.collection(`users/${currentUser.uid}/memos`).orderBy('updatedAt', 'desc');
+      const ref = db.collection(`users/${currentUser.uid}/keeps`).orderBy('updatedAt', 'desc');
       unsubscribe = ref.onSnapshot(
         (snapshot) => {
-          const userMemos: UserMemo[] = [];
+          const userKeeps: UserKeep[] = [];
           snapshot.forEach((doc) => {
             const data = doc.data();
-            userMemos.push({
+            userKeeps.push({
               id: doc.id,
               bodyText: data.bodyText,
               updatedAt: data.updatedAt.toDate(),
             });
           });
-          setMemos(userMemos);
+          setKeeps(userKeeps);
           setLoading(false);
         },
         () => {
@@ -58,7 +58,7 @@ const MemoListScreen = () => {
     return unsubscribe;
   }, []);
 
-  const NoMemoListView = useMemo(
+  const NoKeepListView = useMemo(
     () => (
       <View style={emptyStyles.container}>
         <Loading isLoading={isLoading} />
@@ -67,7 +67,7 @@ const MemoListScreen = () => {
           <Button
             label="作成する"
             onPress={() => {
-              nav.navigate('MemoCreate');
+              nav.navigate('KeepCreate');
             }}
             style={emptyStyles.button}
           />
@@ -79,12 +79,12 @@ const MemoListScreen = () => {
 
   return (
     <>
-      {memos.length === 0 ? (
-        NoMemoListView
+      {keeps.length === 0 ? (
+        NoKeepListView
       ) : (
         <View style={styles.container}>
-          <MemoList memos={memos} />
-          <CircleButton name="plus" onPress={() => nav.navigate('MemoCreate')} />
+          <KeepList keeps={keeps} />
+          <CircleButton name="plus" onPress={() => nav.navigate('KeepCreate')} />
         </View>
       )}
     </>
@@ -94,7 +94,7 @@ const MemoListScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F4F8',
+    backgroundColor: '#8b4513',
   },
 });
 
@@ -117,4 +117,4 @@ const emptyStyles = StyleSheet.create({
   },
 });
 
-export default MemoListScreen;
+export default KeepListScreen;
