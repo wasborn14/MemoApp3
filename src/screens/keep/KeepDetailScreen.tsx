@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet, ScrollView} from 'react-native';
 import CircleButton from '../../components/CircleButton';
 import {dateToString} from '../../utils';
-import {UserKeep} from './KeepListScreen';
+import {UserKeep} from './list/KeepListScreen';
 import {KeepStackPramList, KeepTabNavigation} from '../../navigation';
 import {StackScreenProps} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';

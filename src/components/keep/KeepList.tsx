@@ -3,7 +3,7 @@ import {View, StyleSheet, TouchableOpacity, Text, FlatList, Alert} from 'react-n
 import {Feather} from '@expo/vector-icons';
 import {KeepTabNavigation} from '../../navigation';
 import {useNavigation} from '@react-navigation/native';
-import {UserKeep} from '../../screens/keep/KeepListScreen';
+import {UserKeep} from '../../screens/keep/list/KeepListScreen';
 import firebase from 'firebase';
 
 type Props = {

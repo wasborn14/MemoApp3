@@ -1,13 +1,15 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
-import {KeepList} from '../../components/keep/KeepList';
-import CircleButton from '../../components/CircleButton';
-import Loading from '../../components/Loading';
-import Button from '../../components/Button';
-import {KeepTabNavigation} from '../../navigation';
+import {Text, View, StyleSheet, TextInput} from 'react-native';
+import {KeepList} from '../../../components/keep/KeepList';
+import Loading from '../../../components/Loading';
+import Button from '../../../components/Button';
+import {KeepTabNavigation} from '../../../navigation';
 import {useNavigation} from '@react-navigation/native';
-import LogOutButton from '../../components/LogOutButton';
+import LogOutButton from '../../../components/LogOutButton';
 import firebase from 'firebase';
+import {Feather} from '@expo/vector-icons';
+import {useKeepListDispatch, useKeepListState} from './index';
+import {setKeepList} from './reducer/reducer';
 
 export type UserKeep = {
   id: string;
@@ -17,7 +19,8 @@ export type UserKeep = {
 
 const KeepListScreen = () => {
   const nav = useNavigation<KeepTabNavigation>();
-  const [keeps, setKeeps] = useState<UserKeep[]>([]);
+  const keepList = useKeepListState((state) => state.keep_list);
+  const dispatch = useKeepListDispatch();
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -46,7 +49,7 @@ const KeepListScreen = () => {
               updatedAt: data.updatedAt.toDate(),
             });
           });
-          setKeeps(userKeeps);
+          dispatch(setKeepList(userKeeps));
           setLoading(false);
         },
         () => {
@@ -56,7 +59,7 @@ const KeepListScreen = () => {
       );
     }
     return unsubscribe;
-  }, []);
+  }, [dispatch]);
 
   const NoKeepListView = useMemo(
     () => (
@@ -77,14 +80,36 @@ const KeepListScreen = () => {
     [nav, isLoading],
   );
 
+  useEffect(() => {
+    console.log(keepList);
+  }, [keepList]);
+
   return (
     <>
-      {keeps.length === 0 ? (
+      {keepList.length === 0 ? (
         NoKeepListView
       ) : (
         <View style={styles.container}>
-          <KeepList keeps={keeps} />
-          <CircleButton name="plus" onPress={() => nav.navigate('KeepCreate')} />
+          <View
+            style={{
+              backgroundColor: '#fff',
+              marginHorizontal: 16,
+              marginVertical: 16,
+              paddingVertical: 8,
+              paddingHorizontal: 19,
+              borderRadius: 20,
+              shadowColor: '#000',
+              shadowOffset: {width: 2, height: 2},
+              shadowOpacity: 0.25,
+              shadowRadius: 2,
+              elevation: 10,
+              flexDirection: 'row',
+            }}
+          >
+            <Feather name="plus" size={24} color="black" />
+            <TextInput style={{marginLeft: 8, fontSize: 16}} />
+          </View>
+          <KeepList keeps={keepList} />
         </View>
       )}
     </>

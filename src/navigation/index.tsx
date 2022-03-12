@@ -10,13 +10,13 @@ import MemoListScreen from '../screens/memo/MemoListScreen';
 import MemoEditScreen, {MemoEditParams} from '../screens/memo/MemoEditScreen';
 import MemoCreateScreen from '../screens/memo/MemoCreateScreen';
 import MemoDetailScreen from '../screens/memo/MemoDetailScreen';
-import KeepListScreen from '../screens/keep/KeepListScreen';
 import {MemoDetailParams} from '../screens/memo/MemoDetailScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import LogInScreen from '../screens/LogInScreen';
 import {SettingScreen} from '../screens/SettingScreen';
 import {SimpleLineIcons} from '@expo/vector-icons';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
+import KeepListContainer from '../screens/keep/list';
 import KeepEditScreen from '../screens/keep/KeepEditScreen';
 import KeepCreateScreen from '../screens/keep/KeepCreateScreen';
 import KeepDetailScreen from '../screens/keep/KeepDetailScreen';
@@ -97,7 +97,7 @@ const KeepStackNavigator = () => {
         gestureDirection: 'horizontal',
       }}
     >
-      <KeepStack.Screen name="KeepList" component={KeepListScreen} />
+      <KeepStack.Screen name="KeepList" component={KeepListContainer} />
       <KeepStack.Screen name="KeepEdit" component={KeepEditScreen} />
       <KeepStack.Screen name="KeepCreate" component={KeepCreateScreen} />
       <KeepStack.Screen name="KeepDetail" component={KeepDetailScreen} />
