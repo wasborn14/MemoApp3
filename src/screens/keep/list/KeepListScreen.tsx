@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Text, View, StyleSheet, TextInput} from 'react-native';
+import {Text, View, StyleSheet} from 'react-native';
 import {KeepList} from '../../../components/keep/KeepList';
 import Loading from '../../../components/Loading';
 import Button from '../../../components/Button';
@@ -7,9 +7,9 @@ import {KeepTabNavigation} from '../../../navigation';
 import {useNavigation} from '@react-navigation/native';
 import LogOutButton from '../../../components/LogOutButton';
 import firebase from 'firebase';
-import {Feather} from '@expo/vector-icons';
 import {useKeepListDispatch, useKeepListState} from './index';
 import {setKeepList} from './reducer/reducer';
+import {KeepInput} from '../../../components/keep/KeepInput';
 
 export type UserKeep = {
   id: string;
@@ -68,10 +68,10 @@ const KeepListScreen = () => {
         <View style={emptyStyles.inner}>
           <Text style={emptyStyles.title}>最初のメモを作成しよう</Text>
           <Button
-            label="作成する"
-            onPress={() => {
-              nav.navigate('KeepCreate');
-            }}
+            label="作成する"            onPress={() => {
+            nav.navigate('KeepCreate');
+          }}
+
             style={emptyStyles.button}
           />
         </View>
@@ -80,35 +80,13 @@ const KeepListScreen = () => {
     [nav, isLoading],
   );
 
-  useEffect(() => {
-    console.log(keepList);
-  }, [keepList]);
-
   return (
     <>
       {keepList.length === 0 ? (
         NoKeepListView
       ) : (
         <View style={styles.container}>
-          <View
-            style={{
-              backgroundColor: '#fff',
-              marginHorizontal: 16,
-              marginVertical: 16,
-              paddingVertical: 8,
-              paddingHorizontal: 19,
-              borderRadius: 20,
-              shadowColor: '#000',
-              shadowOffset: {width: 2, height: 2},
-              shadowOpacity: 0.25,
-              shadowRadius: 2,
-              elevation: 10,
-              flexDirection: 'row',
-            }}
-          >
-            <Feather name="plus" size={24} color="black" />
-            <TextInput style={{marginLeft: 8, fontSize: 16}} />
-          </View>
+          <KeepInput />
           <KeepList keeps={keepList} />
         </View>
       )}

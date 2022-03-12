@@ -1,17 +1,16 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, FlatList, Alert} from 'react-native';
 import {Feather} from '@expo/vector-icons';
-import {KeepTabNavigation} from '../../navigation';
-import {useNavigation} from '@react-navigation/native';
 import {UserKeep} from '../../screens/keep/list/KeepListScreen';
 import firebase from 'firebase';
+import {KeepInput} from './KeepInput';
 
 type Props = {
   keeps: UserKeep[];
 };
 
 export const KeepList: React.FC<Props> = ({keeps}) => {
-  const nav = useNavigation<KeepTabNavigation>();
+  const [editKeepId, setEditKeepId] = useState('noMatch');
 
   const deleteKeep = useCallback((id) => {
     const {currentUser} = firebase.auth();
@@ -43,26 +42,42 @@ export const KeepList: React.FC<Props> = ({keeps}) => {
       <FlatList
         data={keeps}
         renderItem={({item}) => (
-          <TouchableOpacity
-            style={styles.keepListItem}
-            onPress={() => {
-              nav.navigate('KeepDetail', {id: item.id});
-            }}
-          >
-            <View style={styles.keepInner}>
-              <Text style={styles.keepListItemTitle} numberOfLines={1}>
-                {item.bodyText}
-              </Text>
-            </View>
-            <TouchableOpacity
-              style={styles.keepDelete}
-              onPress={() => {
-                deleteKeep(item.id);
-              }}
-            >
-              <Feather name="x" color="#B0b0b0" size={16} />
-            </TouchableOpacity>
-          </TouchableOpacity>
+          <>
+            {item.id === editKeepId ? (
+              <>
+                <KeepInput id={item.id} text={item.bodyText} onPress={() => setEditKeepId('noMatch')} />
+              </>
+            ) : (
+              <TouchableOpacity
+                style={styles.keepListItem}
+                // onPress={() => {
+                //   nav.navigate('KeepDetail', {id: item.id});
+                // }}
+              >
+                <View style={styles.keepInner}>
+                  <Text style={styles.keepListItemTitle} numberOfLines={1}>
+                    {item.bodyText}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.keepDelete}
+                  onPress={() => {
+                    setEditKeepId(item.id);
+                  }}
+                >
+                  <Feather name="edit" color="#B0b0b0" size={16} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.keepDelete}
+                  onPress={() => {
+                    deleteKeep(item.id);
+                  }}
+                >
+                  <Feather name="x" color="#B0b0b0" size={16} />
+                </TouchableOpacity>
+              </TouchableOpacity>
+            )}
+          </>
         )}
         keyExtractor={(item) => item.id}
       />

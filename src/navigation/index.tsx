@@ -163,10 +163,10 @@ const MainTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Setting"
+        name="Set"
         component={SetStackNavigator}
         options={{
-          tabBarLabel: 'Setting',
+          tabBarLabel: 'Set',
           tabBarIcon: ({focused}) =>
             focused ? (
               <SimpleLineIcons name="settings" size={24} color="black" />
