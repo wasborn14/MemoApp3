@@ -1,13 +1,15 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
-import {KeepList} from '../../components/keep/KeepList';
-import CircleButton from '../../components/CircleButton';
-import Loading from '../../components/Loading';
-import Button from '../../components/Button';
-import {KeepTabNavigation} from '../../navigation';
+import {KeepList} from '../../../components/keep/KeepList';
+import Loading from '../../../components/Loading';
+import Button from '../../../components/Button';
+import {KeepTabNavigation} from '../../../navigation';
 import {useNavigation} from '@react-navigation/native';
-import LogOutButton from '../../components/LogOutButton';
+import LogOutButton from '../../../components/LogOutButton';
 import firebase from 'firebase';
+import {useKeepListDispatch, useKeepListState} from './index';
+import {setKeepList} from './reducer/reducer';
+import {KeepInput} from '../../../components/keep/KeepInput';
 
 export type UserKeep = {
   id: string;
@@ -17,7 +19,8 @@ export type UserKeep = {
 
 const KeepListScreen = () => {
   const nav = useNavigation<KeepTabNavigation>();
-  const [keeps, setKeeps] = useState<UserKeep[]>([]);
+  const keepList = useKeepListState((state) => state.keep_list);
+  const dispatch = useKeepListDispatch();
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -46,7 +49,7 @@ const KeepListScreen = () => {
               updatedAt: data.updatedAt.toDate(),
             });
           });
-          setKeeps(userKeeps);
+          dispatch(setKeepList(userKeeps));
           setLoading(false);
         },
         () => {
@@ -56,7 +59,7 @@ const KeepListScreen = () => {
       );
     }
     return unsubscribe;
-  }, []);
+  }, [dispatch]);
 
   const NoKeepListView = useMemo(
     () => (
@@ -65,10 +68,10 @@ const KeepListScreen = () => {
         <View style={emptyStyles.inner}>
           <Text style={emptyStyles.title}>最初のメモを作成しよう</Text>
           <Button
-            label="作成する"
-            onPress={() => {
-              nav.navigate('KeepCreate');
-            }}
+            label="作成する"            onPress={() => {
+            nav.navigate('KeepCreate');
+          }}
+
             style={emptyStyles.button}
           />
         </View>
@@ -79,12 +82,12 @@ const KeepListScreen = () => {
 
   return (
     <>
-      {keeps.length === 0 ? (
+      {keepList.length === 0 ? (
         NoKeepListView
       ) : (
         <View style={styles.container}>
-          <KeepList keeps={keeps} />
-          <CircleButton name="plus" onPress={() => nav.navigate('KeepCreate')} />
+          <KeepInput />
+          <KeepList keeps={keepList} />
         </View>
       )}
     </>
