@@ -14,12 +14,14 @@ import {MemoDetailParams} from '../screens/memo/MemoDetailScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import LogInScreen from '../screens/LogInScreen';
 import {SettingScreen} from '../screens/SettingScreen';
-import {SimpleLineIcons} from '@expo/vector-icons';
-import {MaterialCommunityIcons} from '@expo/vector-icons';
 import KeepListContainer from '../screens/keep/list';
 import KeepEditScreen from '../screens/keep/KeepEditScreen';
 import KeepCreateScreen from '../screens/keep/KeepCreateScreen';
 import KeepDetailScreen from '../screens/keep/KeepDetailScreen';
+import {Foundation} from '@expo/vector-icons';
+import {SimpleLineIcons} from '@expo/vector-icons';
+import {MaterialCommunityIcons} from '@expo/vector-icons';
+import GraphTopContainer from '../screens/graph/top';
 
 export type RootStackParamList = {
   SignUp: undefined;
@@ -47,6 +49,10 @@ export type KeepStackPramList = {
   KeepDetail: MemoDetailParams;
 };
 
+export type GraphStackPramList = {
+  GraphTop: undefined;
+};
+
 export type SettingStackParamList = {
   Setting: undefined;
 };
@@ -54,10 +60,12 @@ export type SettingStackParamList = {
 export type MainTabNavigation = StackNavigationProp<RootStackParamList>;
 export type MemoTabNavigation = StackNavigationProp<MemoStackPramList>;
 export type KeepTabNavigation = StackNavigationProp<KeepStackPramList>;
+export type GraphTabNavigation = StackNavigationProp<GraphStackPramList>;
 
 const RootStack = createStackNavigator<RootStackParamList>();
 const MemoStack = createStackNavigator<MemoStackPramList>();
 const KeepStack = createStackNavigator<KeepStackPramList>();
+const GraphStack = createStackNavigator<GraphStackPramList>();
 const SetStack = createStackNavigator<SettingStackParamList>();
 const Tab = createBottomTabNavigator();
 
@@ -105,6 +113,25 @@ const KeepStackNavigator = () => {
   );
 };
 
+const GraphStackNavigator = () => {
+  return (
+    <GraphStack.Navigator
+      screenOptions={{
+        headerStyle: {backgroundColor: '#FFDDAA'},
+        headerTitleStyle: {color: '#000000'},
+        headerTitle: 'Graph',
+        headerTintColor: '#ffffff',
+        headerBackTitle: 'Back',
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
+      }}
+    >
+      <GraphStack.Screen name="GraphTop" component={GraphTopContainer} />
+    </GraphStack.Navigator>
+  );
+};
+
 const SetStackNavigator = () => {
   return (
     <SetStack.Navigator
@@ -137,19 +164,6 @@ const MainTabNavigator = () => {
       }}
     >
       <Tab.Screen
-        name="Memo"
-        component={MemoStackNavigator}
-        options={{
-          tabBarLabel: 'Memo',
-          tabBarIcon: ({focused}) =>
-            focused ? (
-              <SimpleLineIcons name="note" size={24} color="black" />
-            ) : (
-              <SimpleLineIcons name="note" size={24} color="black" />
-            ),
-        }}
-      />
-      <Tab.Screen
         name="Keep"
         component={KeepStackNavigator}
         options={{
@@ -159,6 +173,32 @@ const MainTabNavigator = () => {
               <MaterialCommunityIcons name="human-greeting" size={24} color="black" />
             ) : (
               <MaterialCommunityIcons name="human-greeting" size={24} color="black" />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="Graph"
+        component={GraphStackNavigator}
+        options={{
+          tabBarLabel: 'Graph',
+          tabBarIcon: ({focused}) =>
+            focused ? (
+              <Foundation name="graph-horizontal" size={24} color="black" />
+            ) : (
+              <Foundation name="graph-horizontal" size={24} color="black" />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="Memo"
+        component={MemoStackNavigator}
+        options={{
+          tabBarLabel: 'Memo',
+          tabBarIcon: ({focused}) =>
+            focused ? (
+              <SimpleLineIcons name="note" size={24} color="black" />
+            ) : (
+              <SimpleLineIcons name="note" size={24} color="black" />
             ),
         }}
       />

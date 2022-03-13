@@ -1,25 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {KeepList} from '../../../components/keep/KeepList';
 import {KeepTabNavigation} from '../../../navigation';
 import {useNavigation} from '@react-navigation/native';
 import LogOutButton from '../../../components/LogOutButton';
 import firebase from 'firebase';
-import {useKeepListDispatch, useKeepListState} from './index';
-import {setKeepList} from './reducer/reducer';
-import {KeepInput} from '../../../components/keep/KeepInput';
+import {setTimeList, Time} from './reducer/reducer';
 import Loading from '../../../components/Loading';
+import {useGraphTopDispatch, useGraphTopState} from './index';
+import {TimeList} from '../../../components/time/TimeList';
 
-export type UserKeep = {
-  id: string;
-  bodyText?: string;
-  updatedAt?: Date;
-};
-
-const KeepListScreen = () => {
+const GraphTopScreen = () => {
   const nav = useNavigation<KeepTabNavigation>();
-  const keepList = useKeepListState((state) => state.keep_list);
-  const dispatch = useKeepListDispatch();
+  const timeList = useGraphTopState((state) => state.time_list);
+  const dispatch = useGraphTopDispatch();
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -36,19 +29,26 @@ const KeepListScreen = () => {
     };
     if (currentUser) {
       setLoading(true);
-      const ref = db.collection(`users/${currentUser.uid}/keeps`).orderBy('updatedAt', 'desc');
+      const ref = db.collection(`users/${currentUser.uid}/times`).orderBy('updatedAt', 'asc');
       unsubscribe = ref.onSnapshot(
         (snapshot) => {
-          const userKeeps: UserKeep[] = [];
+          const userTimes: Time[] = [];
           snapshot.forEach((doc) => {
             const data = doc.data();
-            userKeeps.push({
-              id: doc.id,
-              bodyText: data.bodyText,
+            userTimes.push({
+              id: data.id,
+              keep_id: data.keep_id,
+              keep_bodyText: data.keep_bodyText,
+              hours: data.hours,
+              minutes: data.minutes,
+              seconds: data.seconds,
+              year: data.year,
+              month: data.month,
+              day: data.day,
               updatedAt: data.updatedAt.toDate(),
             });
           });
-          dispatch(setKeepList(userKeeps));
+          dispatch(setTimeList(userTimes));
           setLoading(false);
         },
         () => {
@@ -63,8 +63,7 @@ const KeepListScreen = () => {
   return (
     <View style={styles.container}>
       <Loading isLoading={isLoading} />
-      <KeepInput />
-      <KeepList keeps={keepList} />
+      <TimeList timeList={timeList} />
     </View>
   );
 };
@@ -76,4 +75,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default KeepListScreen;
+export default GraphTopScreen;
