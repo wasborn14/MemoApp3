@@ -57,9 +57,9 @@ export const KeepInput: React.FC<Props> = ({id, text, onPress}) => {
     }
   }, [id, bodyText, onPress]);
 
-  useEffect(()=>{
+  useEffect(() => {
     text && setBodyText(text);
-  },[text]);
+  }, [text]);
 
   return (
     <View style={styles.container}>
