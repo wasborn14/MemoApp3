@@ -1,9 +1,17 @@
 export interface GraphTopState {
   time_list: Time[];
+  time?: Time;
+}
+
+export interface KeepTime {
+  keep_id: string;
+  keep_bodyText: string;
+  totalSeconds: number;
 }
 
 export type Time = {
   id: string;
+  keeps?: KeepTime[];
   keep_id: string;
   keep_bodyText: string;
   hours: number;

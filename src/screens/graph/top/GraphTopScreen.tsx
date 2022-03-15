@@ -6,12 +6,11 @@ import LogOutButton from '../../../components/LogOutButton';
 import firebase from 'firebase';
 import {setTimeList, Time} from './reducer/reducer';
 import Loading from '../../../components/Loading';
-import {useGraphTopDispatch, useGraphTopState} from './index';
-import {TimeList} from '../../../components/time/TimeList';
+import {useGraphTopDispatch} from './index';
 
 const GraphTopScreen = () => {
   const nav = useNavigation<KeepTabNavigation>();
-  const timeList = useGraphTopState((state) => state.time_list);
+  // const timeList = useGraphTopState((state) => state.time_list);
   const dispatch = useGraphTopDispatch();
   const [isLoading, setLoading] = useState(false);
 
@@ -63,7 +62,7 @@ const GraphTopScreen = () => {
   return (
     <View style={styles.container}>
       <Loading isLoading={isLoading} />
-      <TimeList timeList={timeList} />
+      {/*<TimeList timeList={timeList} />*/}
     </View>
   );
 };
