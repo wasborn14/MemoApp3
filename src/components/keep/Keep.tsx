@@ -6,6 +6,8 @@ import firebase from 'firebase';
 import {KeepInput} from './KeepInput';
 import {useStopwatch} from 'react-timer-hook';
 import {translateErrors} from '../../utils';
+import {useKeepListDispatch, useKeepListState} from '../../screens/keep/list';
+import {KeepTime, setTimeForKeep} from '../../screens/keep/list/reducer/reducer';
 
 type Props = {
   keep: UserKeep;
@@ -16,6 +18,8 @@ export const Keep: React.FC<Props> = ({keep}) => {
   const {seconds, minutes, hours, isRunning, start, pause} = useStopwatch({
     autoStart: false,
   });
+  const time = useKeepListState((state) => state.time);
+  const dispatch = useKeepListDispatch();
 
   const deleteKeep = useCallback((id) => {
     const {currentUser} = firebase.auth();
@@ -42,15 +46,83 @@ export const Keep: React.FC<Props> = ({keep}) => {
     }
   }, []);
 
+  const sameDate = (firstDate: Date, secondDate: Date): boolean => {
+    if (firstDate.getFullYear() == secondDate.getFullYear()) {
+      if (firstDate.getMonth() == secondDate.getMonth()) {
+        if (firstDate.getDate() == secondDate.getDate()) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  const convertSeconds = (hours: number, minutes: number, seconds: number) => {
+    return hours * 60 * 60 + minutes * 60 + seconds;
+  };
+
+  const createNewKeeps = useCallback(
+    (keeps: KeepTime[], totalSeconds: number) => {
+      const different = keeps.filter(function (item) {
+        return item.keep_id !== keep.id;
+      });
+      const new_keep = {
+        keep_id: keep.id,
+        keep_bodyText: keep.bodyText,
+        totalSeconds: totalSeconds,
+      };
+      return [...different, new_keep];
+    },
+    [keep],
+  );
+
   const handleTimePress = useCallback(() => {
     if (isRunning) {
       const {currentUser} = firebase.auth();
+      if (!currentUser) {
+        return;
+      }
       const db = firebase.firestore();
-      if (currentUser) {
+      const now = new Date();
+      const totalSeconds = convertSeconds(hours, minutes, seconds);
+      if (time && sameDate(time.updatedAt, now)) {
+        if (time.keeps) {
+          const new_keeps = createNewKeeps(time.keeps, totalSeconds);
+          const ref = db.collection(`users/${currentUser.uid}/times`).doc(time.id);
+          ref
+            .set(
+              {
+                id: time.id,
+                keeps: new_keeps,
+                keep_id: keep.id,
+                keep_bodyText: keep.bodyText,
+                hours: hours,
+                minutes: minutes,
+                seconds: seconds,
+                year: now.getFullYear(),
+                month: now.getMonth(),
+                day: now.getDay(),
+                updatedAt: now,
+              },
+              {merge: true},
+            )
+            .then(() => {
+              // この時 keeplistに対して今の時間を設定する必要あり
+              dispatch(setTimeForKeep({keep_id: keep.id, updatedAt: now, totalSeconds}));
+              pause();
+            })
+            .catch((error) => {
+              console.log(error);
+              const errorMsg = translateErrors(error.code);
+              Alert.alert(errorMsg.title, errorMsg.description);
+            });
+        }
+      } else {
         const now = new Date();
         const ref = db.collection(`users/${currentUser.uid}/times/`);
         ref
           .add({
+            keeps: [{keep_id: keep.id, keep_bodyText: keep.bodyText, totalSeconds: totalSeconds}],
             keep_id: keep.id,
             keep_bodyText: keep.bodyText,
             hours: hours,
@@ -73,7 +145,19 @@ export const Keep: React.FC<Props> = ({keep}) => {
     } else {
       start();
     }
-  }, [isRunning, keep.bodyText, keep.id, start, pause, hours, minutes, seconds]);
+  }, [
+    dispatch,
+    isRunning,
+    keep.bodyText,
+    keep.id,
+    start,
+    pause,
+    hours,
+    minutes,
+    seconds,
+    createNewKeeps,
+    time,
+  ]);
 
   return (
     <>
