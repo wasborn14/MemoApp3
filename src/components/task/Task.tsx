@@ -3,11 +3,11 @@ import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
 import {Feather} from '@expo/vector-icons';
 import firebase from 'firebase';
 import {TaskInput} from './TaskInput';
-import {useStopwatch} from 'react-timer-hook';
 import {translateErrors} from '../../utils';
-import {useTaskListDispatch, useTaskListState} from '../../screens/task/list';
-import {TaskTime, setTimeForTask, Time, TaskDetail} from '../../screens/task/list/reducer/reducer';
-import {convertSeconds, sameDate} from '../../utils/time/time';
+import {useTaskListState} from '../../screens/task/list';
+import {TaskTime, TaskDetail, TimeDetail} from '../../screens/task/list/reducer/reducer';
+import {sameDate} from '../../utils/time/time';
+import {useTimer} from 'use-timer';
 
 type Props = {
   task: TaskDetail;
@@ -15,11 +15,10 @@ type Props = {
 
 export const Task: React.FC<Props> = ({task}) => {
   const [editTaskId, setEditTaskId] = useState('noMatch');
-  const {seconds, minutes, hours, isRunning, start, pause} = useStopwatch({
-    autoStart: false,
+  const {time, start, pause, status} = useTimer({
+    initialTime: task.todayTotalSeconds,
   });
-  const time = useTaskListState((state) => state.time);
-  const dispatch = useTaskListDispatch();
+  const timeDetail = useTaskListState((state) => state.time_detail);
 
   const deleteTask = useCallback((id) => {
     const {currentUser} = firebase.auth();
@@ -61,16 +60,16 @@ export const Task: React.FC<Props> = ({task}) => {
     [task],
   );
 
-  const updateTimes = useCallback(
-    (now: Date, time: Time, totalSeconds: number, currentUser) => {
-      if (!time.tasks) return;
+  const updateTimeDetail = useCallback(
+    (now: Date, timeDetail: TimeDetail, time: number, currentUser) => {
+      if (!timeDetail.tasks) return;
       const db = firebase.firestore();
-      const new_tasks = createNewTasks(time.tasks, totalSeconds);
-      const ref = db.collection(`users/${currentUser.uid}/times`).doc(time.id);
+      const new_tasks = createNewTasks(timeDetail.tasks, time);
+      const ref = db.collection(`users/${currentUser.uid}/times`).doc(timeDetail.id);
       ref
         .set(
           {
-            id: time.id,
+            id: timeDetail.id,
             tasks: new_tasks,
             task_id: task.id,
             task_bodyText: task.bodyText,
@@ -79,9 +78,23 @@ export const Task: React.FC<Props> = ({task}) => {
           {merge: true},
         )
         .then(() => {
-          // この時 tasklistに対して今の時間を設定する必要あり
-          dispatch(setTimeForTask({task_id: task.id, updatedAt: now, totalSeconds}));
-          pause();
+          const taskRef = db.collection(`users/${currentUser.uid}/tasks`).doc(task.id);
+          taskRef
+            .set(
+              {
+                timeUpdatedAt: now,
+                todayTotalSeconds: time,
+              },
+              {merge: true},
+            )
+            .then(() => {
+              pause();
+            })
+            .catch((error) => {
+              console.log(error);
+              const errorMsg = translateErrors(error.code);
+              Alert.alert(errorMsg.title, errorMsg.description);
+            });
         })
         .catch((error) => {
           console.log(error);
@@ -89,21 +102,38 @@ export const Task: React.FC<Props> = ({task}) => {
           Alert.alert(errorMsg.title, errorMsg.description);
         });
     },
-    [dispatch, createNewTasks, pause, task],
+    [createNewTasks, pause, task],
   );
 
-  const createTimes = useCallback(
-    (now: Date, totalSeconds: number, currentUser) => {
+  const createTimeDetail = useCallback(
+    (now: Date, time: number, currentUser) => {
       const db = firebase.firestore();
       const ref = db.collection(`users/${currentUser.uid}/times/`);
       ref
         .add({
-          tasks: [{task_id: task.id, task_bodyText: task.bodyText, totalSeconds: totalSeconds}],
+          tasks: [{task_id: task.id, task_bodyText: task.bodyText, totalSeconds: time}],
           task_id: task.id,
           task_bodyText: task.bodyText,
           updatedAt: now,
         })
         .then(() => {
+          const taskRef = db.collection(`users/${currentUser.uid}/tasks`).doc(task.id);
+          taskRef
+            .set(
+              {
+                timeUpdatedAt: now,
+                todayTotalSeconds: time,
+              },
+              {merge: true},
+            )
+            .then(() => {
+              pause();
+            })
+            .catch((error) => {
+              console.log(error);
+              const errorMsg = translateErrors(error.code);
+              Alert.alert(errorMsg.title, errorMsg.description);
+            });
           pause();
         })
         .catch((error) => {
@@ -116,24 +146,23 @@ export const Task: React.FC<Props> = ({task}) => {
   );
 
   const handleTimePress = useCallback(() => {
-    if (isRunning) {
+    if (status === 'RUNNING') {
       const {currentUser} = firebase.auth();
       if (!currentUser) {
         return;
       }
       const now = new Date();
-      const totalSeconds = convertSeconds(hours, minutes, seconds);
-      if (time && sameDate(time.updatedAt, now)) {
-        if (time.tasks) {
-          updateTimes(now, time, totalSeconds, currentUser);
+      if (timeDetail && sameDate(timeDetail.updatedAt, now)) {
+        if (timeDetail.tasks) {
+          updateTimeDetail(now, timeDetail, time, currentUser);
         }
       } else {
-        createTimes(now, totalSeconds, currentUser);
+        createTimeDetail(now, time, currentUser);
       }
     } else {
       start();
     }
-  }, [createTimes, updateTimes, hours, minutes, seconds, time, isRunning, start]);
+  }, [timeDetail, createTimeDetail, updateTimeDetail, time, status, start]);
 
   return (
     <>
@@ -149,9 +178,7 @@ export const Task: React.FC<Props> = ({task}) => {
             </Text>
           </View>
           <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 16}}>{hours > 0 && hours + ':'}</Text>
-            <Text style={{fontSize: 16}}>{minutes > 0 && minutes + ':'}</Text>
-            <Text style={{fontSize: 16}}>{seconds}</Text>
+            <Text style={{fontSize: 16}}>{time}</Text>
           </View>
           <TouchableOpacity
             style={styles.taskDelete}

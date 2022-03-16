@@ -17,7 +17,7 @@ const TaskListScreen = () => {
   const taskList = useTaskListState((state) => state.task_list);
   const dispatch = useTaskListDispatch();
   const [isLoading, setLoading] = useState(false);
-  const time = useTaskListState((state) => state.time);
+  const timeDetail = useTaskListState((state) => state.time_detail);
 
   useEffect(() => {
     nav.setOptions({
@@ -60,8 +60,9 @@ const TaskListScreen = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log(taskList);
-  }, [taskList]);
+    console.log('taskList', taskList);
+    console.log('time', timeDetail);
+  }, [timeDetail, taskList]);
 
   useEffect(() => {
     const db = firebase.firestore();
@@ -100,10 +101,6 @@ const TaskListScreen = () => {
     }
     return unsubscribe;
   }, [dispatch]);
-
-  useEffect(() => {
-    console.log(time);
-  }, [time]);
 
   return (
     <View style={styles.container}>
