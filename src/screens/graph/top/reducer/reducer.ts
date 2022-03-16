@@ -3,17 +3,17 @@ export interface GraphTopState {
   time?: Time;
 }
 
-export interface KeepTime {
-  keep_id: string;
-  keep_bodyText: string;
+export interface TaskTime {
+  task_id: string;
+  task_bodyText: string;
   totalSeconds: number;
 }
 
 export type Time = {
   id: string;
-  keeps?: KeepTime[];
-  keep_id: string;
-  keep_bodyText: string;
+  tasks?: TaskTime[];
+  task_id: string;
+  task_bodyText: string;
   hours: number;
   minutes: number;
   seconds: number;

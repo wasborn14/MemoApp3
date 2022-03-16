@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {KeepTabNavigation} from '../../../navigation';
+import {TaskTabNavigation} from '../../../navigation';
 import {useNavigation} from '@react-navigation/native';
 import LogOutButton from '../../../components/LogOutButton';
 import firebase from 'firebase';
@@ -9,7 +9,7 @@ import Loading from '../../../components/Loading';
 import {useGraphTopDispatch} from './index';
 
 const GraphTopScreen = () => {
-  const nav = useNavigation<KeepTabNavigation>();
+  const nav = useNavigation<TaskTabNavigation>();
   // const timeList = useGraphTopState((state) => state.time_list);
   const dispatch = useGraphTopDispatch();
   const [isLoading, setLoading] = useState(false);
@@ -36,8 +36,8 @@ const GraphTopScreen = () => {
             const data = doc.data();
             userTimes.push({
               id: data.id,
-              keep_id: data.keep_id,
-              keep_bodyText: data.keep_bodyText,
+              task_id: data.task_id,
+              task_bodyText: data.task_bodyText,
               hours: data.hours,
               minutes: data.minutes,
               seconds: data.seconds,

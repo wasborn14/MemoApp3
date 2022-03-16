@@ -22,9 +22,9 @@ const LogInScreen = () => {
             {
               name: 'MainTab',
               params: {
-                screen: 'Keep',
+                screen: 'Task',
                 param: {
-                  screen: 'KeepList',
+                  screen: 'TaskList',
                 },
               },
             },
@@ -48,7 +48,7 @@ const LogInScreen = () => {
             {
               name: 'MainTab',
               params: {
-                screen: 'KeepList',
+                screen: 'TaskList',
               },
             },
           ],

@@ -1,18 +1,18 @@
 import React from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
-import {UserKeep} from '../../screens/keep/list/KeepListScreen';
-import {Keep} from './Keep';
+import {UserTask} from '../../screens/task/list/TaskListScreen';
+import {Task} from './Task';
 
 type Props = {
-  keeps: UserKeep[];
+  tasks: UserTask[];
 };
 
-export const KeepList: React.FC<Props> = ({keeps}) => {
+export const TaskList: React.FC<Props> = ({tasks}) => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={keeps}
-        renderItem={({item}) => <Keep keep={item} />}
+        data={tasks}
+        renderItem={({item}) => <Task task={item} />}
         keyExtractor={(item) => item.id}
       />
     </View>

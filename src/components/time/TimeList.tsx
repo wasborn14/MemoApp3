@@ -13,10 +13,10 @@ export const TimeList: React.FC<Props> = ({timeList}) => {
         data={timeList}
         renderItem={({item}) => (
           <>
-            <TouchableOpacity style={styles.keepListItem}>
-              <View style={styles.keepInner}>
-                <Text style={styles.keepListItemTitle} numberOfLines={1}>
-                  {item.keep_bodyText}
+            <TouchableOpacity style={styles.taskListItem}>
+              <View style={styles.taskInner}>
+                <Text style={styles.taskListItemTitle} numberOfLines={1}>
+                  {item.task_bodyText}
                 </Text>
                 <View style={{flexDirection: 'row'}}>
                   <Text style={{fontSize: 16}}>作業時間：</Text>
@@ -31,8 +31,8 @@ export const TimeList: React.FC<Props> = ({timeList}) => {
         keyExtractor={(item) => item.id}
       />
       {/*// state: data.state,*/}
-      {/*// keep_id: data.keep_id,*/}
-      {/*// keep_bodyText: data.keep_bodyText,*/}
+      {/*// task_id: data.task_id,*/}
+      {/*// task_bodyText: data.task_bodyText,*/}
       {/*// year: data.year,*/}
       {/*// month: data.month,*/}
       {/*// day: data.day,*/}
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#8b4513',
     marginTop: 8,
   },
-  keepListItem: {
+  taskListItem: {
     backgroundColor: '#FFF',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -64,20 +64,20 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 10,
   },
-  keepInner: {
+  taskInner: {
     flex: 1,
     flexDirection: 'row',
   },
-  keepListItemTitle: {
+  taskListItemTitle: {
     fontSize: 16,
     lineHeight: 32,
   },
-  keepListItemDate: {
+  taskListItemDate: {
     fontSize: 12,
     lineHeight: 16,
     color: '#848484',
   },
-  keepDelete: {
+  taskDelete: {
     padding: 8,
   },
 });
