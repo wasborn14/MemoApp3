@@ -10,14 +10,14 @@ type Props = {
   onPress?: () => void;
 };
 
-export const KeepInput: React.FC<Props> = ({id, text, onPress}) => {
+export const TaskInput: React.FC<Props> = ({id, text, onPress}) => {
   const [bodyText, setBodyText] = useState('');
 
   const createPress = useCallback(() => {
     const {currentUser} = firebase.auth();
     const db = firebase.firestore();
     if (currentUser) {
-      const ref = db.collection(`users/${currentUser.uid}/keeps`);
+      const ref = db.collection(`users/${currentUser.uid}/tasks`);
       ref
         .add({
           bodyText,
@@ -38,7 +38,7 @@ export const KeepInput: React.FC<Props> = ({id, text, onPress}) => {
     const {currentUser} = firebase.auth();
     if (currentUser) {
       const db = firebase.firestore();
-      const ref = db.collection(`users/${currentUser.uid}/keeps`).doc(id);
+      const ref = db.collection(`users/${currentUser.uid}/tasks`).doc(id);
       ref
         .set(
           {

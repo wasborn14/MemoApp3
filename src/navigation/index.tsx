@@ -14,10 +14,7 @@ import {MemoDetailParams} from '../screens/memo/MemoDetailScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import LogInScreen from '../screens/LogInScreen';
 import {SettingScreen} from '../screens/SettingScreen';
-import KeepListContainer from '../screens/keep/list';
-import KeepEditScreen from '../screens/keep/KeepEditScreen';
-import KeepCreateScreen from '../screens/keep/KeepCreateScreen';
-import KeepDetailScreen from '../screens/keep/KeepDetailScreen';
+import TaskListContainer from '../screens/task/list';
 import {Foundation} from '@expo/vector-icons';
 import {SimpleLineIcons} from '@expo/vector-icons';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
@@ -31,7 +28,7 @@ export type RootStackParamList = {
 
 export type MainStackParamList = {
   Memo: NavigatorScreenParams<MemoStackPramList>;
-  Keep: NavigatorScreenParams<KeepStackPramList>;
+  Task: NavigatorScreenParams<TaskStackPramList>;
   Set: NavigatorScreenParams<SettingStackParamList>;
 };
 
@@ -42,11 +39,8 @@ export type MemoStackPramList = {
   MemoDetail: MemoDetailParams;
 };
 
-export type KeepStackPramList = {
-  KeepList: undefined;
-  KeepEdit: MemoEditParams;
-  KeepCreate: undefined;
-  KeepDetail: MemoDetailParams;
+export type TaskStackPramList = {
+  TaskList: undefined;
 };
 
 export type GraphStackPramList = {
@@ -59,12 +53,12 @@ export type SettingStackParamList = {
 
 export type MainTabNavigation = StackNavigationProp<RootStackParamList>;
 export type MemoTabNavigation = StackNavigationProp<MemoStackPramList>;
-export type KeepTabNavigation = StackNavigationProp<KeepStackPramList>;
+export type TaskTabNavigation = StackNavigationProp<TaskStackPramList>;
 export type GraphTabNavigation = StackNavigationProp<GraphStackPramList>;
 
 const RootStack = createStackNavigator<RootStackParamList>();
 const MemoStack = createStackNavigator<MemoStackPramList>();
-const KeepStack = createStackNavigator<KeepStackPramList>();
+const TaskStack = createStackNavigator<TaskStackPramList>();
 const GraphStack = createStackNavigator<GraphStackPramList>();
 const SetStack = createStackNavigator<SettingStackParamList>();
 const Tab = createBottomTabNavigator();
@@ -91,13 +85,13 @@ const MemoStackNavigator = () => {
   );
 };
 
-const KeepStackNavigator = () => {
+const TaskStackNavigator = () => {
   return (
-    <KeepStack.Navigator
+    <TaskStack.Navigator
       screenOptions={{
         headerStyle: {backgroundColor: '#FFDDAA'},
         headerTitleStyle: {color: '#000000'},
-        headerTitle: 'Keep',
+        headerTitle: 'Task',
         headerTintColor: '#ffffff',
         headerBackTitle: 'Back',
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
@@ -105,11 +99,8 @@ const KeepStackNavigator = () => {
         gestureDirection: 'horizontal',
       }}
     >
-      <KeepStack.Screen name="KeepList" component={KeepListContainer} />
-      <KeepStack.Screen name="KeepEdit" component={KeepEditScreen} />
-      <KeepStack.Screen name="KeepCreate" component={KeepCreateScreen} />
-      <KeepStack.Screen name="KeepDetail" component={KeepDetailScreen} />
-    </KeepStack.Navigator>
+      <TaskStack.Screen name="TaskList" component={TaskListContainer} />
+    </TaskStack.Navigator>
   );
 };
 
@@ -164,10 +155,10 @@ const MainTabNavigator = () => {
       }}
     >
       <Tab.Screen
-        name="Keep"
-        component={KeepStackNavigator}
+        name="Task"
+        component={TaskStackNavigator}
         options={{
-          tabBarLabel: 'Keep',
+          tabBarLabel: 'Task',
           tabBarIcon: ({focused}) =>
             focused ? (
               <MaterialCommunityIcons name="human-greeting" size={24} color="black" />

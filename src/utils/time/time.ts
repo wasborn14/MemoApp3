@@ -13,3 +13,18 @@ export const endTodayDate = () => {
   now.setSeconds(59);
   return now;
 };
+
+export const sameDate = (firstDate: Date, secondDate: Date): boolean => {
+  if (firstDate.getFullYear() == secondDate.getFullYear()) {
+    if (firstDate.getMonth() == secondDate.getMonth()) {
+      if (firstDate.getDate() == secondDate.getDate()) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
+export const convertSeconds = (hours: number, minutes: number, seconds: number) => {
+  return hours * 60 * 60 + minutes * 60 + seconds;
+};
