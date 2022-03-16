@@ -22,6 +22,8 @@ export const TaskInput: React.FC<Props> = ({id, text, onPress}) => {
         .add({
           bodyText,
           updatedAt: new Date(),
+          timeUpdatedAt: new Date(),
+          todayTotalSeconds: 0,
         })
         .then(() => {
           setBodyText('');

@@ -6,17 +6,11 @@ import {useNavigation} from '@react-navigation/native';
 import LogOutButton from '../../../components/LogOutButton';
 import firebase from 'firebase';
 import {useTaskListDispatch, useTaskListState} from './index';
-import {setTaskList, setTime} from './reducer/reducer';
+import {setTaskList, setTime, TaskDetail} from './reducer/reducer';
 import {TaskInput} from '../../../components/task/TaskInput';
 import Loading from '../../../components/Loading';
 import firestore = firebase.firestore;
 import {endTodayDate, startTodayDate} from '../../../utils/time/time';
-
-export type UserTask = {
-  id: string;
-  bodyText?: string;
-  updatedAt?: Date;
-};
 
 const TaskListScreen = () => {
   const nav = useNavigation<TaskTabNavigation>();
@@ -42,13 +36,15 @@ const TaskListScreen = () => {
       const ref = db.collection(`users/${currentUser.uid}/tasks`).orderBy('updatedAt', 'desc');
       unsubscribe = ref.onSnapshot(
         (snapshot) => {
-          const userTasks: UserTask[] = [];
+          const userTasks: TaskDetail[] = [];
           snapshot.forEach((doc) => {
             const data = doc.data();
             userTasks.push({
               id: doc.id,
               bodyText: data.bodyText,
               updatedAt: data.updatedAt.toDate(),
+              timeUpdatedAt: data.timeUpdatedAt.toDate(),
+              todayTotalSeconds: data.todayTotalSeconds,
             });
           });
           dispatch(setTaskList(userTasks));

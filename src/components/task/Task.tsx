@@ -1,17 +1,16 @@
 import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
 import {Feather} from '@expo/vector-icons';
-import {UserTask} from '../../screens/task/list/TaskListScreen';
 import firebase from 'firebase';
 import {TaskInput} from './TaskInput';
 import {useStopwatch} from 'react-timer-hook';
 import {translateErrors} from '../../utils';
 import {useTaskListDispatch, useTaskListState} from '../../screens/task/list';
-import {TaskTime, setTimeForTask, Time} from '../../screens/task/list/reducer/reducer';
+import {TaskTime, setTimeForTask, Time, TaskDetail} from '../../screens/task/list/reducer/reducer';
 import {convertSeconds, sameDate} from '../../utils/time/time';
 
 type Props = {
-  task: UserTask;
+  task: TaskDetail;
 };
 
 export const Task: React.FC<Props> = ({task}) => {
@@ -27,7 +26,6 @@ export const Task: React.FC<Props> = ({task}) => {
     if (currentUser) {
       const db = firebase.firestore();
       const ref = db.collection(`users/${currentUser.uid}/tasks`).doc(id);
-      console.log('id', id);
       Alert.alert('タスクを削除します。', 'よろしいですか？', [
         {
           text: 'キャンセル',

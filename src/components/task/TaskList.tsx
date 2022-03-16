@@ -1,10 +1,10 @@
 import React from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
-import {UserTask} from '../../screens/task/list/TaskListScreen';
 import {Task} from './Task';
+import {TaskDetail} from "../../screens/task/list/reducer/reducer";
 
 type Props = {
-  tasks: UserTask[];
+  tasks: TaskDetail[];
 };
 
 export const TaskList: React.FC<Props> = ({tasks}) => {

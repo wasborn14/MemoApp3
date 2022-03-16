@@ -1,5 +1,7 @@
+import {startTodayDate} from '../../../../utils/time/time';
+
 export interface TaskListState {
-  task_list: Task[];
+  task_list: TaskDetail[];
   time?: Time;
 }
 
@@ -17,15 +19,15 @@ export type Time = {
   updatedAt: Date;
 };
 
-export type Task = {
+export type TaskDetail = {
   id: string;
-  bodyText?: string;
-  updatedAt?: Date;
-  timeUpdatedAt?: Date;
-  todayTotalSeconds?: number;
+  bodyText: string;
+  updatedAt: Date;
+  timeUpdatedAt: Date;
+  todayTotalSeconds: number;
 };
 
-export const setTaskList = (payload: Task[] | undefined) => ({
+export const setTaskList = (payload: TaskDetail[] | undefined) => ({
   type: 'setTaskList' as const,
   payload,
 });
@@ -57,7 +59,13 @@ export const taskListReducer = (state: TaskListState, action: Action) => {
   switch (action.type) {
     case 'setTaskList':
       if (action.payload) {
-        state.task_list = action.payload;
+        const todayStartAt = startTodayDate();
+        state.task_list = action.payload.map((task) => {
+          if (task.timeUpdatedAt <= todayStartAt) {
+            return {...task, todayTotalSeconds: 0};
+          }
+          return task;
+        });
       }
       break;
     case 'setTime':
