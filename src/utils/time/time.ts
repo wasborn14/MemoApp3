@@ -25,6 +25,6 @@ export const sameDate = (firstDate: Date, secondDate: Date): boolean => {
   return false;
 };
 
-export const convertSeconds = (hours: number, minutes: number, seconds: number) => {
-  return hours * 60 * 60 + minutes * 60 + seconds;
-};
+// export const convertSeconds = (hours: number, minutes: number, seconds: number) => {
+//   return hours * 60 * 60 + minutes * 60 + seconds;
+// };

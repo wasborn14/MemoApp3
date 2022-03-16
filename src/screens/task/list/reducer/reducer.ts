@@ -2,7 +2,7 @@ import {startTodayDate} from '../../../../utils/time/time';
 
 export interface TaskListState {
   task_list: TaskDetail[];
-  time?: Time;
+  time_detail?: TimeDetail;
 }
 
 export interface TaskTime {
@@ -11,7 +11,7 @@ export interface TaskTime {
   totalSeconds: number;
 }
 
-export type Time = {
+export type TimeDetail = {
   id: string;
   tasks?: TaskTime[];
   task_id: string;
@@ -32,24 +32,12 @@ export const setTaskList = (payload: TaskDetail[] | undefined) => ({
   payload,
 });
 
-export const setTime = (payload: Time | undefined) => ({
+export const setTime = (payload: TimeDetail | undefined) => ({
   type: 'setTime' as const,
   payload,
 });
 
-export const setTimeForTask = (payload: {
-  task_id: string;
-  updatedAt: Date;
-  totalSeconds: number;
-}) => ({
-  type: 'setTimeForTask' as const,
-  payload,
-});
-
-export type Action =
-  | ReturnType<typeof setTaskList>
-  | ReturnType<typeof setTime>
-  | ReturnType<typeof setTimeForTask>;
+export type Action = ReturnType<typeof setTaskList> | ReturnType<typeof setTime>;
 
 export const initialState: TaskListState = {
   task_list: [],
@@ -70,17 +58,8 @@ export const taskListReducer = (state: TaskListState, action: Action) => {
       break;
     case 'setTime':
       if (action.payload) {
-        state.time = action.payload;
+        state.time_detail = action.payload;
       }
       break;
-    case 'setTimeForTask':
-      state.task_list = state.task_list.map((task) => {
-        if (task.id == action.payload.task_id) {
-          task.timeUpdatedAt = action.payload.updatedAt;
-          task.todayTotalSeconds = action.payload.totalSeconds;
-          return task;
-        }
-        return task;
-      });
   }
 };
