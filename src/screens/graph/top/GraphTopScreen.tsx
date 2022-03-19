@@ -4,13 +4,15 @@ import {TaskTabNavigation} from '../../../navigation';
 import {useNavigation} from '@react-navigation/native';
 import LogOutButton from '../../../components/LogOutButton';
 import firebase from 'firebase';
-import {setTimeList, Time} from './reducer/reducer';
+import {setTimeList} from './reducer/reducer';
 import Loading from '../../../components/Loading';
-import {useGraphTopDispatch} from './index';
+import {useGraphTopDispatch, useGraphTopState} from './index';
+import {TimeDetail} from '../../task/list/reducer/reducer';
+import {TimeList} from '../../../components/time/TimeList';
 
 const GraphTopScreen = () => {
   const nav = useNavigation<TaskTabNavigation>();
-  // const timeList = useGraphTopState((state) => state.time_list);
+  const timeList = useGraphTopState((state) => state.time_list);
   const dispatch = useGraphTopDispatch();
   const [isLoading, setLoading] = useState(false);
 
@@ -31,23 +33,18 @@ const GraphTopScreen = () => {
       const ref = db.collection(`users/${currentUser.uid}/times`).orderBy('updatedAt', 'asc');
       unsubscribe = ref.onSnapshot(
         (snapshot) => {
-          const userTimes: Time[] = [];
+          const userTimeDetails: TimeDetail[] = [];
           snapshot.forEach((doc) => {
             const data = doc.data();
-            userTimes.push({
+            userTimeDetails.push({
               id: data.id,
+              tasks: data.tasks,
               task_id: data.task_id,
               task_bodyText: data.task_bodyText,
-              hours: data.hours,
-              minutes: data.minutes,
-              seconds: data.seconds,
-              year: data.year,
-              month: data.month,
-              day: data.day,
               updatedAt: data.updatedAt.toDate(),
             });
           });
-          dispatch(setTimeList(userTimes));
+          dispatch(setTimeList(userTimeDetails));
           setLoading(false);
         },
         () => {
@@ -62,7 +59,7 @@ const GraphTopScreen = () => {
   return (
     <View style={styles.container}>
       <Loading isLoading={isLoading} />
-      {/*<TimeList timeList={timeList} />*/}
+      <TimeList timeList={timeList} />
     </View>
   );
 };

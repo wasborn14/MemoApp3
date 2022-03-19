@@ -1,16 +1,30 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, FlatList, TouchableOpacity, Text} from 'react-native';
-import {Time} from '../../screens/graph/top/reducer/reducer';
+import {TaskTime, TimeDetail} from '../../screens/task/list/reducer/reducer';
+import {startTodayDate} from '../../utils/time/time';
 
 type Props = {
-  timeList: Time[];
+  timeList: TimeDetail[];
 };
 
 export const TimeList: React.FC<Props> = ({timeList}) => {
+  const [todayTasks, setTodayTasks] = useState<TaskTime[]>([]);
+
+  useEffect(() => {
+    const todayTasksData = timeList.filter(function (time) {
+      if (time.updatedAt >= startTodayDate()) {
+        return time;
+      }
+    });
+    if (todayTasksData[0]?.tasks) {
+      setTodayTasks(todayTasksData[0].tasks);
+    }
+  }, [timeList]);
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={timeList}
+        data={todayTasks}
         renderItem={({item}) => (
           <>
             <TouchableOpacity style={styles.taskListItem}>
@@ -18,25 +32,15 @@ export const TimeList: React.FC<Props> = ({timeList}) => {
                 <Text style={styles.taskListItemTitle} numberOfLines={1}>
                   {item.task_bodyText}
                 </Text>
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={{fontSize: 16}}>作業時間：</Text>
-                  <Text style={{fontSize: 16}}>{item.hours > 0 && item.hours + '時間'}</Text>
-                  <Text style={{fontSize: 16}}>{item.minutes > 0 && item.minutes + '分'}</Text>
-                  <Text style={{fontSize: 16}}>{item.seconds > 0 && item.seconds + '秒'}</Text>
-                </View>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={{fontSize: 16, fontWeight: '700'}}>{item.totalSeconds}</Text>
               </View>
             </TouchableOpacity>
           </>
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.task_id}
       />
-      {/*// state: data.state,*/}
-      {/*// task_id: data.task_id,*/}
-      {/*// task_bodyText: data.task_bodyText,*/}
-      {/*// year: data.year,*/}
-      {/*// month: data.month,*/}
-      {/*// day: data.day,*/}
-      {/*// updatedAt: data.updatedAt.toDate(),*/}
     </View>
   );
 };
