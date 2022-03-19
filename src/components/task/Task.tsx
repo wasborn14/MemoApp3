@@ -6,7 +6,7 @@ import {TaskInput} from './TaskInput';
 import {translateErrors} from '../../utils';
 import {useTaskListState} from '../../screens/task/list';
 import {TaskTime, TaskDetail, TimeDetail} from '../../screens/task/list/reducer/reducer';
-import {sameDate, startTodayDate} from '../../utils/time/time';
+import {convertSecToTime, isSameDate, startTodayDate} from '../../utils/time/time';
 import {useTimer} from 'use-timer';
 
 type Props = {
@@ -152,7 +152,7 @@ export const Task: React.FC<Props> = ({task}) => {
         return;
       }
       const now = new Date();
-      if (timeDetail && sameDate(timeDetail.updatedAt, now)) {
+      if (timeDetail && isSameDate(timeDetail.updatedAt, now)) {
         if (timeDetail.tasks) {
           updateTimeDetail(now, timeDetail, time, currentUser);
         }
@@ -171,14 +171,17 @@ export const Task: React.FC<Props> = ({task}) => {
           <TaskInput id={task.id} text={task.bodyText} onPress={() => setEditTaskId('noMatch')} />
         </>
       ) : (
-        <TouchableOpacity style={styles.taskListItem} onPress={handleTimePress}>
+        <TouchableOpacity
+          style={[styles.taskListItem, status === 'RUNNING' && styles.runningColor]}
+          onPress={handleTimePress}
+        >
           <View style={styles.taskInner}>
             <Text style={styles.taskListItemTitle} numberOfLines={1}>
               {task.bodyText}
             </Text>
           </View>
           <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 16}}>{time}</Text>
+            <Text style={{fontSize: 16}}>{convertSecToTime(time)}</Text>
           </View>
           <TouchableOpacity
             style={styles.taskDelete}
@@ -224,6 +227,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 2,
     elevation: 10,
+  },
+  runningColor: {
+    backgroundColor: '#adffff',
   },
   taskInner: {
     flex: 1,
