@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {SyntheticEvent, useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet, FlatList, TouchableOpacity, Text} from 'react-native';
 import {TaskTime, TimeDetail} from '../../screens/task/list/reducer/reducer';
-import {startTodayDate} from '../../utils/time/time';
+import {convertSecToTime, formatToday, nextDate, startDate} from '../../utils/time/time';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
 
 type Props = {
   timeList: TimeDetail[];
@@ -9,20 +10,47 @@ type Props = {
 
 export const TimeList: React.FC<Props> = ({timeList}) => {
   const [todayTasks, setTodayTasks] = useState<TaskTime[]>([]);
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
+
+  const onChange = useCallback(
+    (event: SyntheticEvent<Readonly<{timestamp: number}>, Event>, date?: Date) => {
+      if (date) {
+        setShow(false);
+        setDate(date);
+      } else {
+        setShow(false);
+      }
+    },
+    [],
+  );
+
+  const showDatepicker = () => {
+    setShow(true);
+  };
 
   useEffect(() => {
     const todayTasksData = timeList.filter(function (time) {
-      if (time.updatedAt >= startTodayDate()) {
+      if (time.updatedAt >= startDate(date) && time.updatedAt < startDate(nextDate(date))) {
         return time;
       }
     });
     if (todayTasksData[0]?.tasks) {
       setTodayTasks(todayTasksData[0].tasks);
+    } else {
+      setTodayTasks([]);
     }
-  }, [timeList]);
+  }, [date, timeList]);
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity style={styles.taskListItem} onPress={showDatepicker}>
+        <View style={styles.taskInner}>
+          <Text style={styles.taskListItemTitle} numberOfLines={1}>
+            {formatToday(date)}
+          </Text>
+        </View>
+      </TouchableOpacity>
       <FlatList
         data={todayTasks}
         renderItem={({item}) => (
@@ -34,13 +62,25 @@ export const TimeList: React.FC<Props> = ({timeList}) => {
                 </Text>
               </View>
               <View style={{flexDirection: 'row'}}>
-                <Text style={{fontSize: 16, fontWeight: '700'}}>{item.totalSeconds}</Text>
+                <Text style={{fontSize: 16, fontWeight: '700'}}>
+                  {convertSecToTime(item.totalSeconds)}
+                </Text>
               </View>
             </TouchableOpacity>
           </>
         )}
         keyExtractor={(item) => item.task_id}
       />
+      {show && (
+        <RNDateTimePicker
+          testID="dateTimePicker"
+          locale="ja"
+          value={date}
+          mode="date"
+          is24Hour={true}
+          onChange={onChange}
+        />
+      )}
     </View>
   );
 };
