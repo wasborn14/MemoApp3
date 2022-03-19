@@ -1,29 +1,10 @@
+import {TimeDetail} from '../../../task/list/reducer/reducer';
+
 export interface GraphTopState {
-  time_list: Time[];
-  time?: Time;
+  time_list: TimeDetail[];
 }
 
-export interface TaskTime {
-  task_id: string;
-  task_bodyText: string;
-  totalSeconds: number;
-}
-
-export type Time = {
-  id: string;
-  tasks?: TaskTime[];
-  task_id: string;
-  task_bodyText: string;
-  hours: number;
-  minutes: number;
-  seconds: number;
-  year: number;
-  month: number;
-  day: number;
-  updatedAt: Date;
-};
-
-export const setTimeList = (payload: Time[] | undefined) => ({
+export const setTimeList = (payload: TimeDetail[] | undefined) => ({
   type: 'setTimeList' as const,
   payload,
 });

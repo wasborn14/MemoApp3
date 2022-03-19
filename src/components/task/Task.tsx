@@ -6,7 +6,7 @@ import {TaskInput} from './TaskInput';
 import {translateErrors} from '../../utils';
 import {useTaskListState} from '../../screens/task/list';
 import {TaskTime, TaskDetail, TimeDetail} from '../../screens/task/list/reducer/reducer';
-import {sameDate} from '../../utils/time/time';
+import {sameDate, startTodayDate} from '../../utils/time/time';
 import {useTimer} from 'use-timer';
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
 export const Task: React.FC<Props> = ({task}) => {
   const [editTaskId, setEditTaskId] = useState('noMatch');
   const {time, start, pause, status} = useTimer({
-    initialTime: task.todayTotalSeconds,
+    initialTime: task.timeUpdatedAt >= startTodayDate() ? task.todayTotalSeconds : 0,
   });
   const timeDetail = useTaskListState((state) => state.time_detail);
 

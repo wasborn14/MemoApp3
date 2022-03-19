@@ -17,7 +17,6 @@ const TaskListScreen = () => {
   const taskList = useTaskListState((state) => state.task_list);
   const dispatch = useTaskListDispatch();
   const [isLoading, setLoading] = useState(false);
-  const timeDetail = useTaskListState((state) => state.time_detail);
 
   useEffect(() => {
     nav.setOptions({
@@ -33,7 +32,7 @@ const TaskListScreen = () => {
     };
     if (currentUser) {
       setLoading(true);
-      const ref = db.collection(`users/${currentUser.uid}/tasks`).orderBy('updatedAt', 'desc');
+      const ref = db.collection(`users/${currentUser.uid}/tasks`).orderBy('updatedAt', 'asc');
       unsubscribe = ref.onSnapshot(
         (snapshot) => {
           const userTasks: TaskDetail[] = [];
@@ -58,11 +57,6 @@ const TaskListScreen = () => {
     }
     return unsubscribe;
   }, [dispatch]);
-
-  useEffect(() => {
-    console.log('taskList', taskList);
-    console.log('time', timeDetail);
-  }, [timeDetail, taskList]);
 
   useEffect(() => {
     const db = firebase.firestore();
