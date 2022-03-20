@@ -1,8 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {TaskTabNavigation} from '../../../navigation';
-import {useNavigation} from '@react-navigation/native';
-import LogOutButton from '../../../components/LogOutButton';
 import firebase from 'firebase';
 import {setTimeList} from './reducer/reducer';
 import Loading from '../../../components/Loading';
@@ -11,16 +8,9 @@ import {TimeDetail} from '../../task/list/reducer/reducer';
 import {TimeList} from '../../../components/time/TimeList';
 
 const GraphTopScreen = () => {
-  const nav = useNavigation<TaskTabNavigation>();
   const timeList = useGraphTopState((state) => state.time_list);
   const dispatch = useGraphTopDispatch();
   const [isLoading, setLoading] = useState(false);
-
-  useEffect(() => {
-    nav.setOptions({
-      headerRight: () => <LogOutButton />,
-    });
-  }, [nav]);
 
   useEffect(() => {
     const db = firebase.firestore();
