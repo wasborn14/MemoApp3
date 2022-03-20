@@ -1,9 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {TaskList} from '../../../components/task/TaskList';
-import {TaskTabNavigation} from '../../../navigation';
-import {useNavigation} from '@react-navigation/native';
-import LogOutButton from '../../../components/LogOutButton';
 import firebase from 'firebase';
 import {useTaskListDispatch, useTaskListState} from './index';
 import {setTaskList, setTime, TaskDetail} from './reducer/reducer';
@@ -13,16 +10,9 @@ import firestore = firebase.firestore;
 import {endTodayDate, startTodayDate} from '../../../utils/time/time';
 
 const TaskListScreen = () => {
-  const nav = useNavigation<TaskTabNavigation>();
   const taskList = useTaskListState((state) => state.task_list);
   const dispatch = useTaskListDispatch();
   const [isLoading, setLoading] = useState(false);
-
-  useEffect(() => {
-    nav.setOptions({
-      headerRight: () => <LogOutButton />,
-    });
-  }, [nav]);
 
   useEffect(() => {
     const db = firebase.firestore();

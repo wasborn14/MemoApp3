@@ -19,8 +19,11 @@ import {Foundation} from '@expo/vector-icons';
 import {SimpleLineIcons} from '@expo/vector-icons';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import GraphTopContainer from '../screens/graph/top';
+import OpeningScreen from '../screens/OpeningScreen';
+import IdeaListContainer from '../screens/idea';
 
 export type RootStackParamList = {
+  Opening: undefined;
   SignUp: undefined;
   LogIn: undefined;
   MainTab: NavigatorScreenParams<MainStackParamList>;
@@ -47,6 +50,10 @@ export type GraphStackPramList = {
   GraphTop: undefined;
 };
 
+export type IdeaStackPramList = {
+  IdeaList: undefined;
+};
+
 export type SettingStackParamList = {
   Setting: undefined;
 };
@@ -60,6 +67,7 @@ const RootStack = createStackNavigator<RootStackParamList>();
 const MemoStack = createStackNavigator<MemoStackPramList>();
 const TaskStack = createStackNavigator<TaskStackPramList>();
 const GraphStack = createStackNavigator<GraphStackPramList>();
+const IdeaStack = createStackNavigator<IdeaStackPramList>();
 const SetStack = createStackNavigator<SettingStackParamList>();
 const Tab = createBottomTabNavigator();
 
@@ -123,6 +131,25 @@ const GraphStackNavigator = () => {
   );
 };
 
+const IdeaStackNavigator = () => {
+  return (
+    <IdeaStack.Navigator
+      screenOptions={{
+        headerStyle: {backgroundColor: '#FFDDAA'},
+        headerTitleStyle: {color: '#000000'},
+        headerTitle: 'Idea',
+        headerTintColor: '#ffffff',
+        headerBackTitle: 'Back',
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
+      }}
+    >
+      <IdeaStack.Screen name="IdeaList" component={IdeaListContainer} />
+    </IdeaStack.Navigator>
+  );
+};
+
 const SetStackNavigator = () => {
   return (
     <SetStack.Navigator
@@ -181,6 +208,19 @@ const MainTabNavigator = () => {
         }}
       />
       <Tab.Screen
+        name="Idea"
+        component={IdeaStackNavigator}
+        options={{
+          tabBarLabel: 'Idea',
+          tabBarIcon: ({focused}) =>
+            focused ? (
+              <SimpleLineIcons name="note" size={24} color="black" />
+            ) : (
+              <SimpleLineIcons name="note" size={24} color="black" />
+            ),
+        }}
+      />
+      <Tab.Screen
         name="Memo"
         component={MemoStackNavigator}
         options={{
@@ -214,7 +254,7 @@ export const Navigation = () => {
   return (
     <NavigationContainer>
       <RootStack.Navigator
-        initialRouteName="LogIn"
+        initialRouteName="Opening"
         screenOptions={{
           headerStyle: {backgroundColor: '#FFDDAA'},
           headerTitleStyle: {color: '#ffffff'},
@@ -226,6 +266,7 @@ export const Navigation = () => {
           gestureDirection: 'horizontal',
         }}
       >
+        <RootStack.Screen name="Opening" component={OpeningScreen} />
         <RootStack.Screen name="LogIn" component={LogInScreen} />
         <RootStack.Screen name="SignUp" component={SignUpScreen} />
         <RootStack.Screen
