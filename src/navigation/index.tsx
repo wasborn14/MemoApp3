@@ -6,11 +6,11 @@ import {
   StackNavigationProp,
 } from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import MemoListScreen from '../screens/memo/MemoListScreen';
-import MemoEditScreen, {MemoEditParams} from '../screens/memo/MemoEditScreen';
-import MemoCreateScreen from '../screens/memo/MemoCreateScreen';
-import MemoDetailScreen from '../screens/memo/MemoDetailScreen';
-import {MemoDetailParams} from '../screens/memo/MemoDetailScreen';
+// import MemoListScreen from '../screens/memo/MemoListScreen';
+// import MemoEditScreen, {MemoEditParams} from '../screens/memo/MemoEditScreen';
+// import MemoCreateScreen from '../screens/memo/MemoCreateScreen';
+// import MemoDetailScreen from '../screens/memo/MemoDetailScreen';
+// import {MemoDetailParams} from '../screens/memo/MemoDetailScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import LogInScreen from '../screens/LogInScreen';
 import {SettingScreen} from '../screens/SettingScreen';
@@ -63,35 +63,35 @@ export type MemoTabNavigation = StackNavigationProp<MemoStackPramList>;
 export type TaskTabNavigation = StackNavigationProp<TaskStackPramList>;
 export type GraphTabNavigation = StackNavigationProp<GraphStackPramList>;
 
+const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator<RootStackParamList>();
-const MemoStack = createStackNavigator<MemoStackPramList>();
 const TaskStack = createStackNavigator<TaskStackPramList>();
 const GraphStack = createStackNavigator<GraphStackPramList>();
 const IdeaStack = createStackNavigator<IdeaStackPramList>();
 const SetStack = createStackNavigator<SettingStackParamList>();
-const Tab = createBottomTabNavigator();
+// const MemoStack = createStackNavigator<MemoStackPramList>();
 
-const MemoStackNavigator = () => {
-  return (
-    <MemoStack.Navigator
-      screenOptions={{
-        headerStyle: {backgroundColor: '#467FD3'},
-        headerTitleStyle: {color: '#ffffff'},
-        headerTitle: 'Memo App',
-        headerTintColor: '#ffffff',
-        headerBackTitle: 'Back',
-        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-        gestureEnabled: true,
-        gestureDirection: 'horizontal',
-      }}
-    >
-      <MemoStack.Screen name="MemoList" component={MemoListScreen} />
-      <MemoStack.Screen name="MemoEdit" component={MemoEditScreen} />
-      <MemoStack.Screen name="MemoCreate" component={MemoCreateScreen} />
-      <MemoStack.Screen name="MemoDetail" component={MemoDetailScreen} />
-    </MemoStack.Navigator>
-  );
-};
+// const MemoStackNavigator = () => {
+//   return (
+//     <MemoStack.Navigator
+//       screenOptions={{
+//         headerStyle: {backgroundColor: '#467FD3'},
+//         headerTitleStyle: {color: '#ffffff'},
+//         headerTitle: 'Memo App',
+//         headerTintColor: '#ffffff',
+//         headerBackTitle: 'Back',
+//         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+//         gestureEnabled: true,
+//         gestureDirection: 'horizontal',
+//       }}
+//     >
+//       <MemoStack.Screen name="MemoList" component={MemoListScreen} />
+//       <MemoStack.Screen name="MemoEdit" component={MemoEditScreen} />
+//       <MemoStack.Screen name="MemoCreate" component={MemoCreateScreen} />
+//       <MemoStack.Screen name="MemoDetail" component={MemoDetailScreen} />
+//     </MemoStack.Navigator>
+//   );
+// };
 
 const TaskStackNavigator = () => {
   return (
@@ -220,19 +220,19 @@ const MainTabNavigator = () => {
             ),
         }}
       />
-      <Tab.Screen
-        name="Memo"
-        component={MemoStackNavigator}
-        options={{
-          tabBarLabel: 'Memo',
-          tabBarIcon: ({focused}) =>
-            focused ? (
-              <SimpleLineIcons name="note" size={24} color="black" />
-            ) : (
-              <SimpleLineIcons name="note" size={24} color="black" />
-            ),
-        }}
-      />
+      {/*<Tab.Screen*/}
+      {/*  name="Memo"*/}
+      {/*  component={MemoStackNavigator}*/}
+      {/*  options={{*/}
+      {/*    tabBarLabel: 'Memo',*/}
+      {/*    tabBarIcon: ({focused}) =>*/}
+      {/*      focused ? (*/}
+      {/*        <SimpleLineIcons name="note" size={24} color="black" />*/}
+      {/*      ) : (*/}
+      {/*        <SimpleLineIcons name="note" size={24} color="black" />*/}
+      {/*      ),*/}
+      {/*  }}*/}
+      {/*/>*/}
       <Tab.Screen
         name="Set"
         component={SetStackNavigator}

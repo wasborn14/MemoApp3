@@ -15,7 +15,7 @@ type Props = {
 
 export const Task: React.FC<Props> = ({task}) => {
   const [editTaskId, setEditTaskId] = useState('noMatch');
-  const {time, start, pause, status} = useTimer({
+  const {time, start, pause, status, reset} = useTimer({
     initialTime: task.timeUpdatedAt >= startTodayDate() ? task.todayTotalSeconds : 0,
   });
   const timeDetail = useTaskListState((state) => state.time_detail);
@@ -160,9 +160,10 @@ export const Task: React.FC<Props> = ({task}) => {
         createTimeDetail(now, time, currentUser);
       }
     } else {
+      task.timeUpdatedAt < startTodayDate() && reset();
       start();
     }
-  }, [timeDetail, createTimeDetail, updateTimeDetail, time, status, start]);
+  }, [timeDetail, createTimeDetail, updateTimeDetail, time, status, start, reset, task]);
 
   return (
     <>
