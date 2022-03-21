@@ -2,17 +2,16 @@ import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
 import {Feather} from '@expo/vector-icons';
 import firebase from 'firebase';
-import {IdeaCategoryDetail} from '../../screens/idea/reducer/reducer';
+import {IdeaCategoryDetail, IdeaDetail} from '../../screens/idea/reducer/reducer';
 import {IdeaCategoryInput} from './IdeaCategoryInput';
 import {IdeaInput} from './IdeaInput';
-import {IdeaList} from './IdeaList';
 
 type Props = {
-  ideaCategory: IdeaCategoryDetail;
+  idea: IdeaDetail;
 };
 
-export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
-  const [editIdeaCategoryId, setEditIdeaCategoryId] = useState('noMatch');
+export const Idea: React.FC<Props> = ({idea}) => {
+  const [editIdeaCategoryId, setEditIdeaCategoryId] = useState(-1);
   const [isCreateIdeaSelected, setIsCreateIdeaSelected] = useState(false);
   const [isCategorySelected, setIsCategorySelected] = useState(false);
 
@@ -43,33 +42,31 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
 
   return (
     <>
-      {ideaCategory.categoryId === editIdeaCategoryId ? (
+      {idea.id === editIdeaCategoryId ? (
         <>
-          <IdeaCategoryInput
-            ideaCategory={ideaCategory}
-            onPress={() => setEditIdeaCategoryId('noMatch')}
-          />
+          {/*<IdeaCategoryInput*/}
+          {/*    id={ideaCategory.categoryId}*/}
+          {/*    text={ideaCategory.categoryName}*/}
+          {/*    onPress={() => setEditIdeaCategoryId('noMatch')}*/}
+          {/*/>*/}
         </>
       ) : (
         <>
           <TouchableOpacity
-            style={[
-              styles.ideaCategoryListItem,
-              isCategorySelected && styles.selectedCategoryColor,
-            ]}
+            style={styles.ideaCategoryListItem}
             onPress={() => {
               setIsCategorySelected(!isCategorySelected);
             }}
           >
             <View style={styles.ideaCategoryInner}>
               <Text style={styles.ideaCategoryListItemTitle} numberOfLines={1}>
-                {ideaCategory.categoryName}
+                {idea.ideaText}
               </Text>
             </View>
             <TouchableOpacity
               style={styles.ideaCategoryDelete}
               onPress={() => {
-                setEditIdeaCategoryId(ideaCategory.categoryId);
+                setEditIdeaCategoryId(idea.id);
               }}
             >
               <Feather name="edit" color="#B0b0b0" size={16} />
@@ -77,42 +74,32 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
             <TouchableOpacity
               style={styles.ideaCategoryDelete}
               onPress={() => {
-                deleteIdeaCategory(ideaCategory.categoryId);
+                deleteIdeaCategory(idea.id);
               }}
             >
               <Feather name="x" color="#B0b0b0" size={16} />
             </TouchableOpacity>
           </TouchableOpacity>
-          {isCategorySelected && (
-            <>
-              <IdeaList ideaList={ideaCategory.ideaList} />
-              {!isCreateIdeaSelected && (
-                <TouchableOpacity
-                  style={styles.ideaCreatContainer}
-                  onPress={() => {
-                    setEditIdeaCategoryId(ideaCategory.categoryId);
-                  }}
-                >
-                  <TouchableOpacity
-                    style={styles.ideaCreateButton}
-                    onPress={() => {
-                      setIsCreateIdeaSelected(true);
-                    }}
-                  >
-                    <View style={styles.ideaCreateIcon}>
-                      <Feather name="plus" color="#B0b0b0" size={16} />
-                    </View>
-                  </TouchableOpacity>
-                </TouchableOpacity>
-              )}
-            </>
-          )}
-          {isCategorySelected && isCreateIdeaSelected && (
-            <IdeaInput
-              ideaCategory={ideaCategory}
-              handlePressSave={() => setIsCreateIdeaSelected(false)}
-            />
-          )}
+          {/*{isCreateIdeaSelected && <IdeaInput ideaCategory={idea} />}*/}
+          {/*{isCategorySelected && !isCreateIdeaSelected && (*/}
+          {/*    <TouchableOpacity*/}
+          {/*        style={styles.ideaCreatContainer}*/}
+          {/*        onPress={() => {*/}
+          {/*            setEditIdeaCategoryId(ideaCategory.categoryId);*/}
+          {/*        }}*/}
+          {/*    >*/}
+          {/*        <TouchableOpacity*/}
+          {/*            style={styles.ideaCreateButton}*/}
+          {/*            onPress={() => {*/}
+          {/*                setIsCreateIdeaSelected(true);*/}
+          {/*            }}*/}
+          {/*        >*/}
+          {/*            <View style={styles.ideaCreateIcon}>*/}
+          {/*                <Feather name="plus" color="#B0b0b0" size={16} />*/}
+          {/*            </View>*/}
+          {/*        </TouchableOpacity>*/}
+          {/*    </TouchableOpacity>*/}
+          {/*)}*/}
         </>
       )}
     </>
@@ -132,7 +119,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 19,
     marginVertical: 4,
-    marginHorizontal: 16,
+    marginLeft: 32,
+    marginRight: 16,
     alignItems: 'center',
     borderRadius: 20,
     // 影の設定
@@ -141,9 +129,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 2,
     elevation: 10,
-  },
-  selectedCategoryColor: {
-    backgroundColor: '#adffff',
   },
   runningColor: {
     backgroundColor: '#adffff',

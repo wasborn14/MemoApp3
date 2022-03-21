@@ -3,54 +3,73 @@ import {View, StyleSheet, TouchableOpacity, Alert, TextInput} from 'react-native
 import {Feather} from '@expo/vector-icons';
 import firebase from 'firebase';
 import {translateErrors} from '../../utils';
-import {IdeaCategoryDetail} from '../../screens/idea/reducer/reducer';
+import {IdeaCategoryDetail, IdeaDetail} from '../../screens/idea/reducer/reducer';
 
 type Props = {
-  ideaCategory?: IdeaCategoryDetail;
+  ideaCategory: IdeaCategoryDetail;
+  id?: string;
+  text?: string;
   onPress?: () => void;
+  handlePressSave?: () => void;
 };
 
-export const IdeaCategoryInput: React.FC<Props> = ({ideaCategory, onPress}) => {
+export const IdeaInput: React.FC<Props> = ({ideaCategory, id, text, onPress, handlePressSave}) => {
   const [inputText, setInputText] = useState('');
+
+  const getMaxId = useCallback(() => {
+    if (ideaCategory.ideaList.length > 0) {
+      return Math.max(...ideaCategory.ideaList.map((idea) => idea.id));
+    }
+    return 0;
+  }, [ideaCategory]);
 
   const createPress = useCallback(() => {
     if (!inputText) {
       return;
     }
     const {currentUser} = firebase.auth();
-    const db = firebase.firestore();
     if (currentUser) {
-      const ref = db.collection(`users/${currentUser.uid}/ideas`);
+      const idea: IdeaDetail = {
+        id: getMaxId() + 1,
+        ideaText: inputText,
+        point: 1,
+        updatedAt: new Date(),
+      };
+
+      const db = firebase.firestore();
+      const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaCategory.categoryId);
       ref
-        .add({
-          categoryName: inputText,
-          ideaList: [],
-          updatedAt: new Date(),
-        })
+        .set(
+          {
+            categoryName: ideaCategory.categoryName,
+            ideaList: [...ideaCategory.ideaList, idea],
+            updatedAt: new Date(),
+          },
+          {merge: true},
+        )
         .then(() => {
-          setInputText('');
+          handlePressSave && handlePressSave();
         })
         .catch((error) => {
-          console.log(error);
           const errorMsg = translateErrors(error.code);
           Alert.alert(errorMsg.title, errorMsg.description);
         });
     }
-  }, [inputText]);
+  }, [inputText, ideaCategory, getMaxId, handlePressSave]);
 
   const editPress = useCallback(() => {
     if (!inputText) {
       return;
     }
     const {currentUser} = firebase.auth();
-    if (currentUser && ideaCategory) {
+    if (currentUser) {
       const db = firebase.firestore();
-      const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaCategory.categoryId);
+      const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(id);
       ref
         .set(
           {
             categoryName: inputText,
-            ideaList: ideaCategory.ideaList,
+            ideaList: [],
             updatedAt: new Date(),
           },
           {merge: true},
@@ -63,11 +82,11 @@ export const IdeaCategoryInput: React.FC<Props> = ({ideaCategory, onPress}) => {
           Alert.alert(errorMsg.title, errorMsg.description);
         });
     }
-  }, [ideaCategory, inputText, onPress]);
+  }, [id, inputText, onPress]);
 
   useEffect(() => {
-    ideaCategory && setInputText(ideaCategory.categoryName);
-  }, [ideaCategory]);
+    text && setInputText(text);
+  }, [text]);
 
   return (
     <View style={styles.container}>

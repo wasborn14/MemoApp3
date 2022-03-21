@@ -71,7 +71,11 @@ export const TaskInput: React.FC<Props> = ({id, text, onPress}) => {
         onChangeText={(text) => setBodyText(text)}
       />
       <TouchableOpacity onPress={onPress ? editPress : createPress}>
-        <Feather name="plus" size={24} color="black" />
+        {onPress ? (
+          <Feather name="check" size={24} color="black" />
+        ) : (
+          <Feather name="plus" size={24} color="black" />
+        )}
       </TouchableOpacity>
     </View>
   );
