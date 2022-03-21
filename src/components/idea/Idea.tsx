@@ -3,52 +3,74 @@ import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
 import {Feather} from '@expo/vector-icons';
 import firebase from 'firebase';
 import {IdeaCategoryDetail, IdeaDetail} from '../../screens/idea/reducer/reducer';
-import {IdeaCategoryInput} from './IdeaCategoryInput';
 import {IdeaInput} from './IdeaInput';
+import {translateErrors} from '../../utils';
 
 type Props = {
+  ideaCategory: IdeaCategoryDetail;
   idea: IdeaDetail;
 };
 
-export const Idea: React.FC<Props> = ({idea}) => {
-  const [editIdeaCategoryId, setEditIdeaCategoryId] = useState(-1);
-  const [isCreateIdeaSelected, setIsCreateIdeaSelected] = useState(false);
+export const Idea: React.FC<Props> = ({ideaCategory, idea}) => {
+  const [editIdeaId, setEditIdeaId] = useState(-1);
   const [isCategorySelected, setIsCategorySelected] = useState(false);
 
-  const deleteIdeaCategory = useCallback((id) => {
-    const {currentUser} = firebase.auth();
-    if (currentUser) {
-      const db = firebase.firestore();
-      const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(id);
-      Alert.alert('タスクを削除します。', 'よろしいですか？', [
+  const deleteIdea = useCallback(
+    (id: number) => {
+      const {currentUser} = firebase.auth();
+      if (currentUser) {
+        const deletedIdeaList = ideaCategory.ideaList.filter(function (idea) {
+          return idea.id !== id;
+        });
+
+        const db = firebase.firestore();
+        const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaCategory.categoryId);
+        ref
+          .set(
+            {
+              categoryName: ideaCategory.categoryName,
+              ideaList: deletedIdeaList,
+              updatedAt: new Date(),
+            },
+            {merge: true},
+          )
+          .catch((error) => {
+            const errorMsg = translateErrors(error.code);
+            Alert.alert(errorMsg.title, errorMsg.description);
+          });
+      }
+    },
+    [ideaCategory],
+  );
+
+  const confirmDelete = useCallback(
+    (id: number) => {
+      Alert.alert('アイデアを削除します。', 'よろしいですか？', [
         {
           text: 'キャンセル',
-          onPress: () => {
-            // do nothing
-          },
         },
         {
           text: '削除する',
           style: 'destructive',
           onPress: () => {
-            ref.delete().catch(() => {
-              Alert.alert('削除に失敗しました。');
-            });
+            deleteIdea(id);
           },
         },
       ]);
-    }
-  }, []);
+    },
+    [deleteIdea],
+  );
 
   return (
     <>
-      {idea.id === editIdeaCategoryId ? (
+      {idea.id === editIdeaId ? (
         <>
-          {/*<IdeaCategoryInput*/}
-          {/*    id={ideaCategory.categoryId}*/}
-          {/*    text={ideaCategory.categoryName}*/}
-          {/*    onPress={() => setEditIdeaCategoryId('noMatch')}*/}
-          {/*/>*/}
+          <IdeaInput
+            text={idea.ideaText}
+            editIdeaId={editIdeaId}
+            ideaCategory={ideaCategory}
+            onPress={() => setEditIdeaId(-1)}
+          />
         </>
       ) : (
         <>
@@ -66,7 +88,7 @@ export const Idea: React.FC<Props> = ({idea}) => {
             <TouchableOpacity
               style={styles.ideaCategoryDelete}
               onPress={() => {
-                setEditIdeaCategoryId(idea.id);
+                setEditIdeaId(idea.id);
               }}
             >
               <Feather name="edit" color="#B0b0b0" size={16} />
@@ -74,7 +96,7 @@ export const Idea: React.FC<Props> = ({idea}) => {
             <TouchableOpacity
               style={styles.ideaCategoryDelete}
               onPress={() => {
-                deleteIdeaCategory(idea.id);
+                confirmDelete(idea.id);
               }}
             >
               <Feather name="x" color="#B0b0b0" size={16} />

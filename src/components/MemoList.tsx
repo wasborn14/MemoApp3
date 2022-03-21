@@ -22,9 +22,6 @@ export const MemoList: React.FC<Props> = ({memos}) => {
       Alert.alert('メモを削除します。', 'よろしいですか？', [
         {
           text: 'キャンセル',
-          onPress: () => {
-            // do nothing
-          },
         },
         {
           text: '削除する',

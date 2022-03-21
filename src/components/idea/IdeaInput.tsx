@@ -6,6 +6,7 @@ import {translateErrors} from '../../utils';
 import {IdeaCategoryDetail, IdeaDetail} from '../../screens/idea/reducer/reducer';
 
 type Props = {
+  editIdeaId?: number;
   ideaCategory: IdeaCategoryDetail;
   id?: string;
   text?: string;
@@ -13,7 +14,13 @@ type Props = {
   handlePressSave?: () => void;
 };
 
-export const IdeaInput: React.FC<Props> = ({ideaCategory, id, text, onPress, handlePressSave}) => {
+export const IdeaInput: React.FC<Props> = ({
+  editIdeaId,
+  ideaCategory,
+  text,
+  onPress,
+  handlePressSave,
+}) => {
   const [inputText, setInputText] = useState('');
 
   const getMaxId = useCallback(() => {
@@ -57,6 +64,24 @@ export const IdeaInput: React.FC<Props> = ({ideaCategory, id, text, onPress, han
     }
   }, [inputText, ideaCategory, getMaxId, handlePressSave]);
 
+  const getSortIdeaList = useCallback(() => {
+    const targetIdea = ideaCategory.ideaList.filter(function (idea) {
+      return idea.id === editIdeaId;
+    });
+    const ideaList: IdeaDetail[] = ideaCategory.ideaList.filter(function (idea) {
+      return idea.id !== editIdeaId;
+    });
+    const convertedIdea: IdeaDetail = {
+      ...targetIdea[0],
+      ideaText: inputText,
+      updatedAt: new Date(),
+    };
+    ideaList.push(convertedIdea);
+    return ideaList.sort((a, b) => {
+      return a.id - b.id;
+    });
+  }, [editIdeaId, ideaCategory, inputText]);
+
   const editPress = useCallback(() => {
     if (!inputText) {
       return;
@@ -64,12 +89,14 @@ export const IdeaInput: React.FC<Props> = ({ideaCategory, id, text, onPress, han
     const {currentUser} = firebase.auth();
     if (currentUser) {
       const db = firebase.firestore();
-      const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(id);
+      const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaCategory.categoryId);
+
+      const sortIdeaList = getSortIdeaList();
       ref
         .set(
           {
-            categoryName: inputText,
-            ideaList: [],
+            categoryName: ideaCategory.categoryName,
+            ideaList: sortIdeaList,
             updatedAt: new Date(),
           },
           {merge: true},
@@ -82,7 +109,7 @@ export const IdeaInput: React.FC<Props> = ({ideaCategory, id, text, onPress, han
           Alert.alert(errorMsg.title, errorMsg.description);
         });
     }
-  }, [id, inputText, onPress]);
+  }, [getSortIdeaList, onPress, ideaCategory, inputText]);
 
   useEffect(() => {
     text && setInputText(text);

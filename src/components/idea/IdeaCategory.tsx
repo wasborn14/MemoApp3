@@ -21,12 +21,9 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
     if (currentUser) {
       const db = firebase.firestore();
       const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(id);
-      Alert.alert('タスクを削除します。', 'よろしいですか？', [
+      Alert.alert('カテゴリを削除します。', 'よろしいですか？', [
         {
           text: 'キャンセル',
-          onPress: () => {
-            // do nothing
-          },
         },
         {
           text: '削除する',
@@ -85,7 +82,7 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
           </TouchableOpacity>
           {isCategorySelected && (
             <>
-              <IdeaList ideaList={ideaCategory.ideaList} />
+              <IdeaList ideaCategory={ideaCategory} ideaList={ideaCategory.ideaList} />
               {!isCreateIdeaSelected && (
                 <TouchableOpacity
                   style={styles.ideaCreatContainer}

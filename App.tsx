@@ -12,6 +12,7 @@ if (firebase.apps.length === 0) {
 
 LogBox.ignoreLogs(['Setting a timer']);
 LogBox.ignoreLogs(['AsyncStorage has been extracted from']);
+LogBox.ignoreLogs(['Require cycle']);
 // LogBox.ignoreAllLogs(true);
 
 export default function App() {

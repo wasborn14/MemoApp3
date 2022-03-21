@@ -50,28 +50,6 @@ const IdeaListScreen = () => {
       <Loading isLoading={isLoading} />
       <IdeaCategoryInput />
       <IdeaCategoryList ideaCategoryList={ideaCategoryList} />
-
-      {/*<List.Section>*/}
-      {/*  <List.Accordion*/}
-      {/*    title="メモアプリ"*/}
-      {/*    titleStyle={{color: 'black'}}*/}
-      {/*    theme={{colors: {background: '#8b4513'}}}*/}
-      {/*    style={{borderRadius: 40, backgroundColor: 'white', marginHorizontal: 20, marginTop: 20, marginBottom: 10,}}*/}
-      {/*  >*/}
-      {/*    <List.Item title="登録機能" style={{borderRadius: 40, backgroundColor: 'white', marginLeft: 40, marginRight: 20, marginBottom: 5}}/>*/}
-      {/*    <List.Item title="保存機能" style={{borderRadius: 40, backgroundColor: 'white', marginLeft: 40, marginRight: 20}}/>*/}
-      {/*  </List.Accordion>*/}
-
-      {/*  <List.Accordion*/}
-      {/*      title="メモアプリ"*/}
-      {/*      titleStyle={{color: 'black'}}*/}
-      {/*      theme={{colors: {background: '#8b4513'}}}*/}
-      {/*      style={{borderRadius: 40, backgroundColor: 'white', marginHorizontal: 20, marginTop: 20, marginBottom: 10,}}*/}
-      {/*  >*/}
-      {/*    <List.Item title="登録機能" style={{borderRadius: 40, backgroundColor: 'white', marginLeft: 40, marginRight: 20, marginBottom: 5}}/>*/}
-      {/*    <List.Item title="保存機能" style={{borderRadius: 40, backgroundColor: 'white', marginLeft: 40, marginRight: 20}}/>*/}
-      {/*  </List.Accordion>*/}
-      {/*</List.Section>*/}
     </View>
   );
 };
