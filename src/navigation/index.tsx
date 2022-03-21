@@ -30,17 +30,17 @@ export type RootStackParamList = {
 };
 
 export type MainStackParamList = {
-  Memo: NavigatorScreenParams<MemoStackPramList>;
+  // Memo: NavigatorScreenParams<MemoStackPramList>;
   Task: NavigatorScreenParams<TaskStackPramList>;
   Set: NavigatorScreenParams<SettingStackParamList>;
 };
 
-export type MemoStackPramList = {
-  MemoList: undefined;
-  MemoEdit: MemoEditParams;
-  MemoCreate: undefined;
-  MemoDetail: MemoDetailParams;
-};
+// export type MemoStackPramList = {
+//   MemoList: undefined;
+//   MemoEdit: MemoEditParams;
+//   MemoCreate: undefined;
+//   MemoDetail: MemoDetailParams;
+// };
 
 export type TaskStackPramList = {
   TaskList: undefined;
@@ -59,9 +59,10 @@ export type SettingStackParamList = {
 };
 
 export type MainTabNavigation = StackNavigationProp<RootStackParamList>;
-export type MemoTabNavigation = StackNavigationProp<MemoStackPramList>;
+// export type MemoTabNavigation = StackNavigationProp<MemoStackPramList>;
 export type TaskTabNavigation = StackNavigationProp<TaskStackPramList>;
 export type GraphTabNavigation = StackNavigationProp<GraphStackPramList>;
+export type IdeaTabNavigation = StackNavigationProp<IdeaStackPramList>;
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator<RootStackParamList>();

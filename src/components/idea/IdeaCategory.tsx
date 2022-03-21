@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
   },
   ideaCategoryListItemTitle: {
     fontSize: 16,
-    lineHeight: 32,
+    lineHeight: 26,
   },
   ideaCategoryListItemDate: {
     fontSize: 12,
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     color: '#848484',
   },
   ideaCategoryDelete: {
-    padding: 8,
+    padding: 4,
   },
   ideaCreatContainer: {
     flexDirection: 'row',

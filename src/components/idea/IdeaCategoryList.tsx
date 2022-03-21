@@ -14,6 +14,7 @@ export const IdeaCategoryList: React.FC<Props> = ({ideaCategoryList}) => {
         data={ideaCategoryList}
         renderItem={({item}) => <IdeaCategory ideaCategory={item} />}
         keyExtractor={(item) => item.categoryId}
+        contentContainerStyle={{paddingBottom: 20}}
       />
     </View>
   );

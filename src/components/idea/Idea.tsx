@@ -13,7 +13,6 @@ type Props = {
 
 export const Idea: React.FC<Props> = ({ideaCategory, idea}) => {
   const [editIdeaId, setEditIdeaId] = useState(-1);
-  const [isCategorySelected, setIsCategorySelected] = useState(false);
 
   const deleteIdea = useCallback(
     (id: number) => {
@@ -76,8 +75,8 @@ export const Idea: React.FC<Props> = ({ideaCategory, idea}) => {
         <>
           <TouchableOpacity
             style={styles.ideaCategoryListItem}
-            onPress={() => {
-              setIsCategorySelected(!isCategorySelected);
+            onLongPress={() => {
+              setEditIdeaId(idea.id);
             }}
           >
             <View style={styles.ideaCategoryInner}>
@@ -88,40 +87,12 @@ export const Idea: React.FC<Props> = ({ideaCategory, idea}) => {
             <TouchableOpacity
               style={styles.ideaCategoryDelete}
               onPress={() => {
-                setEditIdeaId(idea.id);
-              }}
-            >
-              <Feather name="edit" color="#B0b0b0" size={16} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.ideaCategoryDelete}
-              onPress={() => {
                 confirmDelete(idea.id);
               }}
             >
               <Feather name="x" color="#B0b0b0" size={16} />
             </TouchableOpacity>
           </TouchableOpacity>
-          {/*{isCreateIdeaSelected && <IdeaInput ideaCategory={idea} />}*/}
-          {/*{isCategorySelected && !isCreateIdeaSelected && (*/}
-          {/*    <TouchableOpacity*/}
-          {/*        style={styles.ideaCreatContainer}*/}
-          {/*        onPress={() => {*/}
-          {/*            setEditIdeaCategoryId(ideaCategory.categoryId);*/}
-          {/*        }}*/}
-          {/*    >*/}
-          {/*        <TouchableOpacity*/}
-          {/*            style={styles.ideaCreateButton}*/}
-          {/*            onPress={() => {*/}
-          {/*                setIsCreateIdeaSelected(true);*/}
-          {/*            }}*/}
-          {/*        >*/}
-          {/*            <View style={styles.ideaCreateIcon}>*/}
-          {/*                <Feather name="plus" color="#B0b0b0" size={16} />*/}
-          {/*            </View>*/}
-          {/*        </TouchableOpacity>*/}
-          {/*    </TouchableOpacity>*/}
-          {/*)}*/}
         </>
       )}
     </>
@@ -152,6 +123,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 10,
   },
+
   runningColor: {
     backgroundColor: '#adffff',
   },
@@ -160,7 +132,7 @@ const styles = StyleSheet.create({
   },
   ideaCategoryListItemTitle: {
     fontSize: 16,
-    lineHeight: 32,
+    lineHeight: 26,
   },
   ideaCategoryListItemDate: {
     fontSize: 12,
@@ -168,7 +140,7 @@ const styles = StyleSheet.create({
     color: '#848484',
   },
   ideaCategoryDelete: {
-    padding: 8,
+    padding: 4,
   },
   ideaCreatContainer: {
     flexDirection: 'row',
