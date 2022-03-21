@@ -10,7 +10,9 @@ export interface IdeaCategoryDetail {
 }
 
 export interface IdeaDetail {
+  id: number;
   ideaText: string;
+  point: number;
   updatedAt: Date;
 }
 

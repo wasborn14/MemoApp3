@@ -8,8 +8,6 @@ type Props = {
 };
 
 export const IdeaCategoryList: React.FC<Props> = ({ideaCategoryList}) => {
-  console.log(ideaCategoryList);
-
   return (
     <View style={styles.container}>
       <FlatList

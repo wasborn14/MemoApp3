@@ -18,9 +18,9 @@ const OpeningScreen = () => {
             {
               name: 'MainTab',
               params: {
-                screen: 'Task',
+                screen: 'Idea',
                 param: {
-                  screen: 'TaskList',
+                  screen: 'IdeaList',
                 },
               },
             },

@@ -3,54 +3,100 @@ import {View, StyleSheet, TouchableOpacity, Alert, TextInput} from 'react-native
 import {Feather} from '@expo/vector-icons';
 import firebase from 'firebase';
 import {translateErrors} from '../../utils';
-import {IdeaCategoryDetail} from '../../screens/idea/reducer/reducer';
+import {IdeaCategoryDetail, IdeaDetail} from '../../screens/idea/reducer/reducer';
 
 type Props = {
-  ideaCategory?: IdeaCategoryDetail;
+  editIdeaId?: number;
+  ideaCategory: IdeaCategoryDetail;
+  id?: string;
+  text?: string;
   onPress?: () => void;
+  handlePressSave?: () => void;
 };
 
-export const IdeaCategoryInput: React.FC<Props> = ({ideaCategory, onPress}) => {
+export const IdeaInput: React.FC<Props> = ({
+  editIdeaId,
+  ideaCategory,
+  text,
+  onPress,
+  handlePressSave,
+}) => {
   const [inputText, setInputText] = useState('');
+
+  const getMaxId = useCallback(() => {
+    if (ideaCategory.ideaList.length > 0) {
+      return Math.max(...ideaCategory.ideaList.map((idea) => idea.id));
+    }
+    return 0;
+  }, [ideaCategory]);
 
   const createPress = useCallback(() => {
     if (!inputText) {
       return;
     }
     const {currentUser} = firebase.auth();
-    const db = firebase.firestore();
     if (currentUser) {
-      const ref = db.collection(`users/${currentUser.uid}/ideas`);
+      const idea: IdeaDetail = {
+        id: getMaxId() + 1,
+        ideaText: inputText,
+        point: 1,
+        updatedAt: new Date(),
+      };
+
+      const db = firebase.firestore();
+      const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaCategory.categoryId);
       ref
-        .add({
-          categoryName: inputText,
-          ideaList: [],
-          updatedAt: new Date(),
-        })
+        .set(
+          {
+            categoryName: ideaCategory.categoryName,
+            ideaList: [...ideaCategory.ideaList, idea],
+            updatedAt: new Date(),
+          },
+          {merge: true},
+        )
         .then(() => {
-          setInputText('');
+          handlePressSave && handlePressSave();
         })
         .catch((error) => {
-          console.log(error);
           const errorMsg = translateErrors(error.code);
           Alert.alert(errorMsg.title, errorMsg.description);
         });
     }
-  }, [inputText]);
+  }, [inputText, ideaCategory, getMaxId, handlePressSave]);
+
+  const getSortIdeaList = useCallback(() => {
+    const targetIdea = ideaCategory.ideaList.filter(function (idea) {
+      return idea.id === editIdeaId;
+    });
+    const ideaList: IdeaDetail[] = ideaCategory.ideaList.filter(function (idea) {
+      return idea.id !== editIdeaId;
+    });
+    const convertedIdea: IdeaDetail = {
+      ...targetIdea[0],
+      ideaText: inputText,
+      updatedAt: new Date(),
+    };
+    ideaList.push(convertedIdea);
+    return ideaList.sort((a, b) => {
+      return a.id - b.id;
+    });
+  }, [editIdeaId, ideaCategory, inputText]);
 
   const editPress = useCallback(() => {
     if (!inputText) {
       return;
     }
     const {currentUser} = firebase.auth();
-    if (currentUser && ideaCategory) {
+    if (currentUser) {
       const db = firebase.firestore();
       const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaCategory.categoryId);
+
+      const sortIdeaList = getSortIdeaList();
       ref
         .set(
           {
-            categoryName: inputText,
-            ideaList: ideaCategory.ideaList,
+            categoryName: ideaCategory.categoryName,
+            ideaList: sortIdeaList,
             updatedAt: new Date(),
           },
           {merge: true},
@@ -63,11 +109,11 @@ export const IdeaCategoryInput: React.FC<Props> = ({ideaCategory, onPress}) => {
           Alert.alert(errorMsg.title, errorMsg.description);
         });
     }
-  }, [ideaCategory, inputText, onPress]);
+  }, [getSortIdeaList, onPress, ideaCategory, inputText]);
 
   useEffect(() => {
-    ideaCategory && setInputText(ideaCategory.categoryName);
-  }, [ideaCategory]);
+    text && setInputText(text);
+  }, [text]);
 
   return (
     <View style={styles.container}>
