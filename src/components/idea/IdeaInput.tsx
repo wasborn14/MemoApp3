@@ -121,6 +121,8 @@ export const IdeaInput: React.FC<Props> = ({
         value={inputText}
         style={styles.inputText}
         onChangeText={(text) => setInputText(text)}
+        onBlur={onPress ? editPress : createPress}
+        placeholder="create Idea..."
       />
       <TouchableOpacity onPress={onPress ? editPress : createPress}>
         {onPress ? (
@@ -136,10 +138,11 @@ export const IdeaInput: React.FC<Props> = ({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    marginHorizontal: 16,
-    marginVertical: 16,
     paddingVertical: 8,
     paddingHorizontal: 19,
+    marginVertical: 4,
+    marginRight: 16,
+    marginLeft: 30,
     borderRadius: 20,
     shadowColor: '#000',
     shadowOffset: {width: 2, height: 2},

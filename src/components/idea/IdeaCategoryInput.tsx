@@ -6,11 +6,16 @@ import {translateErrors} from '../../utils';
 import {IdeaCategoryDetail} from '../../screens/idea/reducer/reducer';
 
 type Props = {
+  handlePressDisabled?: () => void;
   ideaCategory?: IdeaCategoryDetail;
   onPress?: () => void;
 };
 
-export const IdeaCategoryInput: React.FC<Props> = ({ideaCategory, onPress}) => {
+export const IdeaCategoryInput: React.FC<Props> = ({
+  handlePressDisabled,
+  ideaCategory,
+  onPress,
+}) => {
   const [inputText, setInputText] = useState('');
 
   const createPress = useCallback(() => {
@@ -28,6 +33,7 @@ export const IdeaCategoryInput: React.FC<Props> = ({ideaCategory, onPress}) => {
           updatedAt: new Date(),
         })
         .then(() => {
+          handlePressDisabled && handlePressDisabled();
           setInputText('');
         })
         .catch((error) => {
@@ -36,7 +42,7 @@ export const IdeaCategoryInput: React.FC<Props> = ({ideaCategory, onPress}) => {
           Alert.alert(errorMsg.title, errorMsg.description);
         });
     }
-  }, [inputText]);
+  }, [inputText, handlePressDisabled]);
 
   const editPress = useCallback(() => {
     if (!inputText) {
@@ -75,6 +81,7 @@ export const IdeaCategoryInput: React.FC<Props> = ({ideaCategory, onPress}) => {
         value={inputText}
         style={styles.inputText}
         onChangeText={(text) => setInputText(text)}
+        onBlur={onPress ? editPress : createPress}
       />
       <TouchableOpacity onPress={onPress ? editPress : createPress}>
         {onPress ? (
