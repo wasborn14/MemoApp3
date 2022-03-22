@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Alert, TextInput} from 'react-native';
 import {Feather} from '@expo/vector-icons';
-import firebase from 'firebase';
 import {translateErrors} from '../../utils';
 import {IdeaCategoryDetail, IdeaDetail} from '../../screens/idea/reducer/reducer';
+import {editIdea, updateIdea} from '../../infras/api';
 
 type Props = {
   editIdeaId?: number;
@@ -34,34 +34,20 @@ export const IdeaInput: React.FC<Props> = ({
     if (!inputText) {
       return;
     }
-    const {currentUser} = firebase.auth();
-    if (currentUser) {
-      const idea: IdeaDetail = {
-        id: getMaxId() + 1,
-        ideaText: inputText,
-        point: 1,
-        updatedAt: new Date(),
-      };
-
-      const db = firebase.firestore();
-      const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaCategory.categoryId);
-      ref
-        .set(
-          {
-            categoryName: ideaCategory.categoryName,
-            ideaList: [...ideaCategory.ideaList, idea],
-            updatedAt: new Date(),
-          },
-          {merge: true},
-        )
-        .then(() => {
-          handlePressSave && handlePressSave();
-        })
-        .catch((error) => {
-          const errorMsg = translateErrors(error.code);
-          Alert.alert(errorMsg.title, errorMsg.description);
-        });
-    }
+    const newIdea: IdeaDetail = {
+      id: getMaxId() + 1,
+      ideaText: inputText,
+      point: 1,
+      updatedAt: new Date(),
+    };
+    updateIdea(ideaCategory, newIdea)
+      .then(() => {
+        handlePressSave && handlePressSave();
+      })
+      .catch((error) => {
+        const errorMsg = translateErrors(error.code);
+        Alert.alert(errorMsg.title, errorMsg.description);
+      });
   }, [inputText, ideaCategory, getMaxId, handlePressSave]);
 
   const getSortIdeaList = useCallback(() => {
@@ -86,29 +72,15 @@ export const IdeaInput: React.FC<Props> = ({
     if (!inputText) {
       return;
     }
-    const {currentUser} = firebase.auth();
-    if (currentUser) {
-      const db = firebase.firestore();
-      const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaCategory.categoryId);
-
-      const sortIdeaList = getSortIdeaList();
-      ref
-        .set(
-          {
-            categoryName: ideaCategory.categoryName,
-            ideaList: sortIdeaList,
-            updatedAt: new Date(),
-          },
-          {merge: true},
-        )
-        .then(() => {
-          onPress && onPress();
-        })
-        .catch((error) => {
-          const errorMsg = translateErrors(error.code);
-          Alert.alert(errorMsg.title, errorMsg.description);
-        });
-    }
+    const sortIdeaList = getSortIdeaList();
+    editIdea(ideaCategory, sortIdeaList)
+      .then(() => {
+        onPress && onPress();
+      })
+      .catch((error) => {
+        const errorMsg = translateErrors(error.code);
+        Alert.alert(errorMsg.title, errorMsg.description);
+      });
   }, [getSortIdeaList, onPress, ideaCategory, inputText]);
 
   useEffect(() => {

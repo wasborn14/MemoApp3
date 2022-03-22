@@ -1,10 +1,10 @@
 import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
 import {Feather} from '@expo/vector-icons';
-import firebase from 'firebase';
 import {IdeaCategoryDetail, IdeaDetail} from '../../screens/idea/reducer/reducer';
 import {IdeaInput} from './IdeaInput';
 import {translateErrors} from '../../utils';
+import {deleteIdea} from '../../infras/api';
 
 type Props = {
   ideaCategory: IdeaCategoryDetail;
@@ -14,30 +14,15 @@ type Props = {
 export const Idea: React.FC<Props> = ({ideaCategory, idea}) => {
   const [editIdeaId, setEditIdeaId] = useState(-1);
 
-  const deleteIdea = useCallback(
+  const handlePressDelete = useCallback(
     (id: number) => {
-      const {currentUser} = firebase.auth();
-      if (currentUser) {
-        const deletedIdeaList = ideaCategory.ideaList.filter(function (idea) {
-          return idea.id !== id;
-        });
-
-        const db = firebase.firestore();
-        const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaCategory.categoryId);
-        ref
-          .set(
-            {
-              categoryName: ideaCategory.categoryName,
-              ideaList: deletedIdeaList,
-              updatedAt: new Date(),
-            },
-            {merge: true},
-          )
-          .catch((error) => {
-            const errorMsg = translateErrors(error.code);
-            Alert.alert(errorMsg.title, errorMsg.description);
-          });
-      }
+      const deletedIdeaList = ideaCategory.ideaList.filter(function (idea) {
+        return idea.id !== id;
+      });
+      deleteIdea(ideaCategory, deletedIdeaList).catch((error) => {
+        const errorMsg = translateErrors(error.code);
+        Alert.alert(errorMsg.title, errorMsg.description);
+      });
     },
     [ideaCategory],
   );
@@ -52,12 +37,12 @@ export const Idea: React.FC<Props> = ({ideaCategory, idea}) => {
           text: '削除する',
           style: 'destructive',
           onPress: () => {
-            deleteIdea(id);
+            handlePressDelete(id);
           },
         },
       ]);
     },
-    [deleteIdea],
+    [handlePressDelete],
   );
 
   return (

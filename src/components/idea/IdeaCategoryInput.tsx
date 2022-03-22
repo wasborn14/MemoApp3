@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Alert, TextInput} from 'react-native';
 import {Feather} from '@expo/vector-icons';
-import firebase from 'firebase';
 import {translateErrors} from '../../utils';
 import {IdeaCategoryDetail} from '../../screens/idea/reducer/reducer';
+import {postIdeaCategory, updateIdeaCategory} from '../../infras/api';
 
 type Props = {
   handlePressDisabled?: () => void;
@@ -22,45 +22,21 @@ export const IdeaCategoryInput: React.FC<Props> = ({
     if (!inputText) {
       return;
     }
-    const {currentUser} = firebase.auth();
-    const db = firebase.firestore();
-    if (currentUser) {
-      const ref = db.collection(`users/${currentUser.uid}/ideas`);
-      ref
-        .add({
-          categoryName: inputText,
-          ideaList: [],
-          updatedAt: new Date(),
-        })
-        .then(() => {
-          handlePressDisabled && handlePressDisabled();
-          setInputText('');
-        })
-        .catch((error) => {
-          console.log(error);
-          const errorMsg = translateErrors(error.code);
-          Alert.alert(errorMsg.title, errorMsg.description);
-        });
-    }
+    postIdeaCategory(inputText)
+      .then(() => {
+        handlePressDisabled && handlePressDisabled();
+        setInputText('');
+      })
+      .catch((error) => {
+        console.log(error);
+        const errorMsg = translateErrors(error.code);
+        Alert.alert(errorMsg.title, errorMsg.description);
+      });
   }, [inputText, handlePressDisabled]);
 
   const editPress = useCallback(() => {
-    if (!inputText) {
-      return;
-    }
-    const {currentUser} = firebase.auth();
-    if (currentUser && ideaCategory) {
-      const db = firebase.firestore();
-      const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaCategory.categoryId);
-      ref
-        .set(
-          {
-            categoryName: inputText,
-            ideaList: ideaCategory.ideaList,
-            updatedAt: new Date(),
-          },
-          {merge: true},
-        )
+    if (inputText && ideaCategory) {
+      updateIdeaCategory(ideaCategory, inputText)
         .then(() => {
           onPress && onPress();
         })
