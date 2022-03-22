@@ -1,11 +1,11 @@
 import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
 import {Feather} from '@expo/vector-icons';
-import firebase from 'firebase';
 import {IdeaCategoryDetail} from '../../screens/idea/reducer/reducer';
 import {IdeaCategoryInput} from './IdeaCategoryInput';
 import {IdeaInput} from './IdeaInput';
 import {IdeaList} from './IdeaList';
+import {deleteIdeaCategory} from '../../infras/api';
 
 type Props = {
   ideaCategory: IdeaCategoryDetail;
@@ -16,26 +16,21 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
   const [isCreateIdeaSelected, setIsCreateIdeaSelected] = useState(false);
   const [isCategorySelected, setIsCategorySelected] = useState(false);
 
-  const deleteIdeaCategory = useCallback((id) => {
-    const {currentUser} = firebase.auth();
-    if (currentUser) {
-      const db = firebase.firestore();
-      const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(id);
-      Alert.alert('カテゴリを削除します。', 'よろしいですか？', [
-        {
-          text: 'キャンセル',
+  const handlePressDelete = useCallback((categoryId: string) => {
+    Alert.alert('カテゴリを削除します。', 'よろしいですか？', [
+      {
+        text: 'キャンセル',
+      },
+      {
+        text: '削除する',
+        style: 'destructive',
+        onPress: () => {
+          deleteIdeaCategory(categoryId).catch(() => {
+            Alert.alert('削除に失敗しました。');
+          });
         },
-        {
-          text: '削除する',
-          style: 'destructive',
-          onPress: () => {
-            ref.delete().catch(() => {
-              Alert.alert('削除に失敗しました。');
-            });
-          },
-        },
-      ]);
-    }
+      },
+    ]);
   }, []);
 
   return (
@@ -74,7 +69,7 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
             <TouchableOpacity
               style={styles.ideaCategoryDelete}
               onPress={() => {
-                deleteIdeaCategory(ideaCategory.categoryId);
+                handlePressDelete(ideaCategory.categoryId);
               }}
             >
               <Feather name="x" color="#B0b0b0" size={16} />
