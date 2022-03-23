@@ -1,11 +1,11 @@
 import React, {useCallback, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text, Alert, FlatList} from 'react-native';
 import {Feather} from '@expo/vector-icons';
 import {IdeaCategoryDetail} from '../../screens/idea/reducer/reducer';
 import {IdeaCategoryInput} from './IdeaCategoryInput';
 import {IdeaInput} from './IdeaInput';
-import {IdeaList} from './IdeaList';
 import {deleteIdeaCategory} from '../../infras/api';
+import {Idea} from './Idea';
 
 type Props = {
   ideaCategory: IdeaCategoryDetail;
@@ -77,7 +77,11 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
           </TouchableOpacity>
           {isCategorySelected && (
             <>
-              <IdeaList ideaCategory={ideaCategory} ideaList={ideaCategory.ideaList} />
+              <FlatList
+                data={ideaCategory.ideaList}
+                renderItem={({item}) => <Idea idea={item} ideaCategory={ideaCategory} />}
+                keyExtractor={(item) => item.id.toString()}
+              />
               {!isCreateIdeaSelected && (
                 <TouchableOpacity
                   style={styles.ideaCreatContainer}

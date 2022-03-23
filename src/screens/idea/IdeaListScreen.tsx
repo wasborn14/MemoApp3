@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import {IdeaCategoryInput} from '../../components/idea/IdeaCategoryInput';
 import firebase from 'firebase';
 import {useIdeaListDispatch, useIdeaListState} from './index';
 import {IdeaCategoryDetail, setIdeaCategoryList} from './reducer/reducer';
-import {IdeaCategoryList} from '../../components/idea/IdeaCategoryList';
 import Loading from '../../components/Loading';
 import {useNavigation} from '@react-navigation/native';
 import {IdeaTabNavigation} from '../../navigation';
 import {Feather} from '@expo/vector-icons';
+import {IdeaCategory} from '../../components/idea/IdeaCategory';
 
 const IdeaListScreen = () => {
   const nav = useNavigation<IdeaTabNavigation>();
@@ -75,7 +75,14 @@ const IdeaListScreen = () => {
       {isCreateCategory && (
         <IdeaCategoryInput handlePressDisabled={() => setIsCreateCategory(false)} />
       )}
-      <IdeaCategoryList ideaCategoryList={ideaCategoryList} />
+      <View style={styles.ideaCategoryListWrap}>
+        <FlatList
+          data={ideaCategoryList}
+          renderItem={({item}) => <IdeaCategory ideaCategory={item} />}
+          keyExtractor={(item) => item.categoryId}
+          contentContainerStyle={{paddingBottom: 20}}
+        />
+      </View>
     </View>
   );
 };
@@ -84,6 +91,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#8b4513',
+  },
+  ideaCategoryListWrap: {
+    marginTop: 8,
   },
 });
 
