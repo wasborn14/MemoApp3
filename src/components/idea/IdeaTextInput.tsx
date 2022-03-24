@@ -2,21 +2,21 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Alert, TextInput} from 'react-native';
 import {Feather} from '@expo/vector-icons';
 import {translateErrors} from '../../utils';
-import {IdeaCategoryDetail, IdeaDetail} from '../../screens/idea/reducer/reducer';
-import {editIdea, updateIdea} from '../../infras/api';
+import {IdeaTitleDetail, IdeaTextDetail} from '../../screens/idea/reducer/reducer';
+import {editIdeaText, updateIdeaText} from '../../infras/api';
 
 type Props = {
-  editIdeaId?: number;
-  ideaCategory: IdeaCategoryDetail;
+  editIdeaTextId?: number;
+  ideaTitle: IdeaTitleDetail;
   id?: string;
   text?: string;
   onPress?: () => void;
   handlePressSave?: () => void;
 };
 
-export const IdeaInput: React.FC<Props> = ({
-  editIdeaId,
-  ideaCategory,
+export const IdeaTextInput: React.FC<Props> = ({
+  editIdeaTextId,
+  ideaTitle,
   text,
   onPress,
   handlePressSave,
@@ -24,23 +24,23 @@ export const IdeaInput: React.FC<Props> = ({
   const [inputText, setInputText] = useState('');
 
   const getMaxId = useCallback(() => {
-    if (ideaCategory.ideaList.length > 0) {
-      return Math.max(...ideaCategory.ideaList.map((idea) => idea.id));
+    if (ideaTitle.ideaTextList.length > 0) {
+      return Math.max(...ideaTitle.ideaTextList.map((ideaText) => ideaText.id));
     }
     return 0;
-  }, [ideaCategory]);
+  }, [ideaTitle]);
 
   const createPress = useCallback(() => {
     if (!inputText) {
       return;
     }
-    const newIdea: IdeaDetail = {
+    const newIdea: IdeaTextDetail = {
       id: getMaxId() + 1,
       ideaText: inputText,
       point: 1,
       updatedAt: new Date(),
     };
-    updateIdea(ideaCategory, newIdea)
+    updateIdeaText(ideaTitle, newIdea)
       .then(() => {
         handlePressSave && handlePressSave();
       })
@@ -48,32 +48,32 @@ export const IdeaInput: React.FC<Props> = ({
         const errorMsg = translateErrors(error.code);
         Alert.alert(errorMsg.title, errorMsg.description);
       });
-  }, [inputText, ideaCategory, getMaxId, handlePressSave]);
+  }, [inputText, ideaTitle, getMaxId, handlePressSave]);
 
   const getSortIdeaList = useCallback(() => {
-    const targetIdea = ideaCategory.ideaList.filter(function (idea) {
-      return idea.id === editIdeaId;
+    const targetIdea = ideaTitle.ideaTextList.filter(function (ideaText) {
+      return ideaText.id === editIdeaTextId;
     });
-    const ideaList: IdeaDetail[] = ideaCategory.ideaList.filter(function (idea) {
-      return idea.id !== editIdeaId;
+    const ideaTextList: IdeaTextDetail[] = ideaTitle.ideaTextList.filter(function (ideaText) {
+      return ideaText.id !== editIdeaTextId;
     });
-    const convertedIdea: IdeaDetail = {
+    const convertedIdea: IdeaTextDetail = {
       ...targetIdea[0],
       ideaText: inputText,
       updatedAt: new Date(),
     };
-    ideaList.push(convertedIdea);
-    return ideaList.sort((a, b) => {
+    ideaTextList.push(convertedIdea);
+    return ideaTextList.sort((a, b) => {
       return a.id - b.id;
     });
-  }, [editIdeaId, ideaCategory, inputText]);
+  }, [editIdeaTextId, ideaTitle, inputText]);
 
   const editPress = useCallback(() => {
     if (!inputText) {
       return;
     }
     const sortIdeaList = getSortIdeaList();
-    editIdea(ideaCategory, sortIdeaList)
+    editIdeaText(ideaTitle, sortIdeaList)
       .then(() => {
         onPress && onPress();
       })
@@ -81,7 +81,7 @@ export const IdeaInput: React.FC<Props> = ({
         const errorMsg = translateErrors(error.code);
         Alert.alert(errorMsg.title, errorMsg.description);
       });
-  }, [getSortIdeaList, onPress, ideaCategory, inputText]);
+  }, [getSortIdeaList, onPress, ideaTitle, inputText]);
 
   useEffect(() => {
     text && setInputText(text);
@@ -94,7 +94,7 @@ export const IdeaInput: React.FC<Props> = ({
         style={styles.inputText}
         onChangeText={(text) => setInputText(text)}
         onBlur={onPress ? editPress : createPress}
-        placeholder="create Idea..."
+        placeholder="create IdeaText..."
       />
       <TouchableOpacity onPress={onPress ? editPress : createPress}>
         {onPress ? (
