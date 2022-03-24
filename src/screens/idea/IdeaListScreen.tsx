@@ -1,21 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
-import {IdeaCategoryInput} from '../../components/idea/IdeaCategoryInput';
+import {IdeaTitleInput} from '../../components/idea/IdeaTitleInput';
 import firebase from 'firebase';
 import {useIdeaListDispatch, useIdeaListState} from './index';
-import {IdeaCategoryDetail, setIdeaCategoryList} from './reducer/reducer';
+import {IdeaTitleDetail, setIdeaTitleList} from './reducer/reducer';
 import Loading from '../../components/Loading';
 import {useNavigation} from '@react-navigation/native';
 import {IdeaTabNavigation} from '../../navigation';
 import {Feather} from '@expo/vector-icons';
-import {IdeaCategory} from '../../components/idea/IdeaCategory';
+import {IdeaTitle} from '../../components/idea/IdeaTitle';
 
 const IdeaListScreen = () => {
   const nav = useNavigation<IdeaTabNavigation>();
   const [isLoading, setLoading] = useState(false);
   const dispatch = useIdeaListDispatch();
-  const ideaCategoryList = useIdeaListState((state) => state.ideaCategoryList);
-  const [isCreateCategory, setIsCreateCategory] = useState(false);
+  const ideaTitleList = useIdeaListState((state) => state.ideaTitleList);
+  const [isCreateIdeaTitle, setIsCreateIdeaTitle] = useState(false);
 
   useEffect(() => {
     nav.setOptions({
@@ -23,10 +23,10 @@ const IdeaListScreen = () => {
         <TouchableOpacity
           style={{marginTop: 8, marginHorizontal: 16}}
           onPress={() => {
-            setIsCreateCategory((prev) => !prev);
+            setIsCreateIdeaTitle((prev) => !prev);
           }}
         >
-          {isCreateCategory ? (
+          {isCreateIdeaTitle ? (
             <Feather name="x" color="black" size={24} />
           ) : (
             <Feather name="plus" color="black" size={24} />
@@ -34,7 +34,7 @@ const IdeaListScreen = () => {
         </TouchableOpacity>
       ),
     });
-  }, [nav, isCreateCategory]);
+  }, [nav, isCreateIdeaTitle]);
 
   useEffect(() => {
     const db = firebase.firestore();
@@ -47,17 +47,17 @@ const IdeaListScreen = () => {
       const ref = db.collection(`users/${currentUser.uid}/ideas`).orderBy('updatedAt', 'asc');
       unsubscribe = ref.onSnapshot(
         (snapshot) => {
-          const ideaCategoryListData: IdeaCategoryDetail[] = [];
+          const ideaTitleListData: IdeaTitleDetail[] = [];
           snapshot.forEach((doc) => {
             const data = doc.data();
-            ideaCategoryListData.push({
-              categoryId: doc.id,
-              categoryName: data.categoryName,
-              ideaList: data.ideaList,
+            ideaTitleListData.push({
+              ideaTitleId: doc.id,
+              ideaTitleName: data.ideaTitleName,
+              ideaTextList: data.ideaTextList,
               updatedAt: data.updatedAt.toDate(),
             });
           });
-          dispatch(setIdeaCategoryList(ideaCategoryListData));
+          dispatch(setIdeaTitleList(ideaTitleListData));
           setLoading(false);
         },
         () => {
@@ -72,14 +72,14 @@ const IdeaListScreen = () => {
   return (
     <View style={styles.container}>
       <Loading isLoading={isLoading} />
-      {isCreateCategory && (
-        <IdeaCategoryInput handlePressDisabled={() => setIsCreateCategory(false)} />
+      {isCreateIdeaTitle && (
+        <IdeaTitleInput handlePressDisabled={() => setIsCreateIdeaTitle(false)} />
       )}
-      <View style={styles.ideaCategoryListWrap}>
+      <View style={styles.ideaTitleListWrap}>
         <FlatList
-          data={ideaCategoryList}
-          renderItem={({item}) => <IdeaCategory ideaCategory={item} />}
-          keyExtractor={(item) => item.categoryId}
+          data={ideaTitleList}
+          renderItem={({item}) => <IdeaTitle ideaTitle={item} />}
+          keyExtractor={(item) => item.ideaTitleId}
           contentContainerStyle={{paddingBottom: 20}}
         />
       </View>
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#8b4513',
   },
-  ideaCategoryListWrap: {
+  ideaTitleListWrap: {
     marginTop: 8,
   },
 });

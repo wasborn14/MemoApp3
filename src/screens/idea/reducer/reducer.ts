@@ -1,37 +1,37 @@
 export interface IdeaListState {
-  ideaCategoryList: IdeaCategoryDetail[];
+  ideaTitleList: IdeaTitleDetail[];
 }
 
-export interface IdeaCategoryDetail {
-  categoryId: string;
-  categoryName: string;
-  ideaList: IdeaDetail[];
+export interface IdeaTitleDetail {
+  ideaTitleId: string;
+  ideaTitleName: string;
+  ideaTextList: IdeaTextDetail[];
   updatedAt: Date;
 }
 
-export interface IdeaDetail {
-  id: number;
+export interface IdeaTextDetail {
+  ideaTextId: number;
   ideaText: string;
   point: number;
   updatedAt: Date;
 }
 
-export const setIdeaCategoryList = (payload: IdeaCategoryDetail[] | undefined) => ({
-  type: 'setIdeaCategoryList' as const,
+export const setIdeaTitleList = (payload: IdeaTitleDetail[] | undefined) => ({
+  type: 'setIdeaTitleList' as const,
   payload,
 });
 
-export type Action = ReturnType<typeof setIdeaCategoryList>;
+export type Action = ReturnType<typeof setIdeaTitleList>;
 
 export const initialState: IdeaListState = {
-  ideaCategoryList: [],
+  ideaTitleList: [],
 };
 
 export const ideaListReducer = (state: IdeaListState, action: Action) => {
   switch (action.type) {
-    case 'setIdeaCategoryList':
+    case 'setIdeaTitleList':
       if (action.payload) {
-        state.ideaCategoryList = action.payload;
+        state.ideaTitleList = action.payload;
       }
       break;
   }

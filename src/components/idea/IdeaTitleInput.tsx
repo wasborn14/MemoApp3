@@ -2,27 +2,23 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Alert, TextInput} from 'react-native';
 import {Feather} from '@expo/vector-icons';
 import {translateErrors} from '../../utils';
-import {IdeaCategoryDetail} from '../../screens/idea/reducer/reducer';
-import {postIdeaCategory, updateIdeaCategory} from '../../infras/api';
+import {IdeaTitleDetail} from '../../screens/idea/reducer/reducer';
+import {postIdeaTitle, updateIdeaTitle} from '../../infras/api';
 
 type Props = {
   handlePressDisabled?: () => void;
-  ideaCategory?: IdeaCategoryDetail;
+  ideaTitle?: IdeaTitleDetail;
   onPress?: () => void;
 };
 
-export const IdeaCategoryInput: React.FC<Props> = ({
-  handlePressDisabled,
-  ideaCategory,
-  onPress,
-}) => {
+export const IdeaTitleInput: React.FC<Props> = ({handlePressDisabled, ideaTitle, onPress}) => {
   const [inputText, setInputText] = useState('');
 
   const createPress = useCallback(() => {
     if (!inputText) {
       return;
     }
-    postIdeaCategory(inputText)
+    postIdeaTitle(inputText)
       .then(() => {
         handlePressDisabled && handlePressDisabled();
         setInputText('');
@@ -35,8 +31,8 @@ export const IdeaCategoryInput: React.FC<Props> = ({
   }, [inputText, handlePressDisabled]);
 
   const editPress = useCallback(() => {
-    if (inputText && ideaCategory) {
-      updateIdeaCategory(ideaCategory, inputText)
+    if (inputText && ideaTitle) {
+      updateIdeaTitle(ideaTitle, inputText)
         .then(() => {
           onPress && onPress();
         })
@@ -45,11 +41,11 @@ export const IdeaCategoryInput: React.FC<Props> = ({
           Alert.alert(errorMsg.title, errorMsg.description);
         });
     }
-  }, [ideaCategory, inputText, onPress]);
+  }, [ideaTitle, inputText, onPress]);
 
   useEffect(() => {
-    ideaCategory && setInputText(ideaCategory.categoryName);
-  }, [ideaCategory]);
+    ideaTitle && setInputText(ideaTitle.ideaTitleName);
+  }, [ideaTitle]);
 
   return (
     <View style={styles.container}>

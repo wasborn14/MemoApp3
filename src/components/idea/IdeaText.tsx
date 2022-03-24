@@ -1,30 +1,30 @@
 import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
 import {Feather} from '@expo/vector-icons';
-import {IdeaCategoryDetail, IdeaDetail} from '../../screens/idea/reducer/reducer';
-import {IdeaInput} from './IdeaInput';
+import {IdeaTitleDetail, IdeaTextDetail} from '../../screens/idea/reducer/reducer';
+import {IdeaTextInput} from './IdeaTextInput';
 import {translateErrors} from '../../utils';
-import {deleteIdea} from '../../infras/api';
+import {deleteIdeaText} from '../../infras/api';
 
 type Props = {
-  ideaCategory: IdeaCategoryDetail;
-  idea: IdeaDetail;
+  ideaTitle: IdeaTitleDetail;
+  ideaText: IdeaTextDetail;
 };
 
-export const Idea: React.FC<Props> = ({ideaCategory, idea}) => {
-  const [editIdeaId, setEditIdeaId] = useState(-1);
+export const IdeaText: React.FC<Props> = ({ideaTitle, ideaText}) => {
+  const [editIdeaTextId, setEditIdeaTextId] = useState(-1);
 
   const handlePressDelete = useCallback(
     (id: number) => {
-      const deletedIdeaList = ideaCategory.ideaList.filter(function (idea) {
-        return idea.id !== id;
+      const deletedIdeaTextList = ideaTitle.ideaTextList.filter(function (ideaText) {
+        return ideaText.ideaTextId !== id;
       });
-      deleteIdea(ideaCategory, deletedIdeaList).catch((error) => {
+      deleteIdeaText(ideaTitle, deletedIdeaTextList).catch((error) => {
         const errorMsg = translateErrors(error.code);
         Alert.alert(errorMsg.title, errorMsg.description);
       });
     },
-    [ideaCategory],
+    [ideaTitle],
   );
 
   const confirmDelete = useCallback(
@@ -47,32 +47,32 @@ export const Idea: React.FC<Props> = ({ideaCategory, idea}) => {
 
   return (
     <>
-      {idea.id === editIdeaId ? (
+      {ideaText.ideaTextId === editIdeaTextId ? (
         <>
-          <IdeaInput
-            text={idea.ideaText}
-            editIdeaId={editIdeaId}
-            ideaCategory={ideaCategory}
-            onPress={() => setEditIdeaId(-1)}
+          <IdeaTextInput
+            text={ideaText.ideaText}
+            editIdeaTextId={editIdeaTextId}
+            ideaTitle={ideaTitle}
+            onPress={() => setEditIdeaTextId(-1)}
           />
         </>
       ) : (
         <>
           <TouchableOpacity
-            style={styles.ideaCategoryListItem}
+            style={styles.ideaTitleListItem}
             onLongPress={() => {
-              setEditIdeaId(idea.id);
+              setEditIdeaTextId(ideaText.ideaTextId);
             }}
           >
-            <View style={styles.ideaCategoryInner}>
-              <Text style={styles.ideaCategoryListItemTitle} numberOfLines={1}>
-                {idea.ideaText}
+            <View style={styles.ideaTitleInner}>
+              <Text style={styles.ideaTitleListItemTitle} numberOfLines={1}>
+                {ideaText.ideaText}
               </Text>
             </View>
             <TouchableOpacity
-              style={styles.ideaCategoryDelete}
+              style={styles.ideaTitleDelete}
               onPress={() => {
-                confirmDelete(idea.id);
+                confirmDelete(ideaText.ideaTextId);
               }}
             >
               <Feather name="x" color="#B0b0b0" size={16} />
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#8b4513',
     marginTop: 8,
   },
-  ideaCategoryListItem: {
+  ideaTitleListItem: {
     backgroundColor: '#FFF',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -112,19 +112,19 @@ const styles = StyleSheet.create({
   runningColor: {
     backgroundColor: '#adffff',
   },
-  ideaCategoryInner: {
+  ideaTitleInner: {
     flex: 1,
   },
-  ideaCategoryListItemTitle: {
+  ideaTitleListItemTitle: {
     fontSize: 16,
     lineHeight: 26,
   },
-  ideaCategoryListItemDate: {
+  ideaTitleListItemDate: {
     fontSize: 12,
     lineHeight: 16,
     color: '#848484',
   },
-  ideaCategoryDelete: {
+  ideaTitleDelete: {
     padding: 4,
   },
   ideaCreatContainer: {
