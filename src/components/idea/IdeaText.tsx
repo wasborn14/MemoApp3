@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
 import {Feather} from '@expo/vector-icons';
 import {IdeaTitleDetail, IdeaTextDetail} from '../../screens/idea/reducer/reducer';
-import {IdeaInput} from './IdeaInput';
+import {IdeaTextInput} from './IdeaTextInput';
 import {translateErrors} from '../../utils';
 import {deleteIdeaText} from '../../infras/api';
 
@@ -17,7 +17,7 @@ export const IdeaText: React.FC<Props> = ({ideaTitle, ideaText}) => {
   const handlePressDelete = useCallback(
     (id: number) => {
       const deletedIdeaTextList = ideaTitle.ideaTextList.filter(function (ideaText) {
-        return ideaText.id !== id;
+        return ideaText.ideaTextId !== id;
       });
       deleteIdeaText(ideaTitle, deletedIdeaTextList).catch((error) => {
         const errorMsg = translateErrors(error.code);
@@ -26,6 +26,9 @@ export const IdeaText: React.FC<Props> = ({ideaTitle, ideaText}) => {
     },
     [ideaTitle],
   );
+
+
+  // TODO ideaTitleのidをideaTextIdに変更する必要あり
 
   const confirmDelete = useCallback(
     (id: number) => {
@@ -47,9 +50,9 @@ export const IdeaText: React.FC<Props> = ({ideaTitle, ideaText}) => {
 
   return (
     <>
-      {ideaText.id === editIdeaTextId ? (
+      {ideaText.ideaTextId === editIdeaTextId ? (
         <>
-          <IdeaInput
+          <IdeaTextInput
             text={ideaText.ideaText}
             editIdeaTextId={editIdeaTextId}
             ideaTitle={ideaTitle}
@@ -61,7 +64,7 @@ export const IdeaText: React.FC<Props> = ({ideaTitle, ideaText}) => {
           <TouchableOpacity
             style={styles.ideaTitleListItem}
             onLongPress={() => {
-              setEditIdeaTextId(ideaText.id);
+              setEditIdeaTextId(ideaText.ideaTextId);
             }}
           >
             <View style={styles.ideaTitleInner}>
@@ -72,7 +75,7 @@ export const IdeaText: React.FC<Props> = ({ideaTitle, ideaText}) => {
             <TouchableOpacity
               style={styles.ideaTitleDelete}
               onPress={() => {
-                confirmDelete(ideaText.id);
+                confirmDelete(ideaText.ideaTextId);
               }}
             >
               <Feather name="x" color="#B0b0b0" size={16} />

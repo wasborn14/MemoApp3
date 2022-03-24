@@ -25,7 +25,7 @@ export const IdeaTextInput: React.FC<Props> = ({
 
   const getMaxId = useCallback(() => {
     if (ideaTitle.ideaTextList.length > 0) {
-      return Math.max(...ideaTitle.ideaTextList.map((ideaText) => ideaText.id));
+      return Math.max(...ideaTitle.ideaTextList.map((ideaText) => ideaText.ideaTextId));
     }
     return 0;
   }, [ideaTitle]);
@@ -35,7 +35,7 @@ export const IdeaTextInput: React.FC<Props> = ({
       return;
     }
     const newIdea: IdeaTextDetail = {
-      id: getMaxId() + 1,
+      ideaTextId: getMaxId() + 1,
       ideaText: inputText,
       point: 1,
       updatedAt: new Date(),
@@ -52,10 +52,10 @@ export const IdeaTextInput: React.FC<Props> = ({
 
   const getSortIdeaList = useCallback(() => {
     const targetIdea = ideaTitle.ideaTextList.filter(function (ideaText) {
-      return ideaText.id === editIdeaTextId;
+      return ideaText.ideaTextId === editIdeaTextId;
     });
     const ideaTextList: IdeaTextDetail[] = ideaTitle.ideaTextList.filter(function (ideaText) {
-      return ideaText.id !== editIdeaTextId;
+      return ideaText.ideaTextId !== editIdeaTextId;
     });
     const convertedIdea: IdeaTextDetail = {
       ...targetIdea[0],
@@ -64,7 +64,7 @@ export const IdeaTextInput: React.FC<Props> = ({
     };
     ideaTextList.push(convertedIdea);
     return ideaTextList.sort((a, b) => {
-      return a.id - b.id;
+      return a.ideaTextId - b.ideaTextId;
     });
   }, [editIdeaTextId, ideaTitle, inputText]);
 

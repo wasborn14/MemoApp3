@@ -1,18 +1,18 @@
 import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Alert, FlatList} from 'react-native';
 import {Feather} from '@expo/vector-icons';
-import {IdeaCategoryDetail} from '../../screens/idea/reducer/reducer';
-import {IdeaCategoryInput} from './IdeaCategoryInput';
-import {IdeaInput} from './IdeaInput';
-import {deleteIdeaCategory} from '../../infras/api';
-import {Idea} from './Idea';
+import {IdeaTitleDetail} from '../../screens/idea/reducer/reducer';
+import {IdeaTitleInput} from './IdeaTitleInput';
+import {IdeaTextInput} from './IdeaTextInput';
+import {deleteIdeaTitle} from '../../infras/api';
+import {IdeaText} from './IdeaText';
 
 type Props = {
-  ideaCategory: IdeaCategoryDetail;
+  ideaTitle: IdeaTitleDetail;
 };
 
-export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
-  const [editIdeaCategoryId, setEditIdeaCategoryId] = useState('noMatch');
+export const IdeaTitle: React.FC<Props> = ({ideaTitle}) => {
+  const [editIdeaTitleId, setEditIdeaTitleId] = useState('noMatch');
   const [isCreateIdeaSelected, setIsCreateIdeaSelected] = useState(false);
   const [isCategorySelected, setIsCategorySelected] = useState(false);
 
@@ -25,7 +25,7 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
         text: '削除する',
         style: 'destructive',
         onPress: () => {
-          deleteIdeaCategory(categoryId).catch(() => {
+          deleteIdeaTitle(categoryId).catch(() => {
             Alert.alert('削除に失敗しました。');
           });
         },
@@ -35,41 +35,35 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
 
   return (
     <>
-      {ideaCategory.categoryId === editIdeaCategoryId ? (
+      {ideaTitle.categoryId === editIdeaTitleId ? (
         <>
-          <IdeaCategoryInput
-            ideaCategory={ideaCategory}
-            onPress={() => setEditIdeaCategoryId('noMatch')}
-          />
+          <IdeaTitleInput ideaTitle={ideaTitle} onPress={() => setEditIdeaTitleId('noMatch')} />
         </>
       ) : (
         <>
           <TouchableOpacity
-            style={[
-              styles.ideaCategoryListItem,
-              isCategorySelected && styles.selectedCategoryColor,
-            ]}
+            style={[styles.ideaTitleListItem, isCategorySelected && styles.selectedCategoryColor]}
             onPress={() => {
               setIsCategorySelected(!isCategorySelected);
             }}
           >
-            <View style={styles.ideaCategoryInner}>
-              <Text style={styles.ideaCategoryListItemTitle} numberOfLines={1}>
-                {ideaCategory.categoryName}
+            <View style={styles.ideaTitleInner}>
+              <Text style={styles.ideaTitleListItemTitle} numberOfLines={1}>
+                {ideaTitle.categoryName}
               </Text>
             </View>
             <TouchableOpacity
-              style={styles.ideaCategoryDelete}
+              style={styles.ideaTitleDelete}
               onPress={() => {
-                setEditIdeaCategoryId(ideaCategory.categoryId);
+                setEditIdeaTitleId(ideaTitle.categoryId);
               }}
             >
               <Feather name="edit" color="#B0b0b0" size={16} />
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.ideaCategoryDelete}
+              style={styles.ideaTitleDelete}
               onPress={() => {
-                handlePressDelete(ideaCategory.categoryId);
+                handlePressDelete(ideaTitle.categoryId);
               }}
             >
               <Feather name="x" color="#B0b0b0" size={16} />
@@ -78,15 +72,15 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
           {isCategorySelected && (
             <>
               <FlatList
-                data={ideaCategory.ideaList}
-                renderItem={({item}) => <Idea idea={item} ideaCategory={ideaCategory} />}
-                keyExtractor={(item) => item.id.toString()}
+                data={ideaTitle.ideaTextList}
+                renderItem={({item}) => <IdeaText ideaText={item} ideaTitle={ideaTitle} />}
+                keyExtractor={(item) => item.ideaTextId.toString()}
               />
               {!isCreateIdeaSelected && (
                 <TouchableOpacity
                   style={styles.ideaCreatContainer}
                   onPress={() => {
-                    setEditIdeaCategoryId(ideaCategory.categoryId);
+                    setEditIdeaTitleId(ideaTitle.categoryId);
                   }}
                 >
                   <TouchableOpacity
@@ -104,8 +98,8 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
             </>
           )}
           {isCategorySelected && isCreateIdeaSelected && (
-            <IdeaInput
-              ideaCategory={ideaCategory}
+            <IdeaTextInput
+              ideaTitle={ideaTitle}
               handlePressSave={() => setIsCreateIdeaSelected(false)}
             />
           )}
@@ -121,7 +115,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#8b4513',
     marginTop: 8,
   },
-  ideaCategoryListItem: {
+  ideaTitleListItem: {
     backgroundColor: '#FFF',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -144,19 +138,19 @@ const styles = StyleSheet.create({
   runningColor: {
     backgroundColor: '#adffff',
   },
-  ideaCategoryInner: {
+  ideaTitleInner: {
     flex: 1,
   },
-  ideaCategoryListItemTitle: {
+  ideaTitleListItemTitle: {
     fontSize: 16,
     lineHeight: 26,
   },
-  ideaCategoryListItemDate: {
+  ideaTitleListItemDate: {
     fontSize: 12,
     lineHeight: 16,
     color: '#848484',
   },
-  ideaCategoryDelete: {
+  ideaTitleDelete: {
     padding: 4,
   },
   ideaCreatContainer: {
