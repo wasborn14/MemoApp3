@@ -11,7 +11,7 @@ export const postIdeaTitle = async (inputText: string) => {
     const db = firebase.firestore();
     const ref = db.collection(`users/${currentUser.uid}/ideas`);
     return ref.add({
-      categoryName: inputText,
+      ideaTitleName: inputText,
       ideaTextList: [],
       updatedAt: new Date(),
     });
@@ -23,10 +23,10 @@ export const updateIdeaTitle = async (ideaTitle: IdeaTitleDetail, inputText: str
   const {currentUser} = firebase.auth();
   if (currentUser && ideaTitle) {
     const db = firebase.firestore();
-    const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaTitle.categoryId);
+    const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaTitle.ideaTitleId);
     return ref.set(
       {
-        categoryName: inputText,
+        ideaTitleName: inputText,
         ideaTextList: ideaTitle.ideaTextList,
         updatedAt: new Date(),
       },
@@ -36,11 +36,11 @@ export const updateIdeaTitle = async (ideaTitle: IdeaTitleDetail, inputText: str
 };
 
 // delete
-export const deleteIdeaTitle = async (categoryId: string) => {
+export const deleteIdeaTitle = async (ideaTitleId: string) => {
   const {currentUser} = firebase.auth();
   if (currentUser) {
     const db = firebase.firestore();
-    const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(categoryId);
+    const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaTitleId);
     return ref.delete();
   }
 };
@@ -51,10 +51,10 @@ export const updateIdeaText = async (ideaTitle: IdeaTitleDetail, newIdeaText: Id
   const {currentUser} = firebase.auth();
   if (currentUser) {
     const db = firebase.firestore();
-    const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaTitle.categoryId);
+    const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaTitle.ideaTitleId);
     return ref.set(
       {
-        categoryName: ideaTitle.categoryName,
+        ideaTitleName: ideaTitle.ideaTitleName,
         ideaTextList: [...ideaTitle.ideaTextList, newIdeaText],
         updatedAt: new Date(),
       },
@@ -71,10 +71,10 @@ export const editIdeaText = async (
   const {currentUser} = firebase.auth();
   if (currentUser) {
     const db = firebase.firestore();
-    const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaTitle.categoryId);
+    const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaTitle.ideaTitleId);
     return ref.set(
       {
-        categoryName: ideaTitle.categoryName,
+        ideaTitleName: ideaTitle.ideaTitleName,
         ideaTextList: sortIdeaTextList,
         updatedAt: new Date(),
       },
@@ -91,10 +91,10 @@ export const deleteIdeaText = async (
   const {currentUser} = firebase.auth();
   if (currentUser) {
     const db = firebase.firestore();
-    const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaTitle.categoryId);
+    const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaTitle.ideaTitleId);
     return ref.set(
       {
-        categoryName: ideaTitle.categoryName,
+        ideaTitleName: ideaTitle.ideaTitleName,
         ideaTextList: deletedIdeaTextList,
         updatedAt: new Date(),
       },

@@ -44,7 +44,7 @@ export const IdeaTitleInput: React.FC<Props> = ({handlePressDisabled, ideaTitle,
   }, [ideaTitle, inputText, onPress]);
 
   useEffect(() => {
-    ideaTitle && setInputText(ideaTitle.categoryName);
+    ideaTitle && setInputText(ideaTitle.ideaTitleName);
   }, [ideaTitle]);
 
   return (

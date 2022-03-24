@@ -3,8 +3,8 @@ export interface IdeaListState {
 }
 
 export interface IdeaTitleDetail {
-  categoryId: string;
-  categoryName: string;
+  ideaTitleId: string;
+  ideaTitleName: string;
   ideaTextList: IdeaTextDetail[];
   updatedAt: Date;
 }

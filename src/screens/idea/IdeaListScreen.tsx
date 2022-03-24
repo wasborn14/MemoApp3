@@ -15,7 +15,7 @@ const IdeaListScreen = () => {
   const [isLoading, setLoading] = useState(false);
   const dispatch = useIdeaListDispatch();
   const ideaTitleList = useIdeaListState((state) => state.ideaTitleList);
-  const [isCreateCategory, setIsCreateCategory] = useState(false);
+  const [isCreateIdeaTitle, setIsCreateIdeaTitle] = useState(false);
 
   useEffect(() => {
     nav.setOptions({
@@ -23,10 +23,10 @@ const IdeaListScreen = () => {
         <TouchableOpacity
           style={{marginTop: 8, marginHorizontal: 16}}
           onPress={() => {
-            setIsCreateCategory((prev) => !prev);
+            setIsCreateIdeaTitle((prev) => !prev);
           }}
         >
-          {isCreateCategory ? (
+          {isCreateIdeaTitle ? (
             <Feather name="x" color="black" size={24} />
           ) : (
             <Feather name="plus" color="black" size={24} />
@@ -34,7 +34,7 @@ const IdeaListScreen = () => {
         </TouchableOpacity>
       ),
     });
-  }, [nav, isCreateCategory]);
+  }, [nav, isCreateIdeaTitle]);
 
   useEffect(() => {
     const db = firebase.firestore();
@@ -51,8 +51,8 @@ const IdeaListScreen = () => {
           snapshot.forEach((doc) => {
             const data = doc.data();
             ideaTitleListData.push({
-              categoryId: doc.id,
-              categoryName: data.categoryName,
+              ideaTitleId: doc.id,
+              ideaTitleName: data.ideaTitleName,
               ideaTextList: data.ideaTextList,
               updatedAt: data.updatedAt.toDate(),
             });
@@ -72,14 +72,14 @@ const IdeaListScreen = () => {
   return (
     <View style={styles.container}>
       <Loading isLoading={isLoading} />
-      {isCreateCategory && (
-        <IdeaTitleInput handlePressDisabled={() => setIsCreateCategory(false)} />
+      {isCreateIdeaTitle && (
+        <IdeaTitleInput handlePressDisabled={() => setIsCreateIdeaTitle(false)} />
       )}
       <View style={styles.ideaTitleListWrap}>
         <FlatList
           data={ideaTitleList}
           renderItem={({item}) => <IdeaTitle ideaTitle={item} />}
-          keyExtractor={(item) => item.categoryId}
+          keyExtractor={(item) => item.ideaTitleId}
           contentContainerStyle={{paddingBottom: 20}}
         />
       </View>

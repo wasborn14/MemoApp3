@@ -27,9 +27,6 @@ export const IdeaText: React.FC<Props> = ({ideaTitle, ideaText}) => {
     [ideaTitle],
   );
 
-
-  // TODO ideaTitleのidをideaTextIdに変更する必要あり
-
   const confirmDelete = useCallback(
     (id: number) => {
       Alert.alert('アイデアを削除します。', 'よろしいですか？', [
