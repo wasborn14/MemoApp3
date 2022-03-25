@@ -1,9 +1,55 @@
 import firebase from 'firebase';
-import {IdeaTitleDetail, IdeaTextDetail} from '../screens/idea/reducer/reducer';
+import {IdeaTitleDetail, IdeaTextDetail} from '../screens/idea/list/reducer/reducer';
+import {IdeaCategoryDetail} from '../screens/idea/category/reducer/reducer';
 
-// IdeaText
+// IdeaCategory
+
+// post
+export const postIdeaCategory = async (inputText: string, maxSortNo: number) => {
+  const {currentUser} = firebase.auth();
+  console.log(inputText);
+  if (currentUser) {
+    const db = firebase.firestore();
+    const ref = db.collection(`users/${currentUser.uid}/ideaCategories`);
+    return ref.add({
+      ideaCategoryName: inputText,
+      sortNo: maxSortNo + 1,
+      updatedAt: new Date(),
+    });
+  }
+};
+
+// update
+export const updateIdeaCategory = async (ideaCategory: IdeaCategoryDetail, inputText: string) => {
+  const {currentUser} = firebase.auth();
+  if (currentUser && ideaCategory) {
+    const db = firebase.firestore();
+    const ref = db
+      .collection(`users/${currentUser.uid}/ideaCategories`)
+      .doc(ideaCategory.ideaCategoryId);
+    return ref.set(
+      {
+        ideaCategoryId: ideaCategory.ideaCategoryId,
+        ideaCategoryName: inputText,
+        sortNo: ideaCategory.sortNo,
+        updatedAt: new Date(),
+      },
+      {merge: true},
+    );
+  }
+};
+
+// delete
+export const deleteIdeaCategory = async (ideaCategoryId: string) => {
+  const {currentUser} = firebase.auth();
+  if (currentUser) {
+    const db = firebase.firestore();
+    const ref = db.collection(`users/${currentUser.uid}/ideaCategories`).doc(ideaCategoryId);
+    return ref.delete();
+  }
+};
+
 // IdeaTitle
-
 // post
 export const postIdeaTitle = async (inputText: string) => {
   const {currentUser} = firebase.auth();

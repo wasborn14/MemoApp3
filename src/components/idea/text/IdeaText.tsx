@@ -1,10 +1,10 @@
 import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
 import {Feather} from '@expo/vector-icons';
-import {IdeaTitleDetail, IdeaTextDetail} from '../../screens/idea/reducer/reducer';
+import {IdeaTitleDetail, IdeaTextDetail} from '../../../screens/idea/list/reducer/reducer';
 import {IdeaTextInput} from './IdeaTextInput';
-import {translateErrors} from '../../utils';
-import {deleteIdeaText} from '../../infras/api';
+import {translateErrors} from '../../../utils';
+import {deleteIdeaText} from '../../../infras/api';
 
 type Props = {
   ideaTitle: IdeaTitleDetail;

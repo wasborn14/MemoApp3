@@ -1,11 +1,11 @@
 import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Alert, FlatList} from 'react-native';
 import {Feather} from '@expo/vector-icons';
-import {IdeaTitleDetail} from '../../screens/idea/reducer/reducer';
+import {IdeaTitleDetail} from '../../../screens/idea/list/reducer/reducer';
 import {IdeaTitleInput} from './IdeaTitleInput';
-import {IdeaTextInput} from './IdeaTextInput';
-import {deleteIdeaTitle} from '../../infras/api';
-import {IdeaText} from './IdeaText';
+import {IdeaTextInput} from '../text/IdeaTextInput';
+import {deleteIdeaTitle} from '../../../infras/api';
+import {IdeaText} from '../text/IdeaText';
 
 type Props = {
   ideaTitle: IdeaTitleDetail;
