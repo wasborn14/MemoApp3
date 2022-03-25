@@ -1,24 +1,30 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Alert, TextInput} from 'react-native';
 import {Feather} from '@expo/vector-icons';
-import {translateErrors} from '../../utils';
-import {IdeaTitleDetail} from '../../screens/idea/reducer/reducer';
-import {postIdeaTitle, updateIdeaTitle} from '../../infras/api';
+import {translateErrors} from '../../../utils';
+import {IdeaCategoryDetail} from '../../../screens/idea/category/reducer/reducer';
+import {postIdeaCategory, updateIdeaCategory} from '../../../infras/api';
+import {useIdeaCategoryListState} from '../../../screens/idea/category';
 
 type Props = {
   handlePressDisabled?: () => void;
-  ideaTitle?: IdeaTitleDetail;
+  ideaCategory?: IdeaCategoryDetail;
   onPress?: () => void;
 };
 
-export const IdeaTitleInput: React.FC<Props> = ({handlePressDisabled, ideaTitle, onPress}) => {
+export const IdeaCategoryInput: React.FC<Props> = ({
+  handlePressDisabled,
+  ideaCategory,
+  onPress,
+}) => {
   const [inputText, setInputText] = useState('');
+  const maxSortNo = useIdeaCategoryListState((state) => state.maxSortNo);
 
   const createPress = useCallback(() => {
     if (!inputText) {
       return;
     }
-    postIdeaTitle(inputText)
+    postIdeaCategory(inputText, maxSortNo)
       .then(() => {
         handlePressDisabled && handlePressDisabled();
         setInputText('');
@@ -28,11 +34,11 @@ export const IdeaTitleInput: React.FC<Props> = ({handlePressDisabled, ideaTitle,
         const errorMsg = translateErrors(error.code);
         Alert.alert(errorMsg.title, errorMsg.description);
       });
-  }, [inputText, handlePressDisabled]);
+  }, [inputText, handlePressDisabled, maxSortNo]);
 
   const editPress = useCallback(() => {
-    if (inputText && ideaTitle) {
-      updateIdeaTitle(ideaTitle, inputText)
+    if (inputText && ideaCategory) {
+      updateIdeaCategory(ideaCategory, inputText)
         .then(() => {
           onPress && onPress();
         })
@@ -41,11 +47,11 @@ export const IdeaTitleInput: React.FC<Props> = ({handlePressDisabled, ideaTitle,
           Alert.alert(errorMsg.title, errorMsg.description);
         });
     }
-  }, [ideaTitle, inputText, onPress]);
+  }, [ideaCategory, inputText, onPress]);
 
   useEffect(() => {
-    ideaTitle && setInputText(ideaTitle.ideaTitleName);
-  }, [ideaTitle]);
+    ideaCategory && setInputText(ideaCategory.ideaCategoryName);
+  }, [ideaCategory]);
 
   return (
     <View style={styles.container}>

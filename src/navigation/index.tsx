@@ -20,7 +20,8 @@ import {SimpleLineIcons} from '@expo/vector-icons';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import GraphTopContainer from '../screens/graph/top';
 import OpeningScreen from '../screens/OpeningScreen';
-import IdeaListContainer from '../screens/idea';
+import IdeaListContainer from '../screens/idea/list';
+import IdeaCategoryListContainer from '../screens/idea/category';
 
 export type RootStackParamList = {
   Opening: undefined;
@@ -52,6 +53,7 @@ export type GraphStackPramList = {
 
 export type IdeaStackPramList = {
   IdeaList: undefined;
+  IdeaCategory: undefined;
 };
 
 export type SettingStackParamList = {
@@ -147,6 +149,7 @@ const IdeaStackNavigator = () => {
       }}
     >
       <IdeaStack.Screen name="IdeaList" component={IdeaListContainer} />
+      <IdeaStack.Screen name="IdeaCategory" component={IdeaCategoryListContainer} />
     </IdeaStack.Navigator>
   );
 };

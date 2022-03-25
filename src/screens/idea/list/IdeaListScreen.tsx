@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
-import {IdeaTitleInput} from '../../components/idea/IdeaTitleInput';
+import {View, StyleSheet, TouchableOpacity, FlatList, Text} from 'react-native';
+import {IdeaTitleInput} from '../../../components/idea/title/IdeaTitleInput';
 import firebase from 'firebase';
 import {useIdeaListDispatch, useIdeaListState} from './index';
 import {IdeaTitleDetail, setIdeaTitleList} from './reducer/reducer';
-import Loading from '../../components/Loading';
+import Loading from '../../../components/Loading';
 import {useNavigation} from '@react-navigation/native';
-import {IdeaTabNavigation} from '../../navigation';
+import {IdeaTabNavigation} from '../../../navigation';
 import {Feather} from '@expo/vector-icons';
-import {IdeaTitle} from '../../components/idea/IdeaTitle';
+import {IdeaTitle} from '../../../components/idea/title/IdeaTitle';
+import Swiper from 'react-native-swiper';
 
 const IdeaListScreen = () => {
   const nav = useNavigation<IdeaTabNavigation>();
@@ -19,6 +20,17 @@ const IdeaListScreen = () => {
 
   useEffect(() => {
     nav.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity
+          style={{marginTop: 8, marginHorizontal: 16}}
+          onPress={() => {
+            nav.navigate('IdeaCategory');
+          }}
+        >
+          <Text style={{fontSize: 24, fontWeight: 'bold'}}>Idea</Text>
+        </TouchableOpacity>
+      ),
+      headerTitle: '',
       headerRight: () => (
         <TouchableOpacity
           style={{marginTop: 8, marginHorizontal: 16}}
@@ -72,17 +84,34 @@ const IdeaListScreen = () => {
   return (
     <View style={styles.container}>
       <Loading isLoading={isLoading} />
-      {isCreateIdeaTitle && (
-        <IdeaTitleInput handlePressDisabled={() => setIsCreateIdeaTitle(false)} />
-      )}
-      <View style={styles.ideaTitleListWrap}>
-        <FlatList
-          data={ideaTitleList}
-          renderItem={({item}) => <IdeaTitle ideaTitle={item} />}
-          keyExtractor={(item) => item.ideaTitleId}
-          contentContainerStyle={{paddingBottom: 20}}
-        />
-      </View>
+      <Swiper showsButtons={false}>
+        <View>
+          {isCreateIdeaTitle && (
+            <IdeaTitleInput handlePressDisabled={() => setIsCreateIdeaTitle(false)} />
+          )}
+          <View style={styles.ideaTitleListWrap}>
+            <FlatList
+              data={ideaTitleList}
+              renderItem={({item}) => <IdeaTitle ideaTitle={item} />}
+              keyExtractor={(item) => item.ideaTitleId}
+              contentContainerStyle={{paddingBottom: 20}}
+            />
+          </View>
+        </View>
+        <View>
+          {isCreateIdeaTitle && (
+            <IdeaTitleInput handlePressDisabled={() => setIsCreateIdeaTitle(false)} />
+          )}
+          <View style={styles.ideaTitleListWrap}>
+            <FlatList
+              data={ideaTitleList}
+              renderItem={({item}) => <IdeaTitle ideaTitle={item} />}
+              keyExtractor={(item) => item.ideaTitleId}
+              contentContainerStyle={{paddingBottom: 20}}
+            />
+          </View>
+        </View>
+      </Swiper>
     </View>
   );
 };

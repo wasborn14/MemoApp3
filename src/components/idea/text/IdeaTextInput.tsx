@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Alert, TextInput} from 'react-native';
 import {Feather} from '@expo/vector-icons';
-import {translateErrors} from '../../utils';
-import {IdeaTitleDetail, IdeaTextDetail} from '../../screens/idea/reducer/reducer';
-import {editIdeaText, updateIdeaText} from '../../infras/api';
+import {translateErrors} from '../../../utils';
+import {IdeaTitleDetail, IdeaTextDetail} from '../../../screens/idea/list/reducer/reducer';
+import {editIdeaText, updateIdeaText} from '../../../infras/api';
 
 type Props = {
   editIdeaTextId?: number;
