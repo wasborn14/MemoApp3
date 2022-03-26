@@ -6,12 +6,14 @@ import {IdeaTitleInput} from './IdeaTitleInput';
 import {IdeaTextInput} from '../text/IdeaTextInput';
 import {deleteIdeaTitle} from '../../../infras/api';
 import {IdeaText} from '../text/IdeaText';
+import {IdeaCategoryDetail} from '../../../screens/idea/category/reducer/reducer';
 
 type Props = {
+  ideaCategory: IdeaCategoryDetail;
   ideaTitle: IdeaTitleDetail;
 };
 
-export const IdeaTitle: React.FC<Props> = ({ideaTitle}) => {
+export const IdeaTitle: React.FC<Props> = ({ideaCategory, ideaTitle}) => {
   const [editIdeaTitleId, setEditIdeaTitleId] = useState('noMatch');
   const [isCreateIdeaSelected, setIsCreateIdeaSelected] = useState(false);
   const [isIdeaTitleSelected, setIsIdeaTitleSelected] = useState(false);
@@ -37,7 +39,11 @@ export const IdeaTitle: React.FC<Props> = ({ideaTitle}) => {
     <>
       {ideaTitle.ideaTitleId === editIdeaTitleId ? (
         <>
-          <IdeaTitleInput ideaTitle={ideaTitle} onPress={() => setEditIdeaTitleId('noMatch')} />
+          <IdeaTitleInput
+            ideaCategory={ideaCategory}
+            ideaTitle={ideaTitle}
+            onPress={() => setEditIdeaTitleId('noMatch')}
+          />
         </>
       ) : (
         <>
@@ -151,7 +157,8 @@ const styles = StyleSheet.create({
     color: '#848484',
   },
   ideaTitleDelete: {
-    padding: 4,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
   },
   ideaCreatContainer: {
     flexDirection: 'row',
