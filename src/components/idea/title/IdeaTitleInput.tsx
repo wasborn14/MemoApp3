@@ -4,21 +4,28 @@ import {Feather} from '@expo/vector-icons';
 import {translateErrors} from '../../../utils';
 import {IdeaTitleDetail} from '../../../screens/idea/list/reducer/reducer';
 import {postIdeaTitle, updateIdeaTitle} from '../../../infras/api';
+import {IdeaCategoryDetail} from '../../../screens/idea/category/reducer/reducer';
 
 type Props = {
+  ideaCategory: IdeaCategoryDetail;
   handlePressDisabled?: () => void;
   ideaTitle?: IdeaTitleDetail;
   onPress?: () => void;
 };
 
-export const IdeaTitleInput: React.FC<Props> = ({handlePressDisabled, ideaTitle, onPress}) => {
+export const IdeaTitleInput: React.FC<Props> = ({
+  ideaCategory,
+  handlePressDisabled,
+  ideaTitle,
+  onPress,
+}) => {
   const [inputText, setInputText] = useState('');
 
   const createPress = useCallback(() => {
     if (!inputText) {
       return;
     }
-    postIdeaTitle(inputText)
+    postIdeaTitle(ideaCategory, inputText)
       .then(() => {
         handlePressDisabled && handlePressDisabled();
         setInputText('');
@@ -28,11 +35,12 @@ export const IdeaTitleInput: React.FC<Props> = ({handlePressDisabled, ideaTitle,
         const errorMsg = translateErrors(error.code);
         Alert.alert(errorMsg.title, errorMsg.description);
       });
-  }, [inputText, handlePressDisabled]);
+  }, [inputText, ideaCategory, handlePressDisabled]);
 
   const editPress = useCallback(() => {
     if (inputText && ideaTitle) {
-      updateIdeaTitle(ideaTitle, inputText)
+      ideaCategory;
+      updateIdeaTitle(ideaCategory, ideaTitle, inputText)
         .then(() => {
           onPress && onPress();
         })
@@ -41,7 +49,7 @@ export const IdeaTitleInput: React.FC<Props> = ({handlePressDisabled, ideaTitle,
           Alert.alert(errorMsg.title, errorMsg.description);
         });
     }
-  }, [ideaTitle, inputText, onPress]);
+  }, [ideaCategory, ideaTitle, inputText, onPress]);
 
   useEffect(() => {
     ideaTitle && setInputText(ideaTitle.ideaTitleName);
