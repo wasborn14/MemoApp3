@@ -32,6 +32,7 @@ export const IdeaTextInput: React.FC<Props> = ({
 
   const createPress = useCallback(() => {
     if (!inputText) {
+      handlePressSave && handlePressSave();
       return;
     }
     const newIdea: IdeaTextDetail = {

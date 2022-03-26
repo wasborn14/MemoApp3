@@ -22,6 +22,7 @@ export const IdeaCategoryInput: React.FC<Props> = ({
 
   const createPress = useCallback(() => {
     if (!inputText) {
+      handlePressDisabled && handlePressDisabled();
       return;
     }
     postIdeaCategory(inputText, maxSortNo)

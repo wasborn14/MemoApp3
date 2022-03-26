@@ -23,6 +23,7 @@ export const IdeaTitleInput: React.FC<Props> = ({
 
   const createPress = useCallback(() => {
     if (!inputText) {
+      handlePressDisabled && handlePressDisabled();
       return;
     }
     postIdeaTitle(ideaCategory, inputText)
