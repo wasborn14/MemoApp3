@@ -92,21 +92,21 @@ const IdeaCategoryListScreen = () => {
   return (
     <View style={styles.container}>
       <Loading isLoading={isLoading} />
-      <View style={styles.ideaTitleWrap}>
+      <TouchableOpacity
+        style={styles.ideaTitleCreateButton}
+        onPress={() => {
+          setIsCreateIdeaCategory((prev) => !prev);
+        }}
+      >
         <Text style={styles.ideaTitle}>Create Category</Text>
-        <TouchableOpacity
-          style={styles.ideaTitleCreateButton}
-          onPress={() => {
-            setIsCreateIdeaCategory((prev) => !prev);
-          }}
-        >
+        <View style={styles.iconWrap}>
           {isCreateIdeaCategory ? (
             <Feather name="x" color="white" size={24} />
           ) : (
             <Feather name="plus" color="white" size={24} />
           )}
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
       <View>
         {isCreateIdeaCategory && (
           <IdeaCategoryInput handlePressDisabled={() => setIsCreateIdeaCategory(false)} />
@@ -129,9 +129,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#8b4513',
   },
-  ideaTitleWrap: {flexDirection: 'row', marginTop: 8},
-  ideaTitle: {fontSize: 24, marginLeft: 16, marginBottom: 8, fontWeight: 'bold', color: 'white'},
-  ideaTitleCreateButton: {marginTop: 8, marginHorizontal: 16},
+  ideaTitleCreateButton: {
+    marginTop: 8,
+    marginHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  ideaTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  iconWrap: {
+    marginTop: 4,
+    marginLeft: 8,
+  },
   ideaTitleListWrap: {
     marginTop: 8,
   },

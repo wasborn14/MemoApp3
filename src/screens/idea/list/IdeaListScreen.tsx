@@ -157,22 +157,22 @@ const IdeaListScreen = () => {
       >
         {ideaCategoryList.map((ideaCategory, index) => (
           <View key={index.toString()}>
-            <View style={styles.ideaTitleListWrap}>
-              <View style={styles.ideaTitleWrap}>
-                <Text style={styles.ideaTitle}>{ideaCategory.ideaCategoryName}</Text>
-                <TouchableOpacity
-                  style={styles.ideaTitleButton}
-                  onPress={() => {
-                    setIsCreateIdeaTitle((prev) => !prev);
-                  }}
-                >
-                  {isCreateIdeaTitle ? (
-                    <Feather name="x" color="white" size={24} />
-                  ) : (
-                    <Feather name="plus" color="white" size={24} />
-                  )}
-                </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.ideaTitleButton}
+              onPress={() => {
+                setIsCreateIdeaTitle((prev) => !prev);
+              }}
+            >
+              <Text style={styles.ideaTitle}>{ideaCategory.ideaCategoryName}</Text>
+              <View style={styles.iconWrap}>
+                {isCreateIdeaTitle ? (
+                  <Feather name="x" color="white" size={24} />
+                ) : (
+                  <Feather name="plus" color="white" size={24} />
+                )}
               </View>
+            </TouchableOpacity>
+            <View style={styles.ideaTitleListWrap}>
               {isCreateIdeaTitle && (
                 <IdeaTitleInput
                   ideaCategory={ideaCategory}
@@ -198,9 +198,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#8b4513',
   },
-  ideaTitleWrap: {flexDirection: 'row'},
-  ideaTitle: {fontSize: 24, marginLeft: 16, marginBottom: 8, fontWeight: 'bold', color: 'white'},
-  ideaTitleButton: {marginTop: 4, marginLeft: 16},
+  ideaTitleButton: {
+    marginTop: 8,
+    marginLeft: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  ideaTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  iconWrap: {
+    marginLeft: 8,
+  },
   ideaTitleListWrap: {
     marginTop: 8,
   },
