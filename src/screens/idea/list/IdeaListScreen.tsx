@@ -117,28 +117,6 @@ const IdeaListScreen = () => {
     return unsubscribe;
   }, [dispatch]);
 
-  // const ideaCategoryIdList = useMemo(
-  //   () => ideaCategoryList.map((ideaCategory) => ideaCategory.ideaCategoryId),
-  //   [ideaCategoryList],
-  // );
-
-  // const separetedIdeaTitleList = useMemo(() => {
-  //   return ideaCategoryList.map((ideaCategory) => {
-  //     ideaTitleList.filter(function (ideaTitle) {
-  //       return ideaTitle.ideaCategoryId === ideaCategory.ideaCategoryId;
-  //     });
-  //   });
-  // }, [ideaCategoryList, ideaTitleList]);
-
-  // const separetedIdeaTitleList = useMemo(
-  //   (ideaCategory) => {
-  //     return ideaTitleList.filter(function (ideaTitle) {
-  //       return ideaTitle.ideaCategoryId === ideaCategory.ideaCategoryId;
-  //     });
-  //   },
-  //   [ideaTitleList],
-  // );
-
   const separetedIdeaTitleList = (ideaCategory: IdeaCategoryDetail) => {
     return ideaTitleList.filter(function (ideaTitle) {
       return ideaTitle.ideaCategoryId === ideaCategory.ideaCategoryId;
@@ -150,8 +128,8 @@ const IdeaListScreen = () => {
       <Loading isLoading={isLoading} />
       <Swiper
         showsButtons={false}
-        loadMinimal={false}
         loop={false}
+        loadMinimal={true} // これで
         dotColor="rgba(255,255,255,0)"
         activeDotColor="rgba(255,255,255,0)"
       >
@@ -184,6 +162,7 @@ const IdeaListScreen = () => {
                 renderItem={({item}) => <IdeaTitle ideaCategory={ideaCategory} ideaTitle={item} />}
                 keyExtractor={(item) => item.ideaTitleId}
                 contentContainerStyle={{paddingBottom: 20}}
+                ListFooterComponent={<View style={{height: 100}}></View>}
               />
             </View>
           </View>

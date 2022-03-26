@@ -6,7 +6,6 @@ import {IdeaCategoryDetail} from '../screens/idea/category/reducer/reducer';
 // post
 export const postIdeaCategory = async (inputText: string, maxSortNo: number) => {
   const {currentUser} = firebase.auth();
-  console.log(inputText);
   if (currentUser) {
     const db = firebase.firestore();
     const ref = db.collection(`users/${currentUser.uid}/ideaCategories`);
