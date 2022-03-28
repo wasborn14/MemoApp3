@@ -129,7 +129,6 @@ const IdeaListScreen = () => {
       <Swiper
         showsButtons={false}
         loop={false}
-        loadMinimal={true} // これで
         dotColor="rgba(255,255,255,0)"
         activeDotColor="rgba(255,255,255,0)"
       >
