@@ -10,9 +10,10 @@ import {useIdeaListState} from '../../../screens/idea/list';
 
 type Props = {
   ideaTitle: IdeaTitleDetail;
+  onLongPress: () => void;
 };
 
-export const IdeaTitle: React.FC<Props> = ({ideaTitle}) => {
+export const IdeaTitle: React.FC<Props> = ({ideaTitle, onLongPress}) => {
   const [editIdeaTitleId, setEditIdeaTitleId] = useState('noMatch');
   const [isCreateIdeaSelected, setIsCreateIdeaSelected] = useState(false);
   const [isIdeaTitleSelected, setIsIdeaTitleSelected] = useState(false);
@@ -53,6 +54,7 @@ export const IdeaTitle: React.FC<Props> = ({ideaTitle}) => {
             onPress={() => {
               setIsIdeaTitleSelected(!isIdeaTitleSelected);
             }}
+            onLongPress={onLongPress}
           >
             <View style={styles.ideaTitleInner}>
               <Text style={styles.ideaTitleListItemTitle} numberOfLines={1}>

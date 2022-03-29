@@ -147,6 +147,28 @@ export const editIdeaText = async (
   }
 };
 
+// sortNoUpdate
+export const editIdeaTextSortNo = async (
+  selectedIdeaCategoryId: string,
+  ideaTitleId: string,
+  sortNo: number,
+) => {
+  const {currentUser} = firebase.auth();
+  if (currentUser) {
+    const db = firebase.firestore();
+    const ref = db
+      .collection(`users/${currentUser.uid}/ideaCategories/${selectedIdeaCategoryId}/ideaTitles`)
+      .doc(ideaTitleId);
+    return ref.set(
+      {
+        sortNo: sortNo,
+        updatedAt: new Date(),
+      },
+      {merge: true},
+    );
+  }
+};
+
 // delete
 export const deleteIdeaText = async (
   selectedIdeaCategoryId: string,
