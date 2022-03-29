@@ -4,29 +4,24 @@ import {Feather} from '@expo/vector-icons';
 import {translateErrors} from '../../../utils';
 import {IdeaTitleDetail} from '../../../screens/idea/list/reducer/reducer';
 import {postIdeaTitle, updateIdeaTitle} from '../../../infras/api';
-import {IdeaCategoryDetail} from '../../../screens/idea/category/reducer/reducer';
+import {useIdeaListState} from '../../../screens/idea/list';
 
 type Props = {
-  ideaCategory: IdeaCategoryDetail;
   handlePressDisabled?: () => void;
   ideaTitle?: IdeaTitleDetail;
   onPress?: () => void;
 };
 
-export const IdeaTitleInput: React.FC<Props> = ({
-  ideaCategory,
-  handlePressDisabled,
-  ideaTitle,
-  onPress,
-}) => {
+export const IdeaTitleInput: React.FC<Props> = ({handlePressDisabled, ideaTitle, onPress}) => {
   const [inputText, setInputText] = useState('');
+  const selectedIdeaCategory = useIdeaListState((state) => state.selectedIdeaCategory);
 
   const createPress = useCallback(() => {
-    if (!inputText) {
+    if (!inputText || !selectedIdeaCategory) {
       handlePressDisabled && handlePressDisabled();
       return;
     }
-    postIdeaTitle(ideaCategory, inputText)
+    postIdeaTitle(selectedIdeaCategory.ideaCategoryId, inputText)
       .then(() => {
         handlePressDisabled && handlePressDisabled();
         setInputText('');
@@ -36,12 +31,11 @@ export const IdeaTitleInput: React.FC<Props> = ({
         const errorMsg = translateErrors(error.code);
         Alert.alert(errorMsg.title, errorMsg.description);
       });
-  }, [inputText, ideaCategory, handlePressDisabled]);
+  }, [inputText, selectedIdeaCategory, handlePressDisabled]);
 
   const editPress = useCallback(() => {
-    if (inputText && ideaTitle) {
-      ideaCategory;
-      updateIdeaTitle(ideaCategory, ideaTitle, inputText)
+    if (inputText && ideaTitle && selectedIdeaCategory) {
+      updateIdeaTitle(selectedIdeaCategory.ideaCategoryId, ideaTitle, inputText)
         .then(() => {
           onPress && onPress();
         })
@@ -50,7 +44,7 @@ export const IdeaTitleInput: React.FC<Props> = ({
           Alert.alert(errorMsg.title, errorMsg.description);
         });
     }
-  }, [ideaCategory, ideaTitle, inputText, onPress]);
+  }, [selectedIdeaCategory, ideaTitle, inputText, onPress]);
 
   useEffect(() => {
     ideaTitle && setInputText(ideaTitle.ideaTitleName);

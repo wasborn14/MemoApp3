@@ -6,44 +6,45 @@ import {IdeaTitleInput} from './IdeaTitleInput';
 import {IdeaTextInput} from '../text/IdeaTextInput';
 import {deleteIdeaTitle} from '../../../infras/api';
 import {IdeaText} from '../text/IdeaText';
-import {IdeaCategoryDetail} from '../../../screens/idea/category/reducer/reducer';
+import {useIdeaListState} from '../../../screens/idea/list';
 
 type Props = {
-  ideaCategory: IdeaCategoryDetail;
   ideaTitle: IdeaTitleDetail;
 };
 
-export const IdeaTitle: React.FC<Props> = ({ideaCategory, ideaTitle}) => {
+export const IdeaTitle: React.FC<Props> = ({ideaTitle}) => {
   const [editIdeaTitleId, setEditIdeaTitleId] = useState('noMatch');
   const [isCreateIdeaSelected, setIsCreateIdeaSelected] = useState(false);
   const [isIdeaTitleSelected, setIsIdeaTitleSelected] = useState(false);
+  const selectedIdeaCategory = useIdeaListState((state) => state.selectedIdeaCategory);
 
-  const handlePressDelete = useCallback((ideaTitleId: string) => {
-    Alert.alert('カテゴリを削除します。', 'よろしいですか？', [
-      {
-        text: 'キャンセル',
-      },
-      {
-        text: '削除する',
-        style: 'destructive',
-        onPress: () => {
-          deleteIdeaTitle(ideaTitleId).catch(() => {
-            Alert.alert('削除に失敗しました。');
-          });
+  const handlePressDelete = useCallback(
+    (ideaTitleId: string) => {
+      Alert.alert('カテゴリを削除します。', 'よろしいですか？', [
+        {
+          text: 'キャンセル',
         },
-      },
-    ]);
-  }, []);
+        {
+          text: '削除する',
+          style: 'destructive',
+          onPress: () => {
+            if (selectedIdeaCategory) {
+              deleteIdeaTitle(selectedIdeaCategory.ideaCategoryId, ideaTitleId).catch(() => {
+                Alert.alert('削除に失敗しました。');
+              });
+            }
+          },
+        },
+      ]);
+    },
+    [selectedIdeaCategory],
+  );
 
   return (
     <>
       {ideaTitle.ideaTitleId === editIdeaTitleId ? (
         <>
-          <IdeaTitleInput
-            ideaCategory={ideaCategory}
-            ideaTitle={ideaTitle}
-            onPress={() => setEditIdeaTitleId('noMatch')}
-          />
+          <IdeaTitleInput ideaTitle={ideaTitle} onPress={() => setEditIdeaTitleId('noMatch')} />
         </>
       ) : (
         <>

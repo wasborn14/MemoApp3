@@ -4,6 +4,7 @@ import {Feather} from '@expo/vector-icons';
 import {translateErrors} from '../../../utils';
 import {IdeaTitleDetail, IdeaTextDetail} from '../../../screens/idea/list/reducer/reducer';
 import {editIdeaText, updateIdeaText} from '../../../infras/api';
+import {useIdeaListState} from '../../../screens/idea/list';
 
 type Props = {
   editIdeaTextId?: number;
@@ -22,6 +23,7 @@ export const IdeaTextInput: React.FC<Props> = ({
   handlePressSave,
 }) => {
   const [inputText, setInputText] = useState('');
+  const selectedIdeaCategory = useIdeaListState((state) => state.selectedIdeaCategory);
 
   const getMaxId = useCallback(() => {
     if (ideaTitle.ideaTextList.length > 0) {
@@ -31,7 +33,7 @@ export const IdeaTextInput: React.FC<Props> = ({
   }, [ideaTitle]);
 
   const createPress = useCallback(() => {
-    if (!inputText) {
+    if (!inputText || !selectedIdeaCategory) {
       handlePressSave && handlePressSave();
       return;
     }
@@ -41,7 +43,7 @@ export const IdeaTextInput: React.FC<Props> = ({
       point: 1,
       updatedAt: new Date(),
     };
-    updateIdeaText(ideaTitle, newIdea)
+    updateIdeaText(selectedIdeaCategory.ideaCategoryId, ideaTitle, newIdea)
       .then(() => {
         handlePressSave && handlePressSave();
       })
@@ -49,7 +51,7 @@ export const IdeaTextInput: React.FC<Props> = ({
         const errorMsg = translateErrors(error.code);
         Alert.alert(errorMsg.title, errorMsg.description);
       });
-  }, [inputText, ideaTitle, getMaxId, handlePressSave]);
+  }, [inputText, ideaTitle, getMaxId, handlePressSave, selectedIdeaCategory]);
 
   const getSortIdeaList = useCallback(() => {
     const targetIdea = ideaTitle.ideaTextList.filter(function (ideaText) {
@@ -70,11 +72,11 @@ export const IdeaTextInput: React.FC<Props> = ({
   }, [editIdeaTextId, ideaTitle, inputText]);
 
   const editPress = useCallback(() => {
-    if (!inputText) {
+    if (!inputText || !selectedIdeaCategory) {
       return;
     }
     const sortIdeaList = getSortIdeaList();
-    editIdeaText(ideaTitle, sortIdeaList)
+    editIdeaText(selectedIdeaCategory.ideaCategoryId, ideaTitle, sortIdeaList)
       .then(() => {
         onPress && onPress();
       })
@@ -82,7 +84,7 @@ export const IdeaTextInput: React.FC<Props> = ({
         const errorMsg = translateErrors(error.code);
         Alert.alert(errorMsg.title, errorMsg.description);
       });
-  }, [getSortIdeaList, onPress, ideaTitle, inputText]);
+  }, [getSortIdeaList, onPress, ideaTitle, inputText, selectedIdeaCategory]);
 
   useEffect(() => {
     text && setInputText(text);
