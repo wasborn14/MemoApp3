@@ -36,7 +36,7 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
 
   return (
     <>
-      {ideaCategory.ideaCategoryId === editIdeaCategoryId ? (
+      {ideaCategory.id === editIdeaCategoryId ? (
         <>
           <IdeaCategoryInput
             ideaCategory={ideaCategory}
@@ -56,13 +56,13 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
           >
             <View style={styles.ideaCategoryInner}>
               <Text style={styles.ideaCategoryListItemTitle} numberOfLines={1}>
-                {ideaCategory.ideaCategoryName}
+                {ideaCategory.name}
               </Text>
             </View>
             <TouchableOpacity
               style={styles.ideaCategoryDelete}
               onPress={() => {
-                setEditIdeaCategoryId(ideaCategory.ideaCategoryId);
+                setEditIdeaCategoryId(ideaCategory.id);
               }}
             >
               <Feather name="edit" color="#B0b0b0" size={16} />
@@ -70,7 +70,7 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
             <TouchableOpacity
               style={styles.ideaCategoryDelete}
               onPress={() => {
-                handlePressDelete(ideaCategory.ideaCategoryId);
+                handlePressDelete(ideaCategory.id);
               }}
             >
               <Feather name="x" color="#B0b0b0" size={16} />

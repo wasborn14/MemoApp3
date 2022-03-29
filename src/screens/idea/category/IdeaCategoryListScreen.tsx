@@ -71,8 +71,8 @@ const IdeaCategoryListScreen = () => {
           snapshot.forEach((doc) => {
             const data = doc.data();
             ideaCategoryListData.push({
-              ideaCategoryId: doc.id,
-              ideaCategoryName: data.ideaCategoryName,
+              id: doc.id,
+              name: data.ideaCategoryName,
               sortNo: data.sortNo,
               updatedAt: data.updatedAt.toDate(),
             });
@@ -115,7 +115,7 @@ const IdeaCategoryListScreen = () => {
           <FlatList
             data={ideaCategoryList}
             renderItem={({item}) => <IdeaCategory ideaCategory={item} />}
-            keyExtractor={(item) => item.ideaCategoryId}
+            keyExtractor={(item) => item.id}
             contentContainerStyle={{paddingBottom: 20}}
           />
         </View>

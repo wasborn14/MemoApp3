@@ -1,29 +1,11 @@
-// export interface IdeaListState {
-//     ideaTitleList: IdeaTitleDetail[];
-// }
-//
-// export interface IdeaTitleDetail {
-//     ideaTitleId: string;
-//     ideaTitleName: string;
-//     ideaTextList: IdeaTextDetail[];
-//     updatedAt: Date;
-// }
-//
-// export interface IdeaTextDetail {
-//     ideaTextId: number;
-//     ideaText: string;
-//     point: number;
-//     updatedAt: Date;
-// }
-
 export interface IdeaCategoryListState {
   ideaCategoryList: IdeaCategoryDetail[];
   maxSortNo: number;
 }
 
 export interface IdeaCategoryDetail {
-  ideaCategoryId: string;
-  ideaCategoryName: string;
+  id: string;
+  name: string;
   sortNo: number;
   updatedAt: Date;
 }

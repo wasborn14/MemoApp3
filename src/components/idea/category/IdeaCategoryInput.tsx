@@ -51,7 +51,7 @@ export const IdeaCategoryInput: React.FC<Props> = ({
   }, [ideaCategory, inputText, onPress]);
 
   useEffect(() => {
-    ideaCategory && setInputText(ideaCategory.ideaCategoryName);
+    ideaCategory && setInputText(ideaCategory.name);
   }, [ideaCategory]);
 
   return (

@@ -10,7 +10,7 @@ export const postIdeaCategory = async (inputText: string, maxSortNo: number) => 
     const db = firebase.firestore();
     const ref = db.collection(`users/${currentUser.uid}/ideaCategories`);
     return ref.add({
-      ideaCategoryName: inputText,
+      name: inputText,
       sortNo: maxSortNo + 1,
       updatedAt: new Date(),
     });
@@ -22,13 +22,11 @@ export const updateIdeaCategory = async (ideaCategory: IdeaCategoryDetail, input
   const {currentUser} = firebase.auth();
   if (currentUser && ideaCategory) {
     const db = firebase.firestore();
-    const ref = db
-      .collection(`users/${currentUser.uid}/ideaCategories`)
-      .doc(ideaCategory.ideaCategoryId);
+    const ref = db.collection(`users/${currentUser.uid}/ideaCategories`).doc(ideaCategory.id);
     return ref.set(
       {
-        ideaCategoryId: ideaCategory.ideaCategoryId,
-        ideaCategoryName: inputText,
+        id: ideaCategory.id,
+        name: inputText,
         sortNo: ideaCategory.sortNo,
         updatedAt: new Date(),
       },
