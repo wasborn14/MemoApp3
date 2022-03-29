@@ -61,8 +61,8 @@ const IdeaListScreen = () => {
           snapshot.forEach((doc) => {
             const data = doc.data();
             ideaCategoryListData.push({
-              ideaCategoryId: doc.id,
-              ideaCategoryName: data.ideaCategoryName,
+              id: doc.id,
+              name: data.ideaCategoryName,
               sortNo: data.sortNo,
               updatedAt: data.updatedAt.toDate(),
             });
@@ -91,7 +91,7 @@ const IdeaListScreen = () => {
     if (currentUser) {
       const ref = db
         .collection(`users/${currentUser.uid}/ideaCategories`)
-        .doc(selectedIdeaCategory.ideaCategoryId)
+        .doc(selectedIdeaCategory.id)
         .collection('ideaTitles');
       // .orderBy('updatedAt', 'asc');
       unsubscribe = ref.onSnapshot(
@@ -100,8 +100,8 @@ const IdeaListScreen = () => {
           snapshot.forEach((doc) => {
             const data = doc.data();
             ideaTitleListData.push({
-              ideaTitleId: doc.id,
-              ideaTitleName: data.ideaTitleName,
+              id: doc.id,
+              name: data.ideaTitleName,
               ideaTextList: data.ideaTextList,
               updatedAt: data.updatedAt.toDate(),
             });
@@ -125,7 +125,7 @@ const IdeaListScreen = () => {
           setIsCreateIdeaTitle((prev) => !prev);
         }}
       >
-        <Text style={styles.ideaTitle}>{selectedIdeaCategory?.ideaCategoryName}</Text>
+        <Text style={styles.ideaTitle}>{selectedIdeaCategory?.name}</Text>
         <View style={styles.iconWrap}>
           {isCreateIdeaTitle ? (
             <Feather name="x" color="white" size={24} />
@@ -143,7 +143,7 @@ const IdeaListScreen = () => {
             <FlatList
               data={ideaTitleList}
               renderItem={({item}) => <IdeaTitle ideaTitle={item} />}
-              keyExtractor={(item) => item.ideaTitleId}
+              keyExtractor={(item) => item.id}
               contentContainerStyle={{paddingBottom: 20}}
               ListFooterComponent={<View style={{height: 100}} />}
             />
@@ -152,53 +152,6 @@ const IdeaListScreen = () => {
       </View>
     </View>
   );
-
-  //  return (
-  //     <View style={styles.container}>
-  //       <Loading isLoading={isLoading} />
-  //       <Swiper
-  //         showsButtons={false}
-  //         loop={false}
-  //         dotColor="rgba(255,255,255,0)"
-  //         activeDotColor="rgba(255,255,255,0)"
-  //       >
-  //         {ideaCategoryList.map((ideaCategory, index) => (
-  //           <View key={index.toString()}>
-  //             <TouchableOpacity
-  //               style={styles.ideaTitleButton}
-  //               onPress={() => {
-  //                 setIsCreateIdeaTitle((prev) => !prev);
-  //               }}
-  //             >
-  //               <Text style={styles.ideaTitle}>{ideaCategory.ideaCategoryName}</Text>
-  //               <View style={styles.iconWrap}>
-  //                 {isCreateIdeaTitle ? (
-  //                   <Feather name="x" color="white" size={24} />
-  //                 ) : (
-  //                   <Feather name="plus" color="white" size={24} />
-  //                 )}
-  //               </View>
-  //             </TouchableOpacity>
-  //             <View style={styles.ideaTitleListWrap}>
-  //               {isCreateIdeaTitle && (
-  //                 <IdeaTitleInput
-  //                   ideaCategory={ideaCategory}
-  //                   handlePressDisabled={() => setIsCreateIdeaTitle(false)}
-  //                 />
-  //               )}
-  //               <FlatList
-  //                 data={separetedIdeaTitleList(ideaCategory)}
-  //                 renderItem={({item}) => <IdeaTitle ideaCategory={ideaCategory} ideaTitle={item} />}
-  //                 keyExtractor={(item) => item.ideaTitleId}
-  //                 contentContainerStyle={{paddingBottom: 20}}
-  //                 ListFooterComponent={<View style={{height: 100}}></View>}
-  //               />
-  //             </View>
-  //           </View>
-  //         ))}
-  //       </Swiper>
-  //     </View>
-  //   );
 };
 
 const styles = StyleSheet.create({

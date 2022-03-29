@@ -21,7 +21,7 @@ export const IdeaTitleInput: React.FC<Props> = ({handlePressDisabled, ideaTitle,
       handlePressDisabled && handlePressDisabled();
       return;
     }
-    postIdeaTitle(selectedIdeaCategory.ideaCategoryId, inputText)
+    postIdeaTitle(selectedIdeaCategory.id, inputText)
       .then(() => {
         handlePressDisabled && handlePressDisabled();
         setInputText('');
@@ -35,7 +35,7 @@ export const IdeaTitleInput: React.FC<Props> = ({handlePressDisabled, ideaTitle,
 
   const editPress = useCallback(() => {
     if (inputText && ideaTitle && selectedIdeaCategory) {
-      updateIdeaTitle(selectedIdeaCategory.ideaCategoryId, ideaTitle, inputText)
+      updateIdeaTitle(selectedIdeaCategory.id, ideaTitle, inputText)
         .then(() => {
           onPress && onPress();
         })
@@ -47,7 +47,7 @@ export const IdeaTitleInput: React.FC<Props> = ({handlePressDisabled, ideaTitle,
   }, [selectedIdeaCategory, ideaTitle, inputText, onPress]);
 
   useEffect(() => {
-    ideaTitle && setInputText(ideaTitle.ideaTitleName);
+    ideaTitle && setInputText(ideaTitle.name);
   }, [ideaTitle]);
 
   return (

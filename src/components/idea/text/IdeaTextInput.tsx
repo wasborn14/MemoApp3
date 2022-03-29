@@ -10,7 +10,7 @@ type Props = {
   editIdeaTextId?: number;
   ideaTitle: IdeaTitleDetail;
   id?: string;
-  text?: string;
+  name?: string;
   onPress?: () => void;
   handlePressSave?: () => void;
 };
@@ -18,7 +18,7 @@ type Props = {
 export const IdeaTextInput: React.FC<Props> = ({
   editIdeaTextId,
   ideaTitle,
-  text,
+  name,
   onPress,
   handlePressSave,
 }) => {
@@ -27,7 +27,7 @@ export const IdeaTextInput: React.FC<Props> = ({
 
   const getMaxId = useCallback(() => {
     if (ideaTitle.ideaTextList.length > 0) {
-      return Math.max(...ideaTitle.ideaTextList.map((ideaText) => ideaText.ideaTextId));
+      return Math.max(...ideaTitle.ideaTextList.map((ideaText) => ideaText.id));
     }
     return 0;
   }, [ideaTitle]);
@@ -38,12 +38,12 @@ export const IdeaTextInput: React.FC<Props> = ({
       return;
     }
     const newIdea: IdeaTextDetail = {
-      ideaTextId: getMaxId() + 1,
-      ideaText: inputText,
+      id: getMaxId() + 1,
+      name: inputText,
       point: 1,
       updatedAt: new Date(),
     };
-    updateIdeaText(selectedIdeaCategory.ideaCategoryId, ideaTitle, newIdea)
+    updateIdeaText(selectedIdeaCategory.id, ideaTitle, newIdea)
       .then(() => {
         handlePressSave && handlePressSave();
       })
@@ -55,19 +55,19 @@ export const IdeaTextInput: React.FC<Props> = ({
 
   const getSortIdeaList = useCallback(() => {
     const targetIdea = ideaTitle.ideaTextList.filter(function (ideaText) {
-      return ideaText.ideaTextId === editIdeaTextId;
+      return ideaText.id === editIdeaTextId;
     });
     const ideaTextList: IdeaTextDetail[] = ideaTitle.ideaTextList.filter(function (ideaText) {
-      return ideaText.ideaTextId !== editIdeaTextId;
+      return ideaText.id !== editIdeaTextId;
     });
     const convertedIdea: IdeaTextDetail = {
       ...targetIdea[0],
-      ideaText: inputText,
+      name: inputText,
       updatedAt: new Date(),
     };
     ideaTextList.push(convertedIdea);
     return ideaTextList.sort((a, b) => {
-      return a.ideaTextId - b.ideaTextId;
+      return a.id - b.id;
     });
   }, [editIdeaTextId, ideaTitle, inputText]);
 
@@ -76,7 +76,7 @@ export const IdeaTextInput: React.FC<Props> = ({
       return;
     }
     const sortIdeaList = getSortIdeaList();
-    editIdeaText(selectedIdeaCategory.ideaCategoryId, ideaTitle, sortIdeaList)
+    editIdeaText(selectedIdeaCategory.id, ideaTitle, sortIdeaList)
       .then(() => {
         onPress && onPress();
       })
@@ -87,8 +87,8 @@ export const IdeaTextInput: React.FC<Props> = ({
   }, [getSortIdeaList, onPress, ideaTitle, inputText, selectedIdeaCategory]);
 
   useEffect(() => {
-    text && setInputText(text);
-  }, [text]);
+    name && setInputText(name);
+  }, [name]);
 
   return (
     <View style={styles.container}>

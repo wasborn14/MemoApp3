@@ -7,15 +7,15 @@ export interface IdeaListState {
 }
 
 export interface IdeaTitleDetail {
-  ideaTitleId: string;
-  ideaTitleName: string;
+  id: string;
+  name: string;
   ideaTextList: IdeaTextDetail[];
   updatedAt: Date;
 }
 
 export interface IdeaTextDetail {
-  ideaTextId: number;
-  ideaText: string;
+  id: number;
+  name: string;
   point: number;
   updatedAt: Date;
 }

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
 import {Feather} from '@expo/vector-icons';
 import {IdeaCategoryDetail} from '../../../screens/idea/category/reducer/reducer';
@@ -30,13 +30,9 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
     ]);
   }, []);
 
-  useEffect(() => {
-    console.log(ideaCategory);
-  }, [ideaCategory]);
-
   return (
     <>
-      {ideaCategory.ideaCategoryId === editIdeaCategoryId ? (
+      {ideaCategory.id === editIdeaCategoryId ? (
         <>
           <IdeaCategoryInput
             ideaCategory={ideaCategory}
@@ -56,13 +52,13 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
           >
             <View style={styles.ideaCategoryInner}>
               <Text style={styles.ideaCategoryListItemTitle} numberOfLines={1}>
-                {ideaCategory.ideaCategoryName}
+                {ideaCategory.name}
               </Text>
             </View>
             <TouchableOpacity
               style={styles.ideaCategoryDelete}
               onPress={() => {
-                setEditIdeaCategoryId(ideaCategory.ideaCategoryId);
+                setEditIdeaCategoryId(ideaCategory.id);
               }}
             >
               <Feather name="edit" color="#B0b0b0" size={16} />
@@ -70,7 +66,7 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
             <TouchableOpacity
               style={styles.ideaCategoryDelete}
               onPress={() => {
-                handlePressDelete(ideaCategory.ideaCategoryId);
+                handlePressDelete(ideaCategory.id);
               }}
             >
               <Feather name="x" color="#B0b0b0" size={16} />

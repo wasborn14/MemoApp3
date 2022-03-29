@@ -21,18 +21,17 @@ const IdeaCategorySelectButton = () => {
               <Text
                 style={[
                   styles.selectButtonText,
-                  item.ideaCategoryId === selectedIdeaCategory?.ideaCategoryId &&
-                    styles.selectedButtonColor,
+                  item.id === selectedIdeaCategory?.id && styles.selectedButtonColor,
                 ]}
               >
-                {item.ideaCategoryName}
+                {item.name}
               </Text>
             </TouchableOpacity>
           </View>
         )}
         horizontal
         showsHorizontalScrollIndicator={false}
-        keyExtractor={(item) => item.ideaCategoryId}
+        keyExtractor={(item) => item.id}
       />
     </View>
   );
