@@ -15,13 +15,14 @@ type Props = {
 export const IdeaTitleInput: React.FC<Props> = ({handlePressDisabled, ideaTitle, onPress}) => {
   const [inputText, setInputText] = useState('');
   const selectedIdeaCategory = useIdeaListState((state) => state.selectedIdeaCategory);
+  const maxSortNo = useIdeaListState((state) => state.maxSortNo);
 
   const createPress = useCallback(() => {
     if (!inputText || !selectedIdeaCategory) {
       handlePressDisabled && handlePressDisabled();
       return;
     }
-    postIdeaTitle(selectedIdeaCategory.id, inputText)
+    postIdeaTitle(selectedIdeaCategory.id, inputText, maxSortNo)
       .then(() => {
         handlePressDisabled && handlePressDisabled();
         setInputText('');
@@ -31,11 +32,11 @@ export const IdeaTitleInput: React.FC<Props> = ({handlePressDisabled, ideaTitle,
         const errorMsg = translateErrors(error.code);
         Alert.alert(errorMsg.title, errorMsg.description);
       });
-  }, [inputText, selectedIdeaCategory, handlePressDisabled]);
+  }, [inputText, selectedIdeaCategory, handlePressDisabled, maxSortNo]);
 
   const editPress = useCallback(() => {
     if (inputText && ideaTitle && selectedIdeaCategory) {
-      updateIdeaTitle(selectedIdeaCategory.id, ideaTitle, inputText)
+      updateIdeaTitle(selectedIdeaCategory.id, ideaTitle, inputText, maxSortNo)
         .then(() => {
           onPress && onPress();
         })
@@ -44,7 +45,7 @@ export const IdeaTitleInput: React.FC<Props> = ({handlePressDisabled, ideaTitle,
           Alert.alert(errorMsg.title, errorMsg.description);
         });
     }
-  }, [selectedIdeaCategory, ideaTitle, inputText, onPress]);
+  }, [selectedIdeaCategory, ideaTitle, inputText, onPress, maxSortNo]);
 
   useEffect(() => {
     ideaTitle && setInputText(ideaTitle.name);

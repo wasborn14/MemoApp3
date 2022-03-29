@@ -76,7 +76,7 @@ export const IdeaTextInput: React.FC<Props> = ({
       return;
     }
     const sortIdeaList = getSortIdeaList();
-    editIdeaText(selectedIdeaCategory.id, ideaTitle, sortIdeaList)
+    editIdeaText(selectedIdeaCategory.id, ideaTitle.id, sortIdeaList)
       .then(() => {
         onPress && onPress();
       })

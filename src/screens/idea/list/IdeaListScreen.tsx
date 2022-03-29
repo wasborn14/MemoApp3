@@ -1,14 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, FlatList, Text} from 'react-native';
 import {IdeaTitleInput} from '../../../components/idea/title/IdeaTitleInput';
 import firebase from 'firebase';
 import {useIdeaListDispatch, useIdeaListState} from './index';
-import {IdeaTitleDetail, setIdeaTitleList, setSelectedIdeaCategory} from './reducer/reducer';
+import {
+  IdeaTitleDetail,
+  setIdeaCategoryList,
+  setIdeaTitleList,
+  setSelectedIdeaCategory,
+  setMaxSortNo,
+} from './reducer/reducer';
 import {useNavigation} from '@react-navigation/native';
 import {IdeaTabNavigation} from '../../../navigation';
 import {Feather} from '@expo/vector-icons';
 import {IdeaTitle} from '../../../components/idea/title/IdeaTitle';
-import {IdeaCategoryDetail, setIdeaCategoryList} from '../category/reducer/reducer';
+import {IdeaCategoryDetail} from '../category/reducer/reducer';
 import {Entypo} from '@expo/vector-icons';
 import IdeaCategorySelectButton from '../../../components/idea/category/ideaCategorySelectButton';
 
@@ -18,6 +24,7 @@ const IdeaListScreen = () => {
   const ideaTitleList = useIdeaListState((state) => state.ideaTitleList);
   const selectedIdeaCategory = useIdeaListState((state) => state.selectedIdeaCategory);
   const [isCreateIdeaTitle, setIsCreateIdeaTitle] = useState(false);
+  const maxSortNo = useIdeaListState((state) => state.maxSortNo);
 
   useEffect(() => {
     nav.setOptions({
@@ -62,7 +69,7 @@ const IdeaListScreen = () => {
             const data = doc.data();
             ideaCategoryListData.push({
               id: doc.id,
-              name: data.ideaCategoryName,
+              name: data.name,
               sortNo: data.sortNo,
               updatedAt: data.updatedAt.toDate(),
             });
@@ -92,8 +99,8 @@ const IdeaListScreen = () => {
       const ref = db
         .collection(`users/${currentUser.uid}/ideaCategories`)
         .doc(selectedIdeaCategory.id)
-        .collection('ideaTitles');
-      // .orderBy('updatedAt', 'asc');
+        .collection('ideaTitles')
+        .orderBy('sortNo', 'asc');
       unsubscribe = ref.onSnapshot(
         (snapshot) => {
           const ideaTitleListData: IdeaTitleDetail[] = [];
@@ -101,8 +108,9 @@ const IdeaListScreen = () => {
             const data = doc.data();
             ideaTitleListData.push({
               id: doc.id,
-              name: data.ideaTitleName,
+              name: data.name,
               ideaTextList: data.ideaTextList,
+              sortNo: data.sortNo,
               updatedAt: data.updatedAt.toDate(),
             });
           });
@@ -115,6 +123,19 @@ const IdeaListScreen = () => {
     }
     return unsubscribe;
   }, [dispatch, selectedIdeaCategory]);
+
+  const getMaxSortNo = useCallback(() => {
+    if (ideaTitleList.length > 0) {
+      return Math.max(...ideaTitleList.map((ideaTitle) => ideaTitle.sortNo));
+    }
+    return 0;
+  }, [ideaTitleList]);
+
+  useEffect(() => console.log(maxSortNo), [maxSortNo]);
+
+  useEffect(() => {
+    dispatch(setMaxSortNo(getMaxSortNo()));
+  }, [dispatch, getMaxSortNo]);
 
   return (
     <View style={styles.container}>

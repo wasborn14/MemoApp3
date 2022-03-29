@@ -18,7 +18,7 @@ const IdeaCategoryListScreen = () => {
   const ideaCategoryList = useIdeaCategoryListState((state) => state.ideaCategoryList);
   const [isCreateIdeaCategory, setIsCreateIdeaCategory] = useState(false);
 
-  const maxSortNo = useCallback(() => {
+  const getMaxSortNo = useCallback(() => {
     if (ideaCategoryList.length > 0) {
       return Math.max(...ideaCategoryList.map((ideaCategory) => ideaCategory.sortNo));
     }
@@ -26,8 +26,8 @@ const IdeaCategoryListScreen = () => {
   }, [ideaCategoryList]);
 
   useEffect(() => {
-    dispatch(setMaxSortNo(maxSortNo()));
-  }, [dispatch, maxSortNo]);
+    dispatch(setMaxSortNo(getMaxSortNo()));
+  }, [dispatch, getMaxSortNo]);
 
   useEffect(() => {
     nav.setOptions({
@@ -72,7 +72,7 @@ const IdeaCategoryListScreen = () => {
             const data = doc.data();
             ideaCategoryListData.push({
               id: doc.id,
-              name: data.ideaCategoryName,
+              name: data.name,
               sortNo: data.sortNo,
               updatedAt: data.updatedAt.toDate(),
             });
