@@ -3,11 +3,10 @@ import {IdeaCategoryDetail} from '../../category/reducer/reducer';
 export interface IdeaListState {
   ideaCategoryList: IdeaCategoryDetail[];
   ideaTitleList: IdeaTitleDetail[];
+  selectedIdeaCategory?: IdeaCategoryDetail;
 }
 
 export interface IdeaTitleDetail {
-  ideaCategoryId: string;
-  ideaCategoryName: string;
   ideaTitleId: string;
   ideaTitleName: string;
   ideaTextList: IdeaTextDetail[];
@@ -31,7 +30,15 @@ export const setIdeaCategoryList = (payload: IdeaCategoryDetail[] | undefined) =
   payload,
 });
 
-export type Action = ReturnType<typeof setIdeaTitleList> | ReturnType<typeof setIdeaCategoryList>;
+export const setSelectedIdeaCategory = (payload: IdeaCategoryDetail | undefined) => ({
+  type: 'setSelectedIdeaCategory' as const,
+  payload,
+});
+
+export type Action =
+  | ReturnType<typeof setIdeaTitleList>
+  | ReturnType<typeof setIdeaCategoryList>
+  | ReturnType<typeof setSelectedIdeaCategory>;
 
 export const initialState: IdeaListState = {
   ideaCategoryList: [],
@@ -49,6 +56,9 @@ export const ideaListReducer = (state: IdeaListState, action: Action) => {
       if (action.payload) {
         state.ideaTitleList = action.payload;
       }
+      break;
+    case 'setSelectedIdeaCategory':
+      state.selectedIdeaCategory = action.payload;
       break;
   }
 };

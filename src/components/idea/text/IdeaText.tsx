@@ -5,6 +5,7 @@ import {IdeaTitleDetail, IdeaTextDetail} from '../../../screens/idea/list/reduce
 import {IdeaTextInput} from './IdeaTextInput';
 import {translateErrors} from '../../../utils';
 import {deleteIdeaText} from '../../../infras/api';
+import {useIdeaListState} from '../../../screens/idea/list';
 
 type Props = {
   ideaTitle: IdeaTitleDetail;
@@ -13,18 +14,24 @@ type Props = {
 
 export const IdeaText: React.FC<Props> = ({ideaTitle, ideaText}) => {
   const [editIdeaTextId, setEditIdeaTextId] = useState(-1);
+  const selectedIdeaCategory = useIdeaListState((state) => state.selectedIdeaCategory);
 
   const handlePressDelete = useCallback(
     (id: number) => {
+      if (!selectedIdeaCategory) {
+        return;
+      }
       const deletedIdeaTextList = ideaTitle.ideaTextList.filter(function (ideaText) {
         return ideaText.ideaTextId !== id;
       });
-      deleteIdeaText(ideaTitle, deletedIdeaTextList).catch((error) => {
-        const errorMsg = translateErrors(error.code);
-        Alert.alert(errorMsg.title, errorMsg.description);
-      });
+      deleteIdeaText(selectedIdeaCategory?.ideaCategoryId, ideaTitle, deletedIdeaTextList).catch(
+        (error) => {
+          const errorMsg = translateErrors(error.code);
+          Alert.alert(errorMsg.title, errorMsg.description);
+        },
+      );
     },
-    [ideaTitle],
+    [ideaTitle, selectedIdeaCategory],
   );
 
   const confirmDelete = useCallback(

@@ -3,22 +3,20 @@ import {View, StyleSheet, TouchableOpacity, FlatList, Text} from 'react-native';
 import {IdeaTitleInput} from '../../../components/idea/title/IdeaTitleInput';
 import firebase from 'firebase';
 import {useIdeaListDispatch, useIdeaListState} from './index';
-import {IdeaTitleDetail, setIdeaTitleList} from './reducer/reducer';
-import Loading from '../../../components/Loading';
+import {IdeaTitleDetail, setIdeaTitleList, setSelectedIdeaCategory} from './reducer/reducer';
 import {useNavigation} from '@react-navigation/native';
 import {IdeaTabNavigation} from '../../../navigation';
 import {Feather} from '@expo/vector-icons';
 import {IdeaTitle} from '../../../components/idea/title/IdeaTitle';
-import Swiper from 'react-native-swiper';
 import {IdeaCategoryDetail, setIdeaCategoryList} from '../category/reducer/reducer';
 import {Entypo} from '@expo/vector-icons';
+import IdeaCategorySelectButton from '../../../components/idea/category/ideaCategorySelectButton';
 
 const IdeaListScreen = () => {
   const nav = useNavigation<IdeaTabNavigation>();
-  const [isLoading, setLoading] = useState(false);
   const dispatch = useIdeaListDispatch();
-  const ideaCategoryList = useIdeaListState((state) => state.ideaCategoryList);
   const ideaTitleList = useIdeaListState((state) => state.ideaTitleList);
+  const selectedIdeaCategory = useIdeaListState((state) => state.selectedIdeaCategory);
   const [isCreateIdeaTitle, setIsCreateIdeaTitle] = useState(false);
 
   useEffect(() => {
@@ -54,7 +52,6 @@ const IdeaListScreen = () => {
       // do nothing
     };
     if (currentUser) {
-      setLoading(true);
       const ref = db
         .collection(`users/${currentUser.uid}/ideaCategories`)
         .orderBy('updatedAt', 'asc');
@@ -71,10 +68,10 @@ const IdeaListScreen = () => {
             });
           });
           dispatch(setIdeaCategoryList(ideaCategoryListData));
-          setLoading(false);
+          dispatch(setSelectedIdeaCategory(ideaCategoryListData[0]));
+          // setSelectedIdeaCategory(ideaCategoryListData[0]);
         },
         () => {
-          setLoading(false);
           // Alert.alert('データの読み込みに失敗しました。');
         },
       );
@@ -83,22 +80,26 @@ const IdeaListScreen = () => {
   }, [dispatch]);
 
   useEffect(() => {
+    if (!selectedIdeaCategory) {
+      return;
+    }
     const db = firebase.firestore();
     const {currentUser} = firebase.auth();
     let unsubscribe = () => {
       // do nothing
     };
     if (currentUser) {
-      setLoading(true);
-      const ref = db.collection(`users/${currentUser.uid}/ideas`).orderBy('updatedAt', 'asc');
+      const ref = db
+        .collection(`users/${currentUser.uid}/ideaCategories`)
+        .doc(selectedIdeaCategory.ideaCategoryId)
+        .collection('ideaTitles');
+      // .orderBy('updatedAt', 'asc');
       unsubscribe = ref.onSnapshot(
         (snapshot) => {
           const ideaTitleListData: IdeaTitleDetail[] = [];
           snapshot.forEach((doc) => {
             const data = doc.data();
             ideaTitleListData.push({
-              ideaCategoryId: data.ideaCategoryId,
-              ideaCategoryName: data.ideaCategoryName,
               ideaTitleId: doc.id,
               ideaTitleName: data.ideaTitleName,
               ideaTextList: data.ideaTextList,
@@ -106,69 +107,98 @@ const IdeaListScreen = () => {
             });
           });
           dispatch(setIdeaTitleList(ideaTitleListData));
-          setLoading(false);
         },
         () => {
-          setLoading(false);
           // Alert.alert('データの読み込みに失敗しました。');
         },
       );
     }
     return unsubscribe;
-  }, [dispatch]);
-
-  const separetedIdeaTitleList = (ideaCategory: IdeaCategoryDetail) => {
-    return ideaTitleList.filter(function (ideaTitle) {
-      return ideaTitle.ideaCategoryId === ideaCategory.ideaCategoryId;
-    });
-  };
+  }, [dispatch, selectedIdeaCategory]);
 
   return (
     <View style={styles.container}>
-      <Loading isLoading={isLoading} />
-      <Swiper
-        showsButtons={false}
-        loop={false}
-        dotColor="rgba(255,255,255,0)"
-        activeDotColor="rgba(255,255,255,0)"
+      <IdeaCategorySelectButton />
+      <TouchableOpacity
+        style={styles.ideaTitleButton}
+        onPress={() => {
+          setIsCreateIdeaTitle((prev) => !prev);
+        }}
       >
-        {ideaCategoryList.map((ideaCategory, index) => (
-          <View key={index.toString()}>
-            <TouchableOpacity
-              style={styles.ideaTitleButton}
-              onPress={() => {
-                setIsCreateIdeaTitle((prev) => !prev);
-              }}
-            >
-              <Text style={styles.ideaTitle}>{ideaCategory.ideaCategoryName}</Text>
-              <View style={styles.iconWrap}>
-                {isCreateIdeaTitle ? (
-                  <Feather name="x" color="white" size={24} />
-                ) : (
-                  <Feather name="plus" color="white" size={24} />
-                )}
-              </View>
-            </TouchableOpacity>
-            <View style={styles.ideaTitleListWrap}>
-              {isCreateIdeaTitle && (
-                <IdeaTitleInput
-                  ideaCategory={ideaCategory}
-                  handlePressDisabled={() => setIsCreateIdeaTitle(false)}
-                />
-              )}
-              <FlatList
-                data={separetedIdeaTitleList(ideaCategory)}
-                renderItem={({item}) => <IdeaTitle ideaCategory={ideaCategory} ideaTitle={item} />}
-                keyExtractor={(item) => item.ideaTitleId}
-                contentContainerStyle={{paddingBottom: 20}}
-                ListFooterComponent={<View style={{height: 100}}></View>}
-              />
-            </View>
-          </View>
-        ))}
-      </Swiper>
+        <Text style={styles.ideaTitle}>{selectedIdeaCategory?.ideaCategoryName}</Text>
+        <View style={styles.iconWrap}>
+          {isCreateIdeaTitle ? (
+            <Feather name="x" color="white" size={24} />
+          ) : (
+            <Feather name="plus" color="white" size={24} />
+          )}
+        </View>
+      </TouchableOpacity>
+      <View style={styles.ideaTitleListWrap}>
+        {selectedIdeaCategory && (
+          <>
+            {isCreateIdeaTitle && (
+              <IdeaTitleInput handlePressDisabled={() => setIsCreateIdeaTitle(false)} />
+            )}
+            <FlatList
+              data={ideaTitleList}
+              renderItem={({item}) => <IdeaTitle ideaTitle={item} />}
+              keyExtractor={(item) => item.ideaTitleId}
+              contentContainerStyle={{paddingBottom: 20}}
+              ListFooterComponent={<View style={{height: 100}} />}
+            />
+          </>
+        )}
+      </View>
     </View>
   );
+
+  //  return (
+  //     <View style={styles.container}>
+  //       <Loading isLoading={isLoading} />
+  //       <Swiper
+  //         showsButtons={false}
+  //         loop={false}
+  //         dotColor="rgba(255,255,255,0)"
+  //         activeDotColor="rgba(255,255,255,0)"
+  //       >
+  //         {ideaCategoryList.map((ideaCategory, index) => (
+  //           <View key={index.toString()}>
+  //             <TouchableOpacity
+  //               style={styles.ideaTitleButton}
+  //               onPress={() => {
+  //                 setIsCreateIdeaTitle((prev) => !prev);
+  //               }}
+  //             >
+  //               <Text style={styles.ideaTitle}>{ideaCategory.ideaCategoryName}</Text>
+  //               <View style={styles.iconWrap}>
+  //                 {isCreateIdeaTitle ? (
+  //                   <Feather name="x" color="white" size={24} />
+  //                 ) : (
+  //                   <Feather name="plus" color="white" size={24} />
+  //                 )}
+  //               </View>
+  //             </TouchableOpacity>
+  //             <View style={styles.ideaTitleListWrap}>
+  //               {isCreateIdeaTitle && (
+  //                 <IdeaTitleInput
+  //                   ideaCategory={ideaCategory}
+  //                   handlePressDisabled={() => setIsCreateIdeaTitle(false)}
+  //                 />
+  //               )}
+  //               <FlatList
+  //                 data={separetedIdeaTitleList(ideaCategory)}
+  //                 renderItem={({item}) => <IdeaTitle ideaCategory={ideaCategory} ideaTitle={item} />}
+  //                 keyExtractor={(item) => item.ideaTitleId}
+  //                 contentContainerStyle={{paddingBottom: 20}}
+  //                 ListFooterComponent={<View style={{height: 100}}></View>}
+  //               />
+  //             </View>
+  //           </View>
+  //         ))}
+  //       </Swiper>
+  //     </View>
+  //   );
 };
 
 const styles = StyleSheet.create({
