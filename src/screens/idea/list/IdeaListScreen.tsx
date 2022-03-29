@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, FlatList, Text} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import {IdeaTitleInput} from '../../../components/idea/title/IdeaTitleInput';
 import firebase from 'firebase';
 import {useIdeaListDispatch, useIdeaListState} from './index';
@@ -17,6 +17,8 @@ import {IdeaTitle} from '../../../components/idea/title/IdeaTitle';
 import {IdeaCategoryDetail} from '../category/reducer/reducer';
 import {Entypo} from '@expo/vector-icons';
 import IdeaCategorySelectButton from '../../../components/idea/category/ideaCategorySelectButton';
+import DraggableFlatList, {RenderItemParams, ScaleDecorator} from 'react-native-draggable-flatlist';
+import {editIdeaTextSortNo} from '../../../infras/api';
 
 const IdeaListScreen = () => {
   const nav = useNavigation<IdeaTabNavigation>();
@@ -24,7 +26,6 @@ const IdeaListScreen = () => {
   const ideaTitleList = useIdeaListState((state) => state.ideaTitleList);
   const selectedIdeaCategory = useIdeaListState((state) => state.selectedIdeaCategory);
   const [isCreateIdeaTitle, setIsCreateIdeaTitle] = useState(false);
-  const maxSortNo = useIdeaListState((state) => state.maxSortNo);
 
   useEffect(() => {
     nav.setOptions({
@@ -131,11 +132,44 @@ const IdeaListScreen = () => {
     return 0;
   }, [ideaTitleList]);
 
-  useEffect(() => console.log(maxSortNo), [maxSortNo]);
-
   useEffect(() => {
     dispatch(setMaxSortNo(getMaxSortNo()));
   }, [dispatch, getMaxSortNo]);
+
+  const renderItem = ({item, drag}: RenderItemParams<IdeaTitleDetail>) => {
+    return (
+      <ScaleDecorator>
+        <IdeaTitle ideaTitle={item} onLongPress={drag} />
+      </ScaleDecorator>
+    );
+  };
+
+  const updateSortNo = useCallback(
+    (changedIdeaTitleList: IdeaTitleDetail[]) => {
+      if (!selectedIdeaCategory) return;
+      const changedSortNumbers: {title: string; id: string; sortPosition: number}[] = [];
+      changedIdeaTitleList.map((changedIdeaTitle, index) => {
+        const sortPosition = index + 1;
+        if (changedIdeaTitle.sortNo !== sortPosition) {
+          changedSortNumbers.push({
+            title: changedIdeaTitle.name,
+            id: changedIdeaTitle.id,
+            sortPosition: sortPosition,
+          });
+        }
+      });
+      if (changedSortNumbers.length > 0) {
+        changedSortNumbers.map((changedSortNumber) => {
+          editIdeaTextSortNo(
+            selectedIdeaCategory?.id,
+            changedSortNumber.id,
+            changedSortNumber.sortPosition,
+          );
+        });
+      }
+    },
+    [selectedIdeaCategory],
+  );
 
   return (
     <View style={styles.container}>
@@ -161,12 +195,13 @@ const IdeaListScreen = () => {
             {isCreateIdeaTitle && (
               <IdeaTitleInput handlePressDisabled={() => setIsCreateIdeaTitle(false)} />
             )}
-            <FlatList
+            <DraggableFlatList
               data={ideaTitleList}
-              renderItem={({item}) => <IdeaTitle ideaTitle={item} />}
+              renderItem={renderItem}
               keyExtractor={(item) => item.id}
               contentContainerStyle={{paddingBottom: 20}}
               ListFooterComponent={<View style={{height: 100}} />}
+              onDragEnd={({data}) => updateSortNo(data)}
             />
           </>
         )}
