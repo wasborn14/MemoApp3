@@ -55,7 +55,7 @@ export const postIdeaTitle = async (selectedIdeaCategoryId: string, inputText: s
       `users/${currentUser.uid}/ideaCategories/${selectedIdeaCategoryId}/ideaTitles`,
     );
     return ref.add({
-      ideaTitleName: inputText,
+      name: inputText,
       ideaTextList: [],
       updatedAt: new Date(),
     });
@@ -73,10 +73,10 @@ export const updateIdeaTitle = async (
     const db = firebase.firestore();
     const ref = db
       .collection(`users/${currentUser.uid}/ideaCategories/${selectedIdeaCategoryId}/ideaTitles`)
-      .doc(ideaTitle.ideaTitleId);
+      .doc(ideaTitle.id);
     return ref.set(
       {
-        ideaTitleName: inputText,
+        name: inputText,
         ideaTextList: ideaTitle.ideaTextList,
         updatedAt: new Date(),
       },
@@ -107,13 +107,12 @@ export const updateIdeaText = async (
   const {currentUser} = firebase.auth();
   if (currentUser) {
     const db = firebase.firestore();
-    // const ref = db.collection(`users/${currentUser.uid}/ideaCategories`).doc(ideaTitle.ideaTitleId);
     const ref = db
       .collection(`users/${currentUser.uid}/ideaCategories/${selectedIdeaCategoryId}/ideaTitles`)
-      .doc(ideaTitle.ideaTitleId);
+      .doc(ideaTitle.id);
     return ref.set(
       {
-        ideaTitleName: ideaTitle.ideaTitleName,
+        ideaTitleName: ideaTitle.name,
         ideaTextList: [...ideaTitle.ideaTextList, newIdeaText],
         updatedAt: new Date(),
       },
@@ -131,13 +130,12 @@ export const editIdeaText = async (
   const {currentUser} = firebase.auth();
   if (currentUser) {
     const db = firebase.firestore();
-    // const ref = db.collection(`users/${currentUser.uid}/ideas`).doc(ideaTitle.ideaTitleId);
     const ref = db
       .collection(`users/${currentUser.uid}/ideaCategories/${selectedIdeaCategoryId}/ideaTitles`)
-      .doc(ideaTitle.ideaTitleId);
+      .doc(ideaTitle.id);
     return ref.set(
       {
-        ideaTitleName: ideaTitle.ideaTitleName,
+        ideaTitleName: ideaTitle.name,
         ideaTextList: sortIdeaTextList,
         updatedAt: new Date(),
       },
@@ -157,10 +155,10 @@ export const deleteIdeaText = async (
     const db = firebase.firestore();
     const ref = db
       .collection(`users/${currentUser.uid}/ideaCategories/${selectedIdeaCategoryId}/ideaTitles`)
-      .doc(ideaTitle.ideaTitleId);
+      .doc(ideaTitle.id);
     return ref.set(
       {
-        ideaTitleName: ideaTitle.ideaTitleName,
+        ideaTitleName: ideaTitle.name,
         ideaTextList: deletedIdeaTextList,
         updatedAt: new Date(),
       },

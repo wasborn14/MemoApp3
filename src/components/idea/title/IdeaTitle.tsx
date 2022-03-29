@@ -29,7 +29,7 @@ export const IdeaTitle: React.FC<Props> = ({ideaTitle}) => {
           style: 'destructive',
           onPress: () => {
             if (selectedIdeaCategory) {
-              deleteIdeaTitle(selectedIdeaCategory.ideaCategoryId, ideaTitleId).catch(() => {
+              deleteIdeaTitle(selectedIdeaCategory.id, ideaTitleId).catch(() => {
                 Alert.alert('削除に失敗しました。');
               });
             }
@@ -42,7 +42,7 @@ export const IdeaTitle: React.FC<Props> = ({ideaTitle}) => {
 
   return (
     <>
-      {ideaTitle.ideaTitleId === editIdeaTitleId ? (
+      {ideaTitle.id === editIdeaTitleId ? (
         <>
           <IdeaTitleInput ideaTitle={ideaTitle} onPress={() => setEditIdeaTitleId('noMatch')} />
         </>
@@ -56,13 +56,13 @@ export const IdeaTitle: React.FC<Props> = ({ideaTitle}) => {
           >
             <View style={styles.ideaTitleInner}>
               <Text style={styles.ideaTitleListItemTitle} numberOfLines={1}>
-                {ideaTitle.ideaTitleName}
+                {ideaTitle.name}
               </Text>
             </View>
             <TouchableOpacity
               style={styles.ideaTitleDelete}
               onPress={() => {
-                setEditIdeaTitleId(ideaTitle.ideaTitleId);
+                setEditIdeaTitleId(ideaTitle.id);
               }}
             >
               <Feather name="edit" color="#B0b0b0" size={16} />
@@ -70,7 +70,7 @@ export const IdeaTitle: React.FC<Props> = ({ideaTitle}) => {
             <TouchableOpacity
               style={styles.ideaTitleDelete}
               onPress={() => {
-                handlePressDelete(ideaTitle.ideaTitleId);
+                handlePressDelete(ideaTitle.id);
               }}
             >
               <Feather name="x" color="#B0b0b0" size={16} />
@@ -87,7 +87,7 @@ export const IdeaTitle: React.FC<Props> = ({ideaTitle}) => {
                 <TouchableOpacity
                   style={styles.ideaCreatContainer}
                   onPress={() => {
-                    setEditIdeaTitleId(ideaTitle.ideaTitleId);
+                    setEditIdeaTitleId(ideaTitle.id);
                   }}
                 >
                   <TouchableOpacity

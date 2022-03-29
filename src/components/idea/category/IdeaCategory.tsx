@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
 import {Feather} from '@expo/vector-icons';
 import {IdeaCategoryDetail} from '../../../screens/idea/category/reducer/reducer';
@@ -29,10 +29,6 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
       },
     ]);
   }, []);
-
-  useEffect(() => {
-    console.log(ideaCategory);
-  }, [ideaCategory]);
 
   return (
     <>

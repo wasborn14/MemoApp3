@@ -43,7 +43,7 @@ export const IdeaTextInput: React.FC<Props> = ({
       point: 1,
       updatedAt: new Date(),
     };
-    updateIdeaText(selectedIdeaCategory.ideaCategoryId, ideaTitle, newIdea)
+    updateIdeaText(selectedIdeaCategory.id, ideaTitle, newIdea)
       .then(() => {
         handlePressSave && handlePressSave();
       })
@@ -76,7 +76,7 @@ export const IdeaTextInput: React.FC<Props> = ({
       return;
     }
     const sortIdeaList = getSortIdeaList();
-    editIdeaText(selectedIdeaCategory.ideaCategoryId, ideaTitle, sortIdeaList)
+    editIdeaText(selectedIdeaCategory.id, ideaTitle, sortIdeaList)
       .then(() => {
         onPress && onPress();
       })

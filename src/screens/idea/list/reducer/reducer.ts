@@ -7,8 +7,8 @@ export interface IdeaListState {
 }
 
 export interface IdeaTitleDetail {
-  ideaTitleId: string;
-  ideaTitleName: string;
+  id: string;
+  name: string;
   ideaTextList: IdeaTextDetail[];
   updatedAt: Date;
 }

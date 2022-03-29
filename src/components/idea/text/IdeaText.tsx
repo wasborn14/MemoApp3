@@ -24,12 +24,10 @@ export const IdeaText: React.FC<Props> = ({ideaTitle, ideaText}) => {
       const deletedIdeaTextList = ideaTitle.ideaTextList.filter(function (ideaText) {
         return ideaText.ideaTextId !== id;
       });
-      deleteIdeaText(selectedIdeaCategory?.ideaCategoryId, ideaTitle, deletedIdeaTextList).catch(
-        (error) => {
-          const errorMsg = translateErrors(error.code);
-          Alert.alert(errorMsg.title, errorMsg.description);
-        },
-      );
+      deleteIdeaText(selectedIdeaCategory?.id, ideaTitle, deletedIdeaTextList).catch((error) => {
+        const errorMsg = translateErrors(error.code);
+        Alert.alert(errorMsg.title, errorMsg.description);
+      });
     },
     [ideaTitle, selectedIdeaCategory],
   );

@@ -100,8 +100,8 @@ const IdeaListScreen = () => {
           snapshot.forEach((doc) => {
             const data = doc.data();
             ideaTitleListData.push({
-              ideaTitleId: doc.id,
-              ideaTitleName: data.ideaTitleName,
+              id: doc.id,
+              name: data.ideaTitleName,
               ideaTextList: data.ideaTextList,
               updatedAt: data.updatedAt.toDate(),
             });
@@ -143,7 +143,7 @@ const IdeaListScreen = () => {
             <FlatList
               data={ideaTitleList}
               renderItem={({item}) => <IdeaTitle ideaTitle={item} />}
-              keyExtractor={(item) => item.ideaTitleId}
+              keyExtractor={(item) => item.id}
               contentContainerStyle={{paddingBottom: 20}}
               ListFooterComponent={<View style={{height: 100}} />}
             />
