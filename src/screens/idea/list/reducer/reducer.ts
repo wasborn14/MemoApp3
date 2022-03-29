@@ -14,8 +14,8 @@ export interface IdeaTitleDetail {
 }
 
 export interface IdeaTextDetail {
-  ideaTextId: number;
-  ideaText: string;
+  id: number;
+  name: string;
   point: number;
   updatedAt: Date;
 }

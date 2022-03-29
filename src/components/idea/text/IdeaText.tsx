@@ -17,12 +17,12 @@ export const IdeaText: React.FC<Props> = ({ideaTitle, ideaText}) => {
   const selectedIdeaCategory = useIdeaListState((state) => state.selectedIdeaCategory);
 
   const handlePressDelete = useCallback(
-    (id: number) => {
+    (selectedId: number) => {
       if (!selectedIdeaCategory) {
         return;
       }
       const deletedIdeaTextList = ideaTitle.ideaTextList.filter(function (ideaText) {
-        return ideaText.ideaTextId !== id;
+        return ideaText.id !== selectedId;
       });
       deleteIdeaText(selectedIdeaCategory?.id, ideaTitle, deletedIdeaTextList).catch((error) => {
         const errorMsg = translateErrors(error.code);
@@ -33,7 +33,7 @@ export const IdeaText: React.FC<Props> = ({ideaTitle, ideaText}) => {
   );
 
   const confirmDelete = useCallback(
-    (id: number) => {
+    (selectedId: number) => {
       Alert.alert('アイデアを削除します。', 'よろしいですか？', [
         {
           text: 'キャンセル',
@@ -42,7 +42,7 @@ export const IdeaText: React.FC<Props> = ({ideaTitle, ideaText}) => {
           text: '削除する',
           style: 'destructive',
           onPress: () => {
-            handlePressDelete(id);
+            handlePressDelete(selectedId);
           },
         },
       ]);
@@ -52,10 +52,10 @@ export const IdeaText: React.FC<Props> = ({ideaTitle, ideaText}) => {
 
   return (
     <>
-      {ideaText.ideaTextId === editIdeaTextId ? (
+      {ideaText.id === editIdeaTextId ? (
         <>
           <IdeaTextInput
-            text={ideaText.ideaText}
+            name={ideaText.name}
             editIdeaTextId={editIdeaTextId}
             ideaTitle={ideaTitle}
             onPress={() => setEditIdeaTextId(-1)}
@@ -66,18 +66,18 @@ export const IdeaText: React.FC<Props> = ({ideaTitle, ideaText}) => {
           <TouchableOpacity
             style={styles.ideaTitleListItem}
             onLongPress={() => {
-              setEditIdeaTextId(ideaText.ideaTextId);
+              setEditIdeaTextId(ideaText.id);
             }}
           >
             <View style={styles.ideaTitleInner}>
               <Text style={styles.ideaTitleListItemTitle} numberOfLines={1}>
-                {ideaText.ideaText}
+                {ideaText.id}
               </Text>
             </View>
             <TouchableOpacity
               style={styles.ideaTitleDelete}
               onPress={() => {
-                confirmDelete(ideaText.ideaTextId);
+                confirmDelete(ideaText.id);
               }}
             >
               <Feather name="x" color="#B0b0b0" size={16} />

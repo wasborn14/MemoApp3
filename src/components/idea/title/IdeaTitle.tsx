@@ -81,7 +81,7 @@ export const IdeaTitle: React.FC<Props> = ({ideaTitle}) => {
               <FlatList
                 data={ideaTitle.ideaTextList}
                 renderItem={({item}) => <IdeaText ideaText={item} ideaTitle={ideaTitle} />}
-                keyExtractor={(item) => item.ideaTextId.toString()}
+                keyExtractor={(item) => item.id.toString()}
               />
               {!isCreateIdeaSelected && (
                 <TouchableOpacity
