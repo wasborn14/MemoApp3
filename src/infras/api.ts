@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import {IdeaTitleDetail, IdeaTextDetail} from '../screens/idea/list/reducer/reducer';
 import {IdeaCategoryDetail} from '../screens/idea/category/reducer/reducer';
+// import {firestore} from 'firebase-tools';
 
 // IdeaCategory
 // post
