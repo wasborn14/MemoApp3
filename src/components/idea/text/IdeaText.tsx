@@ -24,7 +24,7 @@ export const IdeaText: React.FC<Props> = ({ideaTitle, ideaText}) => {
       const deletedIdeaTextList = ideaTitle.ideaTextList.filter(function (ideaText) {
         return ideaText.id !== selectedId;
       });
-      deleteIdeaText(selectedIdeaCategory?.id, ideaTitle, deletedIdeaTextList).catch((error) => {
+      deleteIdeaText(selectedIdeaCategory?.id, ideaTitle.id, deletedIdeaTextList).catch((error) => {
         const errorMsg = translateErrors(error.code);
         Alert.alert(errorMsg.title, errorMsg.description);
       });
@@ -71,7 +71,7 @@ export const IdeaText: React.FC<Props> = ({ideaTitle, ideaText}) => {
           >
             <View style={styles.ideaTitleInner}>
               <Text style={styles.ideaTitleListItemTitle} numberOfLines={1}>
-                {ideaText.id}
+                {ideaText.name}
               </Text>
             </View>
             <TouchableOpacity

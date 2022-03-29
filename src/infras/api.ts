@@ -47,7 +47,11 @@ export const deleteIdeaCategory = async (ideaCategoryId: string) => {
 
 // IdeaTitle
 // post
-export const postIdeaTitle = async (selectedIdeaCategoryId: string, inputText: string) => {
+export const postIdeaTitle = async (
+  selectedIdeaCategoryId: string,
+  inputText: string,
+  maxSortNo: number,
+) => {
   const {currentUser} = firebase.auth();
   if (currentUser) {
     const db = firebase.firestore();
@@ -57,6 +61,7 @@ export const postIdeaTitle = async (selectedIdeaCategoryId: string, inputText: s
     return ref.add({
       name: inputText,
       ideaTextList: [],
+      sortNo: maxSortNo + 1,
       updatedAt: new Date(),
     });
   }
@@ -112,7 +117,6 @@ export const updateIdeaText = async (
       .doc(ideaTitle.id);
     return ref.set(
       {
-        ideaTitleName: ideaTitle.name,
         ideaTextList: [...ideaTitle.ideaTextList, newIdeaText],
         updatedAt: new Date(),
       },
@@ -124,7 +128,7 @@ export const updateIdeaText = async (
 // update
 export const editIdeaText = async (
   selectedIdeaCategoryId: string,
-  ideaTitle: IdeaTitleDetail,
+  ideaTitleId: string,
   sortIdeaTextList: IdeaTextDetail[],
 ) => {
   const {currentUser} = firebase.auth();
@@ -132,10 +136,9 @@ export const editIdeaText = async (
     const db = firebase.firestore();
     const ref = db
       .collection(`users/${currentUser.uid}/ideaCategories/${selectedIdeaCategoryId}/ideaTitles`)
-      .doc(ideaTitle.id);
+      .doc(ideaTitleId);
     return ref.set(
       {
-        ideaTitleName: ideaTitle.name,
         ideaTextList: sortIdeaTextList,
         updatedAt: new Date(),
       },
@@ -147,7 +150,7 @@ export const editIdeaText = async (
 // delete
 export const deleteIdeaText = async (
   selectedIdeaCategoryId: string,
-  ideaTitle: IdeaTitleDetail,
+  ideaTitleId: string,
   deletedIdeaTextList: IdeaTextDetail[],
 ) => {
   const {currentUser} = firebase.auth();
@@ -155,10 +158,9 @@ export const deleteIdeaText = async (
     const db = firebase.firestore();
     const ref = db
       .collection(`users/${currentUser.uid}/ideaCategories/${selectedIdeaCategoryId}/ideaTitles`)
-      .doc(ideaTitle.id);
+      .doc(ideaTitleId);
     return ref.set(
       {
-        ideaTitleName: ideaTitle.name,
         ideaTextList: deletedIdeaTextList,
         updatedAt: new Date(),
       },

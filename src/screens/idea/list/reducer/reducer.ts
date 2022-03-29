@@ -4,12 +4,14 @@ export interface IdeaListState {
   ideaCategoryList: IdeaCategoryDetail[];
   ideaTitleList: IdeaTitleDetail[];
   selectedIdeaCategory?: IdeaCategoryDetail;
+  maxSortNo: number;
 }
 
 export interface IdeaTitleDetail {
   id: string;
   name: string;
   ideaTextList: IdeaTextDetail[];
+  sortNo: number;
   updatedAt: Date;
 }
 
@@ -35,14 +37,21 @@ export const setSelectedIdeaCategory = (payload: IdeaCategoryDetail | undefined)
   payload,
 });
 
+export const setMaxSortNo = (payload: number) => ({
+  type: 'setMaxSortNo' as const,
+  payload,
+});
+
 export type Action =
   | ReturnType<typeof setIdeaTitleList>
   | ReturnType<typeof setIdeaCategoryList>
-  | ReturnType<typeof setSelectedIdeaCategory>;
+  | ReturnType<typeof setSelectedIdeaCategory>
+  | ReturnType<typeof setMaxSortNo>;
 
 export const initialState: IdeaListState = {
   ideaCategoryList: [],
   ideaTitleList: [],
+  maxSortNo: -1,
 };
 
 export const ideaListReducer = (state: IdeaListState, action: Action) => {
@@ -59,6 +68,9 @@ export const ideaListReducer = (state: IdeaListState, action: Action) => {
       break;
     case 'setSelectedIdeaCategory':
       state.selectedIdeaCategory = action.payload;
+      break;
+    case 'setMaxSortNo':
+      state.maxSortNo = action.payload;
       break;
   }
 };
