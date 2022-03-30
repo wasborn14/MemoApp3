@@ -57,6 +57,21 @@ export const deleteIdeaCategory = async (ideaCategoryId: string) => {
   const {currentUser} = firebase.auth();
   if (currentUser) {
     const db = firebase.firestore();
+    const collectionsRef = db
+      .collection(`users/${currentUser.uid}/ideaCategories`)
+      .doc(ideaCategoryId)
+      .collection('ideaTitles');
+    const deleteIds: string[] = [];
+    await collectionsRef.get().then((doc) => {
+      doc.forEach((doc) => {
+        deleteIds.push(doc.id);
+      });
+    });
+    if (deleteIds.length > 0) {
+      deleteIds.map((deletedId) => {
+        collectionsRef.doc(deletedId).delete();
+      });
+    }
     const ref = db.collection(`users/${currentUser.uid}/ideaCategories`).doc(ideaCategoryId);
     return ref.delete();
   }
