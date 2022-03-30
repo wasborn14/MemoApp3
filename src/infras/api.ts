@@ -36,6 +36,22 @@ export const updateIdeaCategory = async (ideaCategory: IdeaCategoryDetail, input
   }
 };
 
+// sortNoUpdate
+export const editIdeaCategorySortNo = async (ideaCategoryId: string, sortNo: number) => {
+  const {currentUser} = firebase.auth();
+  if (currentUser) {
+    const db = firebase.firestore();
+    const ref = db.collection(`users/${currentUser.uid}/ideaCategories`).doc(ideaCategoryId);
+    return ref.set(
+      {
+        sortNo: sortNo,
+        updatedAt: new Date(),
+      },
+      {merge: true},
+    );
+  }
+};
+
 // delete
 export const deleteIdeaCategory = async (ideaCategoryId: string) => {
   const {currentUser} = firebase.auth();

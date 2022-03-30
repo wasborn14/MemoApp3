@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, FlatList, Text} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import firebase from 'firebase';
 import {useIdeaCategoryListDispatch, useIdeaCategoryListState} from './index';
 import {IdeaCategoryDetail, setIdeaCategoryList, setMaxSortNo} from './reducer/reducer';
@@ -10,6 +10,8 @@ import {IdeaTabNavigation} from '../../../navigation';
 import {IdeaCategory} from '../../../components/idea/category/IdeaCategory';
 import {IdeaCategoryInput} from '../../../components/idea/category/IdeaCategoryInput';
 import {Ionicons} from '@expo/vector-icons';
+import DraggableFlatList, {RenderItemParams, ScaleDecorator} from 'react-native-draggable-flatlist';
+import {editIdeaCategorySortNo} from '../../../infras/api';
 
 const IdeaCategoryListScreen = () => {
   const nav = useNavigation<IdeaTabNavigation>();
@@ -17,6 +19,7 @@ const IdeaCategoryListScreen = () => {
   const dispatch = useIdeaCategoryListDispatch();
   const ideaCategoryList = useIdeaCategoryListState((state) => state.ideaCategoryList);
   const [isCreateIdeaCategory, setIsCreateIdeaCategory] = useState(false);
+  const [isStopFetchData, setIsStopFetchData] = useState(false);
 
   const getMaxSortNo = useCallback(() => {
     if (ideaCategoryList.length > 0) {
@@ -60,11 +63,9 @@ const IdeaCategoryListScreen = () => {
     let unsubscribe = () => {
       // do nothing
     };
-    if (currentUser) {
+    if (currentUser && !isStopFetchData) {
       setLoading(true);
-      const ref = db
-        .collection(`users/${currentUser.uid}/ideaCategories`)
-        .orderBy('updatedAt', 'asc');
+      const ref = db.collection(`users/${currentUser.uid}/ideaCategories`).orderBy('sortNo', 'asc');
       unsubscribe = ref.onSnapshot(
         (snapshot) => {
           const ideaCategoryListData: IdeaCategoryDetail[] = [];
@@ -87,7 +88,44 @@ const IdeaCategoryListScreen = () => {
       );
     }
     return unsubscribe;
-  }, [dispatch]);
+  }, [dispatch, isStopFetchData]);
+
+  const updateSortNo = useCallback(
+    (changedIdeaCategoryList: IdeaCategoryDetail[]) => {
+      dispatch(setIdeaCategoryList(changedIdeaCategoryList));
+      setIsStopFetchData(true);
+
+      const changedSortNumbers: {id: string; sortPosition: number}[] = [];
+      changedIdeaCategoryList.map((changedIdeaCategory, index) => {
+        const sortPosition = index + 1;
+        if (changedIdeaCategory.sortNo !== sortPosition) {
+          changedSortNumbers.push({
+            id: changedIdeaCategory.id,
+            sortPosition: sortPosition,
+          });
+        }
+      });
+      if (changedSortNumbers.length > 0) {
+        changedSortNumbers.map((changedSortNumber) => {
+          editIdeaCategorySortNo(changedSortNumber.id, changedSortNumber.sortPosition);
+        });
+
+        // 表示の乱れの抑制のため、データの再取得に間をおく
+        setTimeout(() => {
+          setIsStopFetchData(false);
+        }, 1000);
+      }
+    },
+    [dispatch],
+  );
+
+  const renderItem = ({item, drag}: RenderItemParams<IdeaCategoryDetail>) => {
+    return (
+      <ScaleDecorator>
+        <IdeaCategory ideaCategory={item} onLongPress={drag} />
+      </ScaleDecorator>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -112,11 +150,13 @@ const IdeaCategoryListScreen = () => {
           <IdeaCategoryInput handlePressDisabled={() => setIsCreateIdeaCategory(false)} />
         )}
         <View style={styles.ideaTitleListWrap}>
-          <FlatList
+          <DraggableFlatList
             data={ideaCategoryList}
-            renderItem={({item}) => <IdeaCategory ideaCategory={item} />}
+            renderItem={renderItem}
             keyExtractor={(item) => item.id}
             contentContainerStyle={{paddingBottom: 20}}
+            ListFooterComponent={<View style={{height: 100}} />}
+            onDragEnd={({data}) => updateSortNo(data)}
           />
         </View>
       </View>
