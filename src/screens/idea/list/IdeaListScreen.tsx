@@ -19,7 +19,6 @@ import {Entypo} from '@expo/vector-icons';
 import IdeaCategorySelectButton from '../../../components/idea/category/ideaCategorySelectButton';
 import DraggableFlatList, {RenderItemParams, ScaleDecorator} from 'react-native-draggable-flatlist';
 import {editIdeaTextSortNo} from '../../../infras/api';
-
 const IdeaListScreen = () => {
   const nav = useNavigation<IdeaTabNavigation>();
   const dispatch = useIdeaListDispatch();
@@ -147,6 +146,7 @@ const IdeaListScreen = () => {
   const updateSortNo = useCallback(
     (changedIdeaTitleList: IdeaTitleDetail[]) => {
       if (!selectedIdeaCategory) return;
+      dispatch(setIdeaTitleList(changedIdeaTitleList));
       const changedSortNumbers: {title: string; id: string; sortPosition: number}[] = [];
       changedIdeaTitleList.map((changedIdeaTitle, index) => {
         const sortPosition = index + 1;
