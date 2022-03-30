@@ -3,7 +3,6 @@ import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import firebase from 'firebase';
 import {useIdeaCategoryListDispatch, useIdeaCategoryListState} from './index';
 import {IdeaCategoryDetail, setIdeaCategoryList, setMaxSortNo} from './reducer/reducer';
-import Loading from '../../../components/Loading';
 import {useNavigation} from '@react-navigation/native';
 import {Feather} from '@expo/vector-icons';
 import {IdeaTabNavigation} from '../../../navigation';
@@ -15,7 +14,6 @@ import {editIdeaCategorySortNo} from '../../../infras/api';
 
 const IdeaCategoryListScreen = () => {
   const nav = useNavigation<IdeaTabNavigation>();
-  const [isLoading, setLoading] = useState(false);
   const dispatch = useIdeaCategoryListDispatch();
   const ideaCategoryList = useIdeaCategoryListState((state) => state.ideaCategoryList);
   const [isCreateIdeaCategory, setIsCreateIdeaCategory] = useState(false);
@@ -64,7 +62,6 @@ const IdeaCategoryListScreen = () => {
       // do nothing
     };
     if (currentUser && !isStopFetchData) {
-      setLoading(true);
       const ref = db.collection(`users/${currentUser.uid}/ideaCategories`).orderBy('sortNo', 'asc');
       unsubscribe = ref.onSnapshot(
         (snapshot) => {
@@ -79,10 +76,8 @@ const IdeaCategoryListScreen = () => {
             });
           });
           dispatch(setIdeaCategoryList(ideaCategoryListData));
-          setLoading(false);
         },
         () => {
-          setLoading(false);
           // Alert.alert('データの読み込みに失敗しました。');
         },
       );
@@ -129,7 +124,6 @@ const IdeaCategoryListScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Loading isLoading={isLoading} />
       <TouchableOpacity
         style={styles.ideaTitleCreateButton}
         onPress={() => {
