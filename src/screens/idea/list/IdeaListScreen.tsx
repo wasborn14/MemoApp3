@@ -19,13 +19,13 @@ import {Entypo} from '@expo/vector-icons';
 import IdeaCategorySelectButton from '../../../components/idea/category/ideaCategorySelectButton';
 import DraggableFlatList, {RenderItemParams, ScaleDecorator} from 'react-native-draggable-flatlist';
 import {editIdeaTextSortNo} from '../../../infras/api';
-
 const IdeaListScreen = () => {
   const nav = useNavigation<IdeaTabNavigation>();
   const dispatch = useIdeaListDispatch();
   const ideaTitleList = useIdeaListState((state) => state.ideaTitleList);
   const selectedIdeaCategory = useIdeaListState((state) => state.selectedIdeaCategory);
   const [isCreateIdeaTitle, setIsCreateIdeaTitle] = useState(false);
+  const [isStopFetchData, setIsStopFetchData] = useState(false);
 
   useEffect(() => {
     nav.setOptions({
@@ -96,7 +96,7 @@ const IdeaListScreen = () => {
     let unsubscribe = () => {
       // do nothing
     };
-    if (currentUser) {
+    if (currentUser && !isStopFetchData) {
       const ref = db
         .collection(`users/${currentUser.uid}/ideaCategories`)
         .doc(selectedIdeaCategory.id)
@@ -123,7 +123,7 @@ const IdeaListScreen = () => {
       );
     }
     return unsubscribe;
-  }, [dispatch, selectedIdeaCategory]);
+  }, [dispatch, selectedIdeaCategory, isStopFetchData]);
 
   const getMaxSortNo = useCallback(() => {
     if (ideaTitleList.length > 0) {
@@ -147,12 +147,14 @@ const IdeaListScreen = () => {
   const updateSortNo = useCallback(
     (changedIdeaTitleList: IdeaTitleDetail[]) => {
       if (!selectedIdeaCategory) return;
-      const changedSortNumbers: {title: string; id: string; sortPosition: number}[] = [];
+      dispatch(setIdeaTitleList(changedIdeaTitleList));
+      setIsStopFetchData(true);
+
+      const changedSortNumbers: {id: string; sortPosition: number}[] = [];
       changedIdeaTitleList.map((changedIdeaTitle, index) => {
         const sortPosition = index + 1;
         if (changedIdeaTitle.sortNo !== sortPosition) {
           changedSortNumbers.push({
-            title: changedIdeaTitle.name,
             id: changedIdeaTitle.id,
             sortPosition: sortPosition,
           });
@@ -166,9 +168,14 @@ const IdeaListScreen = () => {
             changedSortNumber.sortPosition,
           );
         });
+
+        // 表示の乱れの抑制のため、データの再取得に間をおく
+        setTimeout(() => {
+          setIsStopFetchData(false);
+        }, 1000);
       }
     },
-    [selectedIdeaCategory],
+    [selectedIdeaCategory, dispatch],
   );
 
   return (
