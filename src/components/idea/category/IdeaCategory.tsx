@@ -7,9 +7,10 @@ import {deleteIdeaCategory} from '../../../infras/api';
 
 type Props = {
   ideaCategory: IdeaCategoryDetail;
+  onLongPress: () => void;
 };
 
-export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
+export const IdeaCategory: React.FC<Props> = ({ideaCategory, onLongPress}) => {
   const [editIdeaCategoryId, setEditIdeaCategoryId] = useState('noMatch');
   const [isIdeaCategorySelected, setIsIdeaCategorySelected] = useState(false);
 
@@ -49,6 +50,7 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory}) => {
             onPress={() => {
               setIsIdeaCategorySelected(!isIdeaCategorySelected);
             }}
+            onLongPress={onLongPress}
           >
             <View style={styles.ideaCategoryInner}>
               <Text style={styles.ideaCategoryListItemTitle} numberOfLines={1}>

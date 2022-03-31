@@ -19,6 +19,7 @@ import {Entypo} from '@expo/vector-icons';
 import IdeaCategorySelectButton from '../../../components/idea/category/ideaCategorySelectButton';
 import DraggableFlatList, {RenderItemParams, ScaleDecorator} from 'react-native-draggable-flatlist';
 import {editIdeaTextSortNo} from '../../../infras/api';
+
 const IdeaListScreen = () => {
   const nav = useNavigation<IdeaTabNavigation>();
   const dispatch = useIdeaListDispatch();
@@ -60,9 +61,7 @@ const IdeaListScreen = () => {
       // do nothing
     };
     if (currentUser) {
-      const ref = db
-        .collection(`users/${currentUser.uid}/ideaCategories`)
-        .orderBy('updatedAt', 'asc');
+      const ref = db.collection(`users/${currentUser.uid}/ideaCategories`).orderBy('sortNo', 'asc');
       unsubscribe = ref.onSnapshot(
         (snapshot) => {
           const ideaCategoryListData: IdeaCategoryDetail[] = [];
