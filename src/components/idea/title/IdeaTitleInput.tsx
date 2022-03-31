@@ -58,6 +58,8 @@ export const IdeaTitleInput: React.FC<Props> = ({handlePressDisabled, ideaTitle,
         style={styles.inputText}
         onChangeText={(text) => setInputText(text)}
         onBlur={onPress ? editPress : createPress}
+        autoFocus={true}
+        placeholder="create IdeaTitle..."
       />
       <TouchableOpacity onPress={onPress ? editPress : createPress}>
         {onPress ? (

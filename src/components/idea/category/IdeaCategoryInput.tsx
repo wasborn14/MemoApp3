@@ -61,6 +61,8 @@ export const IdeaCategoryInput: React.FC<Props> = ({
         style={styles.inputText}
         onChangeText={(text) => setInputText(text)}
         onBlur={onPress ? editPress : createPress}
+        placeholder="create IdeaCategory..."
+        autoFocus={true}
       />
       <TouchableOpacity onPress={onPress ? editPress : createPress}>
         {onPress ? (

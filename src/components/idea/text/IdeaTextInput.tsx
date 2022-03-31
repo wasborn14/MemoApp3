@@ -98,6 +98,7 @@ export const IdeaTextInput: React.FC<Props> = ({
         onChangeText={(text) => setInputText(text)}
         onBlur={onPress ? editPress : createPress}
         placeholder="create IdeaText..."
+        autoFocus={true}
       />
       <TouchableOpacity onPress={onPress ? editPress : createPress}>
         {onPress ? (
