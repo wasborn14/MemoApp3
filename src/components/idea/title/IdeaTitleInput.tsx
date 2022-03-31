@@ -36,7 +36,7 @@ export const IdeaTitleInput: React.FC<Props> = ({handlePressDisabled, ideaTitle,
 
   const editPress = useCallback(() => {
     if (inputText && ideaTitle && selectedIdeaCategory) {
-      updateIdeaTitle(selectedIdeaCategory.id, ideaTitle, inputText, maxSortNo)
+      updateIdeaTitle(selectedIdeaCategory.id, ideaTitle, inputText)
         .then(() => {
           onPress && onPress();
         })
