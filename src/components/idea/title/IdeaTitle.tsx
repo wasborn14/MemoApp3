@@ -86,12 +86,7 @@ export const IdeaTitle: React.FC<Props> = ({ideaTitle, onLongPress}) => {
                 keyExtractor={(item) => item.id.toString()}
               />
               {!isCreateIdeaSelected && (
-                <TouchableOpacity
-                  style={styles.ideaCreatContainer}
-                  onPress={() => {
-                    setEditIdeaTitleId(ideaTitle.id);
-                  }}
-                >
+                <View style={styles.ideaCreatContainer}>
                   <TouchableOpacity
                     style={styles.ideaCreateButton}
                     onPress={() => {
@@ -102,7 +97,7 @@ export const IdeaTitle: React.FC<Props> = ({ideaTitle, onLongPress}) => {
                       <Feather name="plus" color="#B0b0b0" size={16} />
                     </View>
                   </TouchableOpacity>
-                </TouchableOpacity>
+                </View>
               )}
             </>
           )}
@@ -142,10 +137,7 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   selectedIdeaTitleColor: {
-    backgroundColor: '#adffff',
-  },
-  runningColor: {
-    backgroundColor: '#adffff',
+    backgroundColor: '#D7FFDB',
   },
   ideaTitleInner: {
     flex: 1,
@@ -173,13 +165,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 8,
-    paddingHorizontal: 19,
+    paddingVertical: 12,
     marginVertical: 4,
     marginHorizontal: 16,
     alignItems: 'center',
     borderRadius: 20,
-    width: 80,
+    width: 100,
     // 影の設定
     shadowColor: '#000',
     shadowOffset: {width: 2, height: 2},
