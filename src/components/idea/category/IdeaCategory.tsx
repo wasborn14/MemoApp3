@@ -12,7 +12,6 @@ type Props = {
 
 export const IdeaCategory: React.FC<Props> = ({ideaCategory, onLongPress}) => {
   const [editIdeaCategoryId, setEditIdeaCategoryId] = useState('noMatch');
-  const [isIdeaCategorySelected, setIsIdeaCategorySelected] = useState(false);
 
   const handlePressDelete = useCallback((ideaCategoryId: string) => {
     Alert.alert('カテゴリを削除します。', 'よろしいですか？', [
@@ -43,13 +42,7 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory, onLongPress}) => {
       ) : (
         <>
           <TouchableOpacity
-            style={[
-              styles.ideaCategoryListItem,
-              isIdeaCategorySelected && styles.selectedIdeaCategoryColor,
-            ]}
-            onPress={() => {
-              setIsIdeaCategorySelected(!isIdeaCategorySelected);
-            }}
+            style={styles.ideaCategoryListItem}
             onLongPress={onLongPress}
           >
             <View style={styles.ideaCategoryInner}>
@@ -104,7 +97,7 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   selectedIdeaCategoryColor: {
-    backgroundColor: '#adffff',
+    backgroundColor: '#D7FFDB',
   },
   runningColor: {
     backgroundColor: '#adffff',

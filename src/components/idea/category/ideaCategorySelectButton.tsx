@@ -39,7 +39,7 @@ const IdeaCategorySelectButton = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 30,
+    height: 40,
     backgroundColor: '#FFDDAA',
   },
   selectButtonWrap: {
@@ -47,16 +47,19 @@ const styles = StyleSheet.create({
   },
   selectButton: {
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
   },
   selectButtonText: {
     fontSize: 16,
+    lineHeight: 20,
     fontWeight: 'bold',
     color: 'gray',
   },
   selectedButtonColor: {
     color: '#E58009',
     fontSize: 20,
+    fontWeight: 'bold',
   },
 });
 

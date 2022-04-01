@@ -31,14 +31,11 @@ const IdeaListScreen = () => {
   useEffect(() => {
     nav.setOptions({
       headerLeft: () => (
-        <TouchableOpacity
+        <View
           style={{marginTop: 8, marginHorizontal: 16}}
-          onPress={() => {
-            nav.navigate('IdeaCategory');
-          }}
         >
           <Text style={{fontSize: 24, fontWeight: 'bold'}}>Idea</Text>
-        </TouchableOpacity>
+        </View>
       ),
       headerTitle: '',
       headerRight: () => (
