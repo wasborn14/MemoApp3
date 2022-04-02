@@ -41,30 +41,26 @@ export const IdeaCategory: React.FC<Props> = ({ideaCategory, onLongPress}) => {
         </>
       ) : (
         <>
-          <TouchableOpacity
-            style={styles.ideaCategoryListItem}
-            onLongPress={onLongPress}
-          >
+          <TouchableOpacity style={styles.ideaCategoryListItem} onLongPress={onLongPress}>
             <View style={styles.ideaCategoryInner}>
               <Text style={styles.ideaCategoryListItemTitle} numberOfLines={1}>
                 {ideaCategory.name}
               </Text>
             </View>
             <TouchableOpacity
-              style={styles.ideaCategoryDelete}
+              style={styles.ideaCategoryEdit}
               onPress={() => {
                 setEditIdeaCategoryId(ideaCategory.id);
               }}
             >
-              <Feather name="edit" color="#B0b0b0" size={16} />
+              <Feather name="edit" color="#DADADA" size={20} />
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.ideaCategoryDelete}
               onPress={() => {
                 handlePressDelete(ideaCategory.id);
               }}
             >
-              <Feather name="x" color="#B0b0b0" size={16} />
+              <Feather name="x" color="#DADADA" size={20} />
             </TouchableOpacity>
           </TouchableOpacity>
         </>
@@ -114,8 +110,8 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: '#848484',
   },
-  ideaCategoryDelete: {
-    padding: 4,
+  ideaCategoryEdit: {
+    paddingRight: 12,
   },
   ideaCreatContainer: {
     flexDirection: 'row',

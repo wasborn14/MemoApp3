@@ -62,20 +62,19 @@ export const IdeaTitle: React.FC<Props> = ({ideaTitle, onLongPress}) => {
               </Text>
             </View>
             <TouchableOpacity
-              style={styles.ideaTitleDelete}
+              style={styles.ideaTitleEdit}
               onPress={() => {
                 setEditIdeaTitleId(ideaTitle.id);
               }}
             >
-              <Feather name="edit" color="#B0b0b0" size={16} />
+              <Feather name="edit" color="#DADADA" size={20} />
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.ideaTitleDelete}
               onPress={() => {
                 handlePressDelete(ideaTitle.id);
               }}
             >
-              <Feather name="x" color="#B0b0b0" size={16} />
+              <Feather name="x" color="#DADADA" size={20} />
             </TouchableOpacity>
           </TouchableOpacity>
           {isIdeaTitleSelected && (
@@ -94,7 +93,7 @@ export const IdeaTitle: React.FC<Props> = ({ideaTitle, onLongPress}) => {
                     }}
                   >
                     <View style={styles.ideaCreateIcon}>
-                      <Feather name="plus" color="#B0b0b0" size={16} />
+                      <Feather name="plus" color="#DADADA" size={20} />
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -151,9 +150,8 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: '#848484',
   },
-  ideaTitleDelete: {
-    paddingVertical: 4,
-    paddingHorizontal: 8,
+  ideaTitleEdit: {
+    paddingRight: 12,
   },
   ideaCreatContainer: {
     flexDirection: 'row',
@@ -165,7 +163,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 12,
+    paddingVertical: 8,
     marginVertical: 4,
     marginHorizontal: 16,
     alignItems: 'center',

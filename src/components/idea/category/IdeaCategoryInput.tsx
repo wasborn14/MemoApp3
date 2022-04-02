@@ -63,6 +63,7 @@ export const IdeaCategoryInput: React.FC<Props> = ({
         onBlur={onPress ? editPress : createPress}
         placeholder="create IdeaCategory..."
         autoFocus={true}
+        selectionColor="#8b4513"
       />
       <TouchableOpacity onPress={onPress ? editPress : createPress}>
         {onPress ? (
@@ -81,7 +82,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginVertical: 16,
     paddingVertical: 8,
-    paddingHorizontal: 19,
+    paddingLeft: 12,
+    paddingRight: 16,
     borderRadius: 20,
     shadowColor: '#000',
     shadowOffset: {width: 2, height: 2},

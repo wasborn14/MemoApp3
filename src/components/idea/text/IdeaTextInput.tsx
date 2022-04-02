@@ -100,6 +100,7 @@ export const IdeaTextInput: React.FC<Props> = ({
         placeholder="create IdeaText..."
         autoFocus={true}
         autoCapitalize="none"
+        selectionColor="#8b4513"
       />
       <TouchableOpacity onPress={onPress ? editPress : createPress}>
         {onPress ? (
@@ -116,7 +117,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     paddingVertical: 8,
-    paddingHorizontal: 19,
+    paddingLeft: 12,
+    paddingRight: 16,
     marginVertical: 4,
     marginRight: 16,
     marginLeft: 30,

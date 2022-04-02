@@ -75,12 +75,11 @@ export const IdeaText: React.FC<Props> = ({ideaTitle, ideaText}) => {
               </Text>
             </View>
             <TouchableOpacity
-              style={styles.ideaTitleDelete}
               onPress={() => {
                 confirmDelete(ideaText.id);
               }}
             >
-              <Feather name="x" color="#B0b0b0" size={16} />
+              <Feather name="x" color="#DADADA" size={20} />
             </TouchableOpacity>
           </TouchableOpacity>
         </>
@@ -128,9 +127,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
     color: '#848484',
-  },
-  ideaTitleDelete: {
-    padding: 4,
   },
   ideaCreatContainer: {
     flexDirection: 'row',
