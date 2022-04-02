@@ -105,7 +105,7 @@ const LogInScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F4F8',
+    backgroundColor: '#8b4513',
   },
   inner: {
     paddingHorizontal: 27,
@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
     lineHeight: 32,
     fontWeight: 'bold',
     marginBottom: 24,
+    color: '#FFF',
   },
   input: {
     fontSize: 16,
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
   footerLink: {
     fontSize: 14,
     lineHeight: 24,
-    color: '#467FD3',
+    color: '#FFF',
   },
 });
 
