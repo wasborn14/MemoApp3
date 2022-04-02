@@ -31,9 +31,7 @@ const IdeaListScreen = () => {
   useEffect(() => {
     nav.setOptions({
       headerLeft: () => (
-        <View
-          style={{marginTop: 8, marginHorizontal: 16}}
-        >
+        <View style={{marginTop: 8, marginHorizontal: 16}}>
           <Text style={{fontSize: 24, fontWeight: 'bold'}}>Idea</Text>
         </View>
       ),

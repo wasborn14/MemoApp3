@@ -172,19 +172,35 @@ const SetStackNavigator = () => {
     </SetStack.Navigator>
   );
 };
+//selectionColor="#8b4513"
 
 const MainTabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={{
         lazy: false,
-        tabBarLabelStyle: {fontWeight: 'bold'},
+        tabBarStyle: {backgroundColor: '#FFDDAA'},
+        tabBarActiveBackgroundColor: 'white',
+        tabBarLabelStyle: {fontWeight: 'bold', color: '#8b4513', paddingBottom: 4},
         tabBarActiveTintColor: '#262928',
         tabBarInactiveTintColor: '#D4D4D4',
         headerShown: false,
         tabBarHideOnKeyboard: true,
       }}
     >
+      <Tab.Screen
+        name="Idea"
+        component={IdeaStackNavigator}
+        options={{
+          tabBarLabel: 'Idea',
+          tabBarIcon: ({focused}) =>
+            focused ? (
+              <SimpleLineIcons name="note" size={24} color="black" />
+            ) : (
+              <SimpleLineIcons name="note" size={24} color="black" />
+            ),
+        }}
+      />
       <Tab.Screen
         name="Task"
         component={TaskStackNavigator}
@@ -208,19 +224,6 @@ const MainTabNavigator = () => {
               <Foundation name="graph-horizontal" size={24} color="black" />
             ) : (
               <Foundation name="graph-horizontal" size={24} color="black" />
-            ),
-        }}
-      />
-      <Tab.Screen
-        name="Idea"
-        component={IdeaStackNavigator}
-        options={{
-          tabBarLabel: 'Idea',
-          tabBarIcon: ({focused}) =>
-            focused ? (
-              <SimpleLineIcons name="note" size={24} color="black" />
-            ) : (
-              <SimpleLineIcons name="note" size={24} color="black" />
             ),
         }}
       />
