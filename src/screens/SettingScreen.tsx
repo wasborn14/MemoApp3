@@ -43,10 +43,10 @@ export const SettingScreen: React.FC<Props> = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F4F8',
+    backgroundColor: '#8b4513',
   },
   memoListItem: {
-    backgroundColor: '#FFF',
+    backgroundColor: '#EBCCA8',
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: 16,

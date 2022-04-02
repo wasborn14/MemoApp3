@@ -158,9 +158,9 @@ const SetStackNavigator = () => {
   return (
     <SetStack.Navigator
       screenOptions={{
-        headerStyle: {backgroundColor: '#467FD3'},
-        headerTitleStyle: {color: '#ffffff'},
-        headerTitle: 'Memo App',
+        headerStyle: {backgroundColor: '#FFDDAA'},
+        headerTitleStyle: {color: '#000000'},
+        headerTitle: 'Setting',
         headerTintColor: '#ffffff',
         headerBackTitle: 'Back',
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
@@ -180,9 +180,9 @@ const MainTabNavigator = () => {
       screenOptions={{
         lazy: false,
         tabBarStyle: {backgroundColor: '#FFDDAA'},
-        tabBarActiveBackgroundColor: 'white',
+        tabBarActiveBackgroundColor: '#FFF',
         tabBarLabelStyle: {fontWeight: 'bold', color: '#8b4513', paddingBottom: 4},
-        tabBarActiveTintColor: '#262928',
+        tabBarActiveTintColor: '#D7FFDB',
         tabBarInactiveTintColor: '#D4D4D4',
         headerShown: false,
         tabBarHideOnKeyboard: true,
@@ -264,8 +264,8 @@ export const Navigation = () => {
         initialRouteName="Opening"
         screenOptions={{
           headerStyle: {backgroundColor: '#FFDDAA'},
-          headerTitleStyle: {color: '#ffffff'},
-          headerTitle: 'Memo App',
+          headerTitleStyle: {color: 'black'},
+          headerTitle: 'Idea App',
           headerTintColor: '#ffffff',
           headerBackTitle: 'Back',
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
