@@ -18,10 +18,12 @@ import TaskListContainer from '../screens/task/list';
 import {Foundation} from '@expo/vector-icons';
 import {SimpleLineIcons} from '@expo/vector-icons';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
+import {AntDesign} from '@expo/vector-icons';
 import GraphTopContainer from '../screens/graph/top';
 import OpeningScreen from '../screens/OpeningScreen';
 import IdeaListContainer from '../screens/idea/list';
 import IdeaCategoryListContainer from '../screens/idea/category';
+import ShoppingTopContainer from '../screens/shopping';
 
 export type RootStackParamList = {
   Opening: undefined;
@@ -56,6 +58,10 @@ export type IdeaStackPramList = {
   IdeaCategory: undefined;
 };
 
+export type ShoppingPramList = {
+  ShoppingTop: undefined;
+};
+
 export type SettingStackParamList = {
   Setting: undefined;
 };
@@ -65,12 +71,14 @@ export type MainTabNavigation = StackNavigationProp<RootStackParamList>;
 export type TaskTabNavigation = StackNavigationProp<TaskStackPramList>;
 export type GraphTabNavigation = StackNavigationProp<GraphStackPramList>;
 export type IdeaTabNavigation = StackNavigationProp<IdeaStackPramList>;
+export type ShoppingNavigation = StackNavigationProp<ShoppingPramList>;
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator<RootStackParamList>();
 const TaskStack = createStackNavigator<TaskStackPramList>();
 const GraphStack = createStackNavigator<GraphStackPramList>();
 const IdeaStack = createStackNavigator<IdeaStackPramList>();
+const ShoppingStack = createStackNavigator<ShoppingPramList>();
 const SetStack = createStackNavigator<SettingStackParamList>();
 // const MemoStack = createStackNavigator<MemoStackPramList>();
 
@@ -154,6 +162,25 @@ const IdeaStackNavigator = () => {
   );
 };
 
+const ShoppingStackNavigator = () => {
+  return (
+    <ShoppingStack.Navigator
+      screenOptions={{
+        headerStyle: {backgroundColor: '#FFDDAA'},
+        headerTitleStyle: {color: '#000000'},
+        headerTitle: 'Shopping',
+        headerTintColor: '#ffffff',
+        headerBackTitle: 'Back',
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
+      }}
+    >
+      <ShoppingStack.Screen name="ShoppingTop" component={ShoppingTopContainer} />
+    </ShoppingStack.Navigator>
+  );
+};
+
 const SetStackNavigator = () => {
   return (
     <SetStack.Navigator
@@ -188,6 +215,19 @@ const MainTabNavigator = () => {
         tabBarHideOnKeyboard: true,
       }}
     >
+      <Tab.Screen
+        name="Shopping"
+        component={ShoppingStackNavigator}
+        options={{
+          tabBarLabel: 'Shopping',
+          tabBarIcon: ({focused}) =>
+            focused ? (
+              <AntDesign name="shoppingcart" size={24} color="black" />
+            ) : (
+              <AntDesign name="shoppingcart" size={24} color="black" />
+            ),
+        }}
+      />
       <Tab.Screen
         name="Idea"
         component={IdeaStackNavigator}
