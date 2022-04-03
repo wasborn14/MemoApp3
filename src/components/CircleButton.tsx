@@ -11,14 +11,14 @@ type Props = {
 const CircleButton: React.FC<Props> = ({name, style, onPress}) => {
   return (
     <TouchableOpacity style={[styles.circleButton, style]} onPress={onPress}>
-      <Feather name={name} size={32} color="white" />
+      <Feather name={name} size={32} color="black" />
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   circleButton: {
-    backgroundColor: '#467FD3',
+    backgroundColor: '#FFDDAA',
     width: 64,
     height: 64,
     borderRadius: 32,
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   circleButtonLabel: {
-    color: '#ffffff',
+    color: '#FFF',
     fontSize: 40,
     lineHeight: 44,
   },

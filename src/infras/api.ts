@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import {IdeaTitleDetail, IdeaTextDetail} from '../screens/idea/list/reducer/reducer';
 import {IdeaCategoryDetail} from '../screens/idea/category/reducer/reducer';
+import {ShoppingItemDetail} from '../screens/shopping/reducer/reducer';
 // import {firestore} from 'firebase-tools';
 
 // IdeaCategory
@@ -220,5 +221,63 @@ export const deleteIdeaText = async (
       },
       {merge: true},
     );
+  }
+};
+
+// ------------------ Shopping -----------------------
+
+// ShoppingItem
+// post
+export const postShoppingItem = async (inputText: string) => {
+  const {currentUser} = firebase.auth();
+  if (currentUser) {
+    const db = firebase.firestore();
+    const ref = db.collection(`users/${currentUser.uid}/shoppingItems`);
+    return ref.add({
+      name: inputText,
+      check: false,
+      updatedAt: new Date(),
+    });
+  }
+};
+
+// update
+export const updateShoppingItem = async (shoppingItem: ShoppingItemDetail, inputText: string) => {
+  const {currentUser} = firebase.auth();
+  if (currentUser) {
+    const db = firebase.firestore();
+    const ref = db.collection(`users/${currentUser.uid}/shoppingItems`).doc(shoppingItem.id);
+    return ref.set(
+      {
+        name: inputText,
+        updatedAt: new Date(),
+      },
+      {merge: true},
+    );
+  }
+};
+
+export const updateShoppingItemCheck = (shoppingItemId: string, shoppingItemCheck: boolean) => {
+  const {currentUser} = firebase.auth();
+  if (currentUser) {
+    const db = firebase.firestore();
+    const ref = db.collection(`users/${currentUser.uid}/shoppingItems`).doc(shoppingItemId);
+    return ref.set(
+      {
+        check: !shoppingItemCheck,
+        updatedAt: new Date(),
+      },
+      {merge: true},
+    );
+  }
+};
+
+// delete
+export const deleteShoppingItem = async (shoppingItemId: string) => {
+  const {currentUser} = firebase.auth();
+  if (currentUser) {
+    const db = firebase.firestore();
+    const ref = db.collection(`users/${currentUser.uid}/shoppingItems`).doc(shoppingItemId);
+    return ref.delete();
   }
 };
